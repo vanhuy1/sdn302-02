@@ -1,0 +1,30 @@
+.footer {
+    background-color: #FFF7ED;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #eaeaea;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+.footer nav ul li a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+.footer nav ul li a:hover {
+    text-decoration: underline;
+}
