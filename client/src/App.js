@@ -1,15 +1,11 @@
-import Header from './components/header/header';
-import Footer from './components/footer/footer';
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Home from './components/home';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Header />
-      </header>
-      <footer>
-        <Footer />
-      </footer>
+    <div>
+      <Home />
     </div>
   );
 }
