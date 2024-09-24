@@ -28,7 +28,8 @@ app.use(cookieParser())
 
 //routes
 
-
+app.use('/auth', require('./routes/authRoutes'))
+app.use('/users', require('./routes/userRoutes'))
 
 //mongodb
 
