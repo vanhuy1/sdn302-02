@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: Boolean,
-        required: true
+        default: true
     },
     address: {
         type: String,
@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     identifyNumber: {
-        type: Number,
+        type: String,
         required: true
     },
     phoneNumber: {
-        type: Number,
+        type: String,
         required: true
     },
     roles: {
