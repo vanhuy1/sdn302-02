@@ -1,12 +1,11 @@
 import React from 'react';
-import NavbarComponent from './landing-page/navbar';
-import FooterComponent from './landing-page/footer';
 import { Container, Row, Col, Button, Image } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-const Home = () => {
+const HomePage = () => {
     return (
         <div>
-            <NavbarComponent />
+            {/* <Header /> */}
 
             <div className="banner"
                 style={{
@@ -43,9 +42,9 @@ const Home = () => {
                 </Row>
             </Container>
 
-            <FooterComponent />
+            {/* <Footer /> */}
         </div>
     );
 };
 
-export default Home;
+export default HomePage;

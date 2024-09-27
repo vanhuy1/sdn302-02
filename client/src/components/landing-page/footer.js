@@ -2,7 +2,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const FooterComponent = () => {
+const Footer = () => {
     return (
         <footer className="bg-light text-center text-lg-start">
             <Container className="p-4">
@@ -53,4 +53,4 @@ const FooterComponent = () => {
     );
 };
 
-export default FooterComponent;
+export default Footer;
