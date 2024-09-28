@@ -27,9 +27,10 @@ const Public = () => {
                         </Nav>
 
                         <Button variant="outline-primary" className="me-2">Register</Button>
-                        <Button variant="primary">
-                            <Link to="/login"> Login</Link>
+                        <Button variant="outline-primary">
+                            <Link to="/login" style={{ textDecoration: 'none' }}> Login</Link>
                         </Button>
+
                     </Navbar.Collapse>
                 </Navbar>
             </header>
