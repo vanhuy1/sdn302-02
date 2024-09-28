@@ -23,6 +23,10 @@ const bookingSchema = new mongoose.Schema({
     endDate: {
         type: Date,
         required: true
+    },
+    amountBook: {
+        type: Number,
+        required: true
     }
 });
 
