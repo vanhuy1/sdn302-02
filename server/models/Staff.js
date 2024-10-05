@@ -1,13 +1,9 @@
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema({
-    staffID: {
-        type: Number,
-        required: true,
-        unique: true
-    },
-    departmentID: {
-        type: Number,
+
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Department'
     },
@@ -17,8 +13,9 @@ const staffSchema = new mongoose.Schema({
         maxlength: 20
     },
     gender: {
-        type: String,
-        required: true
+        type: Boolean,
+        required: true,
+        default: false
     },
     birthday: {
         type: Date,
@@ -36,6 +33,10 @@ const staffSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         default: null
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 });
 
