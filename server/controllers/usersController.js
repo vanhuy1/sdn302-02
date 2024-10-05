@@ -88,8 +88,13 @@ const updateUser = async (req, res) => {
     res.json({ message: `${updatedUser.username} updated` })
 }
 
+const getUser = async (req, res) => {
+
+}
+
 module.exports = {
     getAllUsers,
     createNewUser,
-    updateUser
+    updateUser,
+    getUser
 }

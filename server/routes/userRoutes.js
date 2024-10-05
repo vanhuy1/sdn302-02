@@ -11,4 +11,6 @@ router.route('/')
     .get(usersController.getAllUsers)
     .patch(usersController.updateUser)
 
+router.get('/:id', usersController.getUser)
+
 module.exports = router
