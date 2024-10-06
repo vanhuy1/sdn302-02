@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const customerServiceSchema = new mongoose.Schema({
-    customerID: {
+    userID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Customer'
+        ref: 'User'
     },
     serviceID: {
         type: mongoose.Schema.Types.ObjectId,
