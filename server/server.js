@@ -32,7 +32,8 @@ app.use('/auth', require('./routes/authRoutes'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/manage/staffs', require('./routes/staffManageRoutes'))
 app.use('/departments', require('./routes/departmentRoutes'))
-
+app.use('/', require('./routes/ServiceRoutes'))
+app.use('/service', require('./routes/ServiceItemRoutes'))
 //mongodb
 
 app.use(errorHandler)
