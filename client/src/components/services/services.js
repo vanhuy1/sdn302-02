@@ -28,7 +28,7 @@ const Services = () => {
                         style={{ marginRight: "30px" }}
                     >
                         <Nav className="me-5">
-                            <Nav.Link href="/home">Home</Nav.Link>
+                            <Nav.Link href="/">Home</Nav.Link>
                             <Nav.Link href="/about">About</Nav.Link>
                             <Nav.Link href="/services">Services</Nav.Link>
                             <Nav.Link href="/contact">Contact</Nav.Link>
