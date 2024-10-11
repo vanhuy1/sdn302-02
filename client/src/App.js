@@ -4,6 +4,9 @@ import HomePage from './features/auth/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './features/auth/Login'
 import Public from './components/Public';
+import About from './components/about/About';
+import Service from './components/services/services';
+import Contact from './components/contact/Contact';
 import Layout from './components/Layout';
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
@@ -20,6 +23,9 @@ function App() {
         {/* public routes */}
         <Route index element={<Public />} />
         <Route path='login' element={<Login />} />
+        <Route path="about" element={<About />} />
+        <Route path="services" element={<Service />} />
+        <Route path="contact" element={<Contact />} />
 
         {/* Protected Routes */}
         <Route element={<PersistLogin />}>
