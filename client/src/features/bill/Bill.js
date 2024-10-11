@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Row, Col, Container } from "react-bootstrap";
 import Header from "../../components/landing-page/header";
 import Footer from "../../components/landing-page/footer";
@@ -7,13 +7,27 @@ import Sidebar from "../../components/Sidebar";
 const Bill = () => {
     const [customerName, setCustomerName] = useState("");
     const [phone, setPhone] = useState("");
-    const [orderDate, setOrderDate] = useState(null);
-    const [roomType, setRoomType] = useState("");
-    const [roomAmount, setRoomAmount] = useState(0);
-    const [roomPrice, setRoomPrice] = useState(0);
+    const [roomDetails, setRoomDetails] = useState([]);
     const [services, setServices] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
+    const [arriveDate, setArriveDate] = useState(null);
+    const [leaveDate, setLeaveDate] = useState(null);
     const [isPaid, setIsPaid] = useState(true);
+
+    const apiUrl = process.env.BACKEND_URL;
+
+    useEffect(async () => {
+        const {data} = await axios.get(`${apiUrl}/bill`);
+
+        setCustomerName(data.customerName);
+        setPhone(data.phoneNumber);
+        setRoomDetails(data.roomDetails);
+        setServices(data.services);
+        setTotalCost(data.totalCost);
+        setArriveDate(data.arriveDate);
+        setLeaveDate(data.leaveDate);
+        setIsPaid(data.isPaid);
+    }, []);
 
     return (
         <>
@@ -32,19 +46,19 @@ const Bill = () => {
                             <h1 className="py-4 text-center">Bill</h1>
                             <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
                                 <p>Customer Name</p>
-                                <p>Nam{orderDate}</p>
+                                <p>{customerName}</p>
                             </div>
                             <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
                                 <p>Phone</p>
-                                <p>0123456789{orderDate}</p>
+                                <p>{phone}</p>
                             </div>
                             <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
                                 <p>Arrive Date</p>
-                                <p>2024-02-16 {orderDate}</p>
+                                <p>{arriveDate}</p>
                             </div>
                             <div className="d-flex justify-content-between mx-5 border-bottom">
                                 <p>Leave Date</p>
-                                <p>2024-02-16 {orderDate}</p>
+                                <p>{leaveDate}</p>
                             </div>
 
                             <div className="mx-5 mt-5">
@@ -63,38 +77,56 @@ const Bill = () => {
                                         PRICE
                                     </p>
                                 </div>
-                                <div className="d-flex">
-                                    <p className="col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
+                                
+                                {roomDetails.forEach((roomDetail, index) => (
+                                    <div key={index} className="d-flex">
+                                    {/* <p className="col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
                                         <ul>
                                             <li>Room 102</li>
                                         </ul>
+                                    </p> */}
+                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
+                                        {roomDetail.roomCategory}
                                     </p>
                                     <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        Classic
-                                        {roomType}
-                                    </p>
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        {roomAmount}
+                                        {roomDetail.roomNumber}
                                     </p>
                                     <p className="col-md-2 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
-                                        {roomPrice}
+                                        {roomDetail.price}
+                                    </p>
+                                </div>
+                                ))}
+                                
+                                <div className="d-flex">
+                                    {/* <p className="align-items-center col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
+                                        <ul>
+                                            <li>Room 102</li>
+                                        </ul>
+                                    </p> */}
+                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
+                                        Classic
+                                    </p>
+                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
+                                        1
+                                    </p>
+                                    <p className="col-md-2 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
+                                        1
                                     </p>
                                 </div>
                                 <div className="d-flex">
-                                    <p className="align-items-center col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
+                                    {/* <p className="align-items-center col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
                                         <ul>
                                             <li>Room 102</li>
                                         </ul>
-                                    </p>
+                                    </p> */}
                                     <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
                                         Classic
-                                        {roomType}
                                     </p>
                                     <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        {roomAmount}
+                                        1
                                     </p>
                                     <p className="col-md-2 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
-                                        {roomPrice}
+                                        1
                                     </p>
                                 </div>
                             </div>
@@ -102,6 +134,9 @@ const Bill = () => {
                             <div className="mx-5 mt-5">
                                 <h5 className="fw-bolder">Service:</h5>
                                 <ul>
+                                    {services.forEach((service, index) => (
+                                        <li key={index}>{service.serviceName}: {service.servicePrice}VND</li>
+                                    ))}
                                     <li>Service 1: 200000 VND</li>
                                     <li>Service 2: 200000 VND</li>
                                     <li>Service 3: 200000 VND</li>
