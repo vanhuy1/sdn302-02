@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema({
-
-    department: {
+    departmentID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Department'
@@ -30,6 +29,16 @@ const staffSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    position: {
+        type: String,
+        required: true
+    },
+    salary: {
+        type: Number
+    },
+    email: {
+        type: String
+    },
     phoneNumber: {
         type: String,
         default: null
@@ -38,6 +47,6 @@ const staffSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Staff', staffSchema);

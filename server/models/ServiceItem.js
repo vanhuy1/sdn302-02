@@ -18,6 +18,6 @@ const serviceItemSchema = new mongoose.Schema({
         ref: 'Service',
         required: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('ServiceItem', serviceItemSchema);
