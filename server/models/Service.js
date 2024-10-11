@@ -17,6 +17,6 @@ const serviceSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ServiceItem'
     }]
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Service', serviceSchema);
