@@ -1,5 +1,3 @@
-import Date from Date
-
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema({
