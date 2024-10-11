@@ -57,6 +57,10 @@ const billSchema = new mongoose.Schema({
     leaveDate: {
         type: Date,
         required: true
+    },
+    isPaid: {
+        type: Boolean,
+        required: true
     }
 });
 
