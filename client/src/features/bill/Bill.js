@@ -32,7 +32,6 @@ const Bill = () => {
 
     return (
         <>
-            <Header />
             <Container fluid>
                 <Row>
                     <Col md={2} className="bg-light shadow-sm">
@@ -160,7 +159,6 @@ const Bill = () => {
                     </Col>
                 </Row>
             </Container>
-            <Footer />
         </>
     );
 };
