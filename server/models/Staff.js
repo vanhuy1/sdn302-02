@@ -13,9 +13,9 @@ const staffSchema = new mongoose.Schema({
         maxlength: 20
     },
     gender: {
-        type: Boolean,
+        type: String,
         required: true,
-        default: false
+        enum: ['Male', 'Female', 'Other'],
     },
     birthday: {
         type: Date,

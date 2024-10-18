@@ -14,15 +14,15 @@ const getAllUsers = async (req, res) => {
 }
 
 const createNewUser = async (req, res) => {
-    const { username, password, name, address, birthDay, identifyNumber, phoneNumber, roles } = req.body
+    const { username, password, name, address, gender, birthDay, identifyNumber, phoneNumber, roles } = req.body
 
     // Confirm data
-    if (!username || !password || !name || !address || !birthDay || !identifyNumber || !phoneNumber) {
+    if (!username || !password || !name || !address || !gender || !birthDay || !identifyNumber || !phoneNumber) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
     // Check for duplicate username
-    const duplicate = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    const duplicate = await User.findOne({ username }).lean().exec()
 
     if (duplicate) {
         return res.status(409).json({ message: 'Duplicate username' })
@@ -32,8 +32,8 @@ const createNewUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
 
     const userObject = (!Array.isArray(roles) || !roles.length)
-        ? { username, "password": hashedPwd, name, address, birthDay, identifyNumber, phoneNumber }
-        : { username, "password": hashedPwd, name, address, birthDay, identifyNumber, phoneNumber, roles }
+        ? { username, "password": hashedPwd, name, address, gender, birthDay, identifyNumber, phoneNumber }
+        : { username, "password": hashedPwd, name, address, gender, birthDay, identifyNumber, phoneNumber, roles }
 
     // Create and store new user 
     const user = await User.create(userObject)
@@ -43,13 +43,14 @@ const createNewUser = async (req, res) => {
     } else {
         res.status(400).json({ message: 'Invalid user data received' })
     }
+
 }
 
 const updateUser = async (req, res) => {
-    const { username, name, gender, address, birthDay, identifyNumber, phoneNumber, roles } = req.body
+    const { id, username, password, name, gender, address, birthDay, identifyNumber, phoneNumber, roles, active } = req.body
 
     // Confirm data 
-    if (!id || !username || !name || !Array.isArray(gender) || !gender.length || typeof gender !== 'boolean' || !address || birthDay || !identifyNumber || !phoneNumber || !Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
+    if (!id || !username || !name || !gender || !address || !birthDay || !identifyNumber || !phoneNumber || !Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
         return res.status(400).json({ message: 'All fields except password are required' })
     }
 
