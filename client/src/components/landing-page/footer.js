@@ -18,13 +18,13 @@ const Footer = () => {
                         <h5 className="text-uppercase">SERVICES</h5>
                         <ul className="list-unstyled">
                             <li>
-                                <a href="#about" className="text-dark">About Us</a>
+                                <a href="/about" className="text-dark">About Us</a>
                             </li>
                             <li>
-                                <a href="#services" className="text-dark">Services</a>
+                                <a href="/services" className="text-dark">Services</a>
                             </li>
                             <li>
-                                <a href="#contact" className="text-dark">Contact</a>
+                                <a href="/contact" className="text-dark">Contact</a>
                             </li>
                         </ul>
                     </Col>

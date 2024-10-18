@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const serviceSchema = new mongoose.Schema({
-    serviceName: {
+const serviceItemSchema = new mongoose.Schema({
+    itemName: {
         type: String,
         required: true
     },
-    price: {
+    cost: {
         type: Number,
         required: true
     },
@@ -13,10 +13,11 @@ const serviceSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    serviceItems: [{
+    service: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ServiceItem'
-    }]
+        ref: 'Service',
+        required: true
+    }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Service', serviceSchema);
+module.exports = mongoose.model('ServiceItem', serviceItemSchema);

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const customerServiceSchema = new mongoose.Schema({
-    customerID: {
+    userID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Customer'
+        ref: 'User'
     },
     serviceID: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,6 +15,6 @@ const customerServiceSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('CustomerService', customerServiceSchema);
