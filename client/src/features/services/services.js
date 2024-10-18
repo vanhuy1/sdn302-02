@@ -1,8 +1,8 @@
 import React from 'react';
-import TaskBar from '../taskbar/taskbar';
-import Content from './common/content';
-import FooterComponent from '../landing-page/footer';
-import Header from '../landing-page/header';
+import TaskBar from '../../components/taskbar/taskbar';
+import Content from '../../components/services/common/content';
+import FooterComponent from '../../components/landing-page/footer';
+import Header from '../../components/landing-page/header';
 
 const Services = () => {
     return (

@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ServiceItem from './serviceItem';
+import { useFetchServicesQuery } from "../../../app/api/apiSlice";
 
 const Content = () => {
     const [activeTab, setActiveTab] = useState('choose'); // 'choose' or 'chosen'
+    const [selectedService, setSelectedService] = useState(null);
 
-    const services = Array.from({ length: 20 }, (_, index) => ({
-        imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`,
-        mainText: `Service ${index + 1}`,
-        secondaryText: `Description for Service ${index + 1}`,
-    }));
+    const { data: serviceList, error, isLoading } = useFetchServicesQuery();
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <div style={styles.container}>
             <div style={styles.innerContainer}>
                 {/* Tabs for Choose Services / Chosen List */}
                 <div style={styles.tabs}>
-                    <div 
-                        style={{ 
-                            ...styles.tab, 
-                            backgroundColor: activeTab === 'choose' ? 'lightgray' : 'transparent' 
-                        }} 
+                    <div
+                        style={{
+                            ...styles.tab,
+                            backgroundColor: activeTab === 'choose' ? 'lightgray' : 'transparent'
+                        }}
                         onClick={() => setActiveTab('choose')}
                     >
                         Choose Services
                     </div>
-                    <div 
-                        style={{ 
-                            ...styles.tab, 
-                            backgroundColor: activeTab === 'chosen' ? 'lightgray' : 'transparent' 
-                        }} 
+                    <div
+                        style={{
+                            ...styles.tab,
+                            backgroundColor: activeTab === 'chosen' ? 'lightgray' : 'transparent'
+                        }}
                         onClick={() => setActiveTab('chosen')}
                     >
                         Chosen List
@@ -38,22 +39,37 @@ const Content = () => {
                 {/* Content based on active tab */}
                 <div style={styles.row}>
                     <div style={styles.column}>
-                        <div style={styles.option}>Foods</div>
-                        <div style={styles.option}>Drinks</div>
-                        <div style={styles.option}>Vehicle</div>
-                        <div style={styles.option}>Entertain</div>
+                        <ul>
+                            {serviceList && serviceList.map(service => (
+                                <li 
+                                    key={service._id} 
+                                    style={styles.option}
+                                    onClick={() => setSelectedService(service)}
+                                >
+                                    {service.serviceName}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                     <div style={styles.listContainer}>
-                        <div style={styles.grid}>
-                            {services.map((service, index) => (
-                                <ServiceItem 
-                                    key={index} 
-                                    imageUrl={service.imageUrl} 
-                                    mainText={service.mainText} 
-                                    secondaryText={service.secondaryText} 
-                                />
-                            ))}
-                        </div>
+                        {selectedService ? (
+                            <div>
+                                <h3>{selectedService.serviceName}</h3>
+                                <p>{selectedService.description}</p>
+                                <div style={styles.grid}>
+                                    {selectedService.serviceItems && selectedService.serviceItems.map(item => (
+                                        <ServiceItem
+                                            key={item._id}
+                                            imageUrl={`https://via.placeholder.com/150?text=${item.itemName}`}
+                                            mainText={item.itemName}
+                                            secondaryText={`$${item.cost}`}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div>Please select a service from the list.</div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -94,9 +110,14 @@ const styles = {
     column: {
         flex: '1',
         marginRight: '20px',
+        border: '1px solid #ccc',
+        borderRadius: '10px',
+        padding: '10px',
+        overflowY: 'auto', // Enable vertical scrolling
+        maxHeight: '400px', // Set a maximum height for the container
     },
     option: {
-        padding: '10px', 
+        padding: '10px',
         borderBottom: '1px solid #ccc',
         cursor: 'pointer',
     },

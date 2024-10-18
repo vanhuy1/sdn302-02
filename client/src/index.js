@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import About from './components/about/about';
-import Service from './components/services/services';
+import Service from './features/services/services';
 import Contact from './components/contact/contact';
 import Public from './components/Public';
 
