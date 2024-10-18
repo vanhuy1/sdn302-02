@@ -14,6 +14,9 @@ import { ROLES } from './config/roles'
 import Prefetch from './features/auth/Prefetch'
 import DashLayout from './components/DashLayout'
 import Booking from './features/booking/BookingRoom';
+import RegisterForm from './features/users/RegisterForm';
+import UserList from './features/users/UserList';
+import UpdateUser from './features/users/UpdateUser';
 import Bill from './features/bill/Bill';
 
 function App() {
@@ -23,6 +26,7 @@ function App() {
         {/* public routes */}
         <Route index element={<Public />} />
         <Route path='login' element={<Login />} />
+        <Route path='register' element={<RegisterForm />} />
         <Route path="about" element={<About />} />
         <Route path="services" element={<Service />} />
         <Route path="contact" element={<Contact />} />
@@ -33,7 +37,15 @@ function App() {
             <Route element={<Prefetch />}>
               <Route path="dash" element={<DashLayout />}>
 
+
                 <Route index element={<HomePage />} />
+
+                <Route path='users'>
+                  <Route index elements={<UserList />} />
+                  <Route path=':id' element={<UpdateUser />} />
+
+                </Route>
+
 
               </Route>
               {/* Booking routes */}

@@ -26,7 +26,10 @@ const Public = () => {
                             <Nav.Link href="/contact">Contact</Nav.Link>
                         </Nav>
 
-                        <Button variant="outline-primary" className="me-2">Register</Button>
+
+                        <Button variant="outline-primary" className="me-2">
+                            <Link to="/register" style={{ textDecoration: 'none' }}> Register</Link>
+                        </Button>
                         <Button variant="outline-primary">
                             <Link to="/login" style={{ textDecoration: 'none' }}> Login</Link>
                         </Button>

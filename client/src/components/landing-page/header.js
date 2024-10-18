@@ -87,13 +87,16 @@ const Header = () => {
                         <Nav.Link href="/about">About</Nav.Link>
                         <Nav.Link href="/services">Services</Nav.Link>
                         <Nav.Link href="/contact">Contact</Nav.Link>
+                        <Button variant="outline-primary" className="me-2">
+                            <Link to="/dash/userList" style={{ textDecoration: 'none' }}> ManageCustomer</Link>
+                        </Button>
                     </Nav>
 
                     {/* <Button variant="outline-primary" className="me-2">Register</Button>
                     <Button variant="primary">
                         Login
                     </Button> */}
-                    <nav className="dash-header__nav">
+                    <nav className="">
                         <p>Current User: {username}</p>
                         <p>Status: {status}</p>
                         {buttonContent}

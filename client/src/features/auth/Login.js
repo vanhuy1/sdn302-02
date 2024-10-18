@@ -5,7 +5,6 @@ import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice'
 import usePersist from '../../hooks/usePersist'
 import PulseLoader from 'react-spinners/PulseLoader'
-
 const Login = () => {
 
     const userRef = useRef()
@@ -47,7 +46,7 @@ const Login = () => {
             } else {
                 setErrMsg(err.data?.message);
             }
-            errRef.current.focus();
+            // errRef.current.focus();
         }
     }
 
@@ -59,55 +58,119 @@ const Login = () => {
 
     if (isLoading) return <PulseLoader color={"#FFF"} />
 
+    const styles = {
+        wrapper: {
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#f4f4f4',
+        },
+        public: {
+            backgroundColor: '#fff',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            maxWidth: '400px',
+            width: '100%',
+        },
+        header: {
+            textAlign: 'center',
+            color: '#333',
+        },
+        form: {
+            width: '100%',
+        },
+        formInput: {
+            width: '100%',
+            padding: '10px',
+            margin: '10px 0',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            fontSize: '16px',
+        },
+        formSubmitButton: {
+            width: '100%',
+            padding: '10px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            fontSize: '16px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '10px',
+        },
+        formPersist: {
+            display: 'flex',
+            alignItems: 'center',
+            marginTop: '10px',
+        },
+        errClass: {
+            color: 'red',
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            fontSize: '14px',
+        },
+        footer: {
+            marginTop: '20px',
+            textAlign: 'center',
+        },
+        footerLink: {
+            color: '#007bff',
+            textDecoration: 'none',
+        },
+    };
+
     const content = (
-        <section className="public">
-            <header>
-                <h1>Login</h1>
-            </header>
-            <main className="login">
-                <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
+        <div style={styles.wrapper}>
+            <section style={styles.public}>
+                <header>
+                    <h1 style={styles.header}>Login</h1>
+                </header>
+                <main style={styles.login}>
+                    <p ref={errRef} style={styles[errClass]} aria-live="assertive">{errMsg}</p>
 
-                <form className="form" onSubmit={handleSubmit}>
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        className="form__input"
-                        type="text"
-                        id="username"
-                        ref={userRef}
-                        value={username}
-                        onChange={handleUserInput}
-                        autoComplete="off"
-                        required
-                    />
-
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        className="form__input"
-                        type="password"
-                        id="password"
-                        onChange={handlePwdInput}
-                        value={password}
-                        required
-                    />
-                    <button className="form__submit-button">Sign In</button>
-
-
-                    <label htmlFor="persist" className="form__persist">
+                    <form style={styles.form} onSubmit={handleSubmit}>
+                        <label htmlFor="username">Username:</label>
                         <input
-                            type="checkbox"
-                            className="form__checkbox"
-                            id="persist"
-                            onChange={handleToggle}
-                            checked={persist}
+                            style={styles.formInput}
+                            type="text"
+                            id="username"
+                            ref={userRef}
+                            value={username}
+                            onChange={handleUserInput}
+                            autoComplete="off"
+                            required
                         />
-                        Trust This Device
-                    </label>
-                </form>
-            </main>
-            <footer>
-                <Link to="/">Back to Home</Link>
-            </footer>
-        </section>
+
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            style={styles.formInput}
+                            type="password"
+                            id="password"
+                            onChange={handlePwdInput}
+                            value={password}
+                            required
+                        />
+                        <button style={styles.formSubmitButton}>Sign In</button>
+
+                        <label htmlFor="persist" style={styles.formPersist}>
+                            <input
+                                type="checkbox"
+                                className={styles.form__checkbox}
+                                id="persist"
+                                onChange={handleToggle}
+                                checked={persist}
+                            />
+                            Trust This Device
+                        </label>
+                    </form>
+                </main>
+                <footer style={styles.footer}>
+                    <Link to="/" style={styles.footerLink}>Back to Home</Link>
+                </footer>
+            </section>
+        </div>
     )
 
     return content
