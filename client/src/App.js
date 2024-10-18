@@ -4,6 +4,9 @@ import HomePage from './features/auth/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './features/auth/Login'
 import Public from './components/Public';
+import About from './components/about/About';
+import Service from './components/services/services';
+import Contact from './components/contact/Contact';
 import Layout from './components/Layout';
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
@@ -14,6 +17,7 @@ import Booking from './features/booking/BookingRoom';
 import RegisterForm from './features/users/RegisterForm';
 import UserList from './features/users/UserList';
 import UpdateUser from './features/users/UpdateUser';
+import Bill from './features/bill/Bill';
 
 function App() {
   return (
@@ -23,6 +27,9 @@ function App() {
         <Route index element={<Public />} />
         <Route path='login' element={<Login />} />
         <Route path='register' element={<RegisterForm />} />
+        <Route path="about" element={<About />} />
+        <Route path="services" element={<Service />} />
+        <Route path="contact" element={<Contact />} />
 
         {/* Protected Routes */}
         <Route element={<PersistLogin />}>
@@ -43,6 +50,7 @@ function App() {
               </Route>
               {/* Booking routes */}
               <Route path="/booking" element={<Booking />} />
+              <Route path='/bill' element={<Bill />} />
 
             </Route>
           </Route>
