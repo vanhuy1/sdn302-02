@@ -50,6 +50,9 @@ function App() {
               </Route>
               {/* Booking routes */}
               <Route path="/booking" element={<Booking />} />
+              <Route path="/viewroom" element={<ViewAllRoomBook />} />
+              <Route path="/edit-booking/:id" element={<EditBooking />} />
+              <Route path="/delete-booking/:id" element={<DeleteBooking />} />
               <Route path='/bill' element={<Bill />} />
 
             </Route>
