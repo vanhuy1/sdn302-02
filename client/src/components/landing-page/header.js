@@ -19,7 +19,7 @@ const DASH_REGEX = /^\/dash(\/)?$/
 
 const Header = () => {
 
-    const { username, status } = useAuth();
+    const { username, status, userID } = useAuth();
 
     const { isManager } = useAuth()
 
@@ -84,7 +84,7 @@ const Header = () => {
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end" style={{ marginRight: '30px' }}>
                     <Nav className="me-5">
                         <Nav.Link href="/home">Home</Nav.Link>
-                        <Nav.Link href="/about">About</Nav.Link>
+                        <Nav.Link href="/booking">Booking</Nav.Link>
                         <Nav.Link href="/services">Services</Nav.Link>
                         <Nav.Link href="/contact">Contact</Nav.Link>
                     </Nav>
@@ -93,9 +93,11 @@ const Header = () => {
                     <Button variant="primary">
                         Login
                     </Button> */}
-                    <nav className="dash-header__nav">
-                        <p>Current User: {username}</p>
-                        <p>Status: {status}</p>
+                    <nav className="dash-header__nav" style={{ display: 'flex' }}>
+                        <p className='m-1'>
+                            <strong><em>Hello </em></strong> {username}
+                        </p>
+                        <p>Hi {userID}</p>
                         {buttonContent}
                     </nav>
                 </Navbar.Collapse>
