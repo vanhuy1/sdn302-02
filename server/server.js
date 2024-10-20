@@ -32,6 +32,7 @@ app.use('/auth', require('./routes/authRoutes'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/manage/staffs', require('./routes/staffManageRoutes'))
 app.use('/departments', require('./routes/departmentRoutes'))
+app.use('/booking', require('./routes/bookingRoutes'))
 
 //mongodb
 

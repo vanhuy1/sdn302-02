@@ -64,7 +64,7 @@ const Public = () => {
                             Experience luxury at our hotel with top-notch facilities and outstanding services.
                             Whether you're traveling for business or leisure, we provide a tranquil and sophisticated environment that guarantees a memorable stay.
                         </p>
-                        <Button variant="primary" href="#book">Book Now</Button>
+                        <Button variant="primary" href="/booking">Book Now</Button>
                     </Col>
                 </Row>
             </Container>

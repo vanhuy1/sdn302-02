@@ -11,6 +11,10 @@ import { ROLES } from './config/roles'
 import Prefetch from './features/auth/Prefetch'
 import DashLayout from './components/DashLayout'
 import Booking from './features/booking/BookingRoom';
+import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
+import EditBooking from './features/booking/EditBooking';
+import DeleteBooking from './features/booking/DeleteBooking';
+
 
 function App() {
   return (
@@ -31,7 +35,9 @@ function App() {
               </Route>
               {/* Booking routes */}
               <Route path="/booking" element={<Booking />} />
-
+              <Route path="/viewroom" element={<ViewAllRoomBook />} />
+              <Route path="/edit-booking/:id" element={<EditBooking />} />
+              <Route path="/delete-booking/:id" element={<DeleteBooking />} />
             </Route>
           </Route>
         </Route>
