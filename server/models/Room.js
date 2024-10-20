@@ -18,10 +18,6 @@ const roomSchema = new mongoose.Schema({
     description: {
         type: String,
         default: null
-    },
-    amount: {
-        type: Number,
-        required: true
     }
 }, { timestamps: true });
 
