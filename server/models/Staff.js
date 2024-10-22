@@ -8,8 +8,7 @@ const staffSchema = new mongoose.Schema({
     },
     staffName: {
         type: String,
-        required: true,
-        maxlength: 20
+        required: true
     },
     gender: {
         type: String,
@@ -22,7 +21,6 @@ const staffSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        maxlength: 20,
         default: null
     },
     identityNumber: {
@@ -34,14 +32,15 @@ const staffSchema = new mongoose.Schema({
         required: true
     },
     salary: {
-        type: Number
+        type: Number,
+        required: true
     },
     email: {
         type: String
     },
     phoneNumber: {
         type: String,
-        default: null
+        required: true,
     },
     active: {
         type: Boolean,

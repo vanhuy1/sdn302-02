@@ -1,92 +1,178 @@
-const Staff = require('../models/Staff')
-const Department = require('../models/Department')
+const Staff = require("../models/Staff");
+const Department = require("../models/Department");
 
 const getAllStaffs = async (req, res) => {
-    const staffs = await Staff.find().lean()
+    try {
+        const staffs = await Staff.find({}).lean();
+        res.status(200).json(staffs);
 
-    if (!staffs.length) {
-        return res.status(400).json({ message: 'No staffs found' })
+        // if (!staffs.length) {
+        //     return res.status(400).json({ message: 'No staffs found' })
+        // }
+
+        // const staffWithDepartment = await Promise.all(staffs.map(async (staff) => {
+        //     const department = await Department.findById(staff.departmentID).lean().exec()
+        //     return { ...staff, departmentName: department.departmentName }
+        // }))
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const getStaffById = async (req, res) => {
+    try {
+        const staff = await Staff.findById(req.params.staffId);
+        if (!staff) {
+            return res.status(404).json({ message: "Staff not found" });
+        }
+        res.status(200).json(staff);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const createNewStaff = async (req, res) => {
+    const {
+        departmentID,
+        staffName,
+        gender,
+        birthday,
+        address,
+        identityNumber,
+        position,
+        salary,
+        email,
+        phoneNumber,
+        active,
+    } = req.body;
+
+    if (
+        !departmentID ||
+        !staffName ||
+        !gender ||
+        !identityNumber ||
+        !position ||
+        !salary ||
+        !phoneNumber
+    ) {
+        return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const staffWithDepartment = await Promise.all(staffs.map(async (staff) => {
-        const department = await Department.findById(staff.department).lean().exec()
-        return { ...staff, departmentName: department.departmentName }
-    }))
-
-    res.json(staffWithDepartment)
-}
-
-const getStaff = async (req, res) => {
-
-}
-
-const newStaff = async (req, res) => {
-    const { department, staffName, birthday, address, identityNumber, phoneNumber } = req.body
-
-    if (!department, !staffName, !birthday, !address, !identityNumber, !phoneNumber) {
-        return res.status(400).json({ message: 'All fields are required' })
+    const departmentExists = await Department.findById(departmentID).lean().exec();
+    if (!departmentExists) {
+        return res.status(404).json({ message: "Department not found!" });
     }
 
-    const duplicate = await Staff.findOne({ identityNumber }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    const duplicateIdentityNumber = await Staff.findOne({ identityNumber })
+        .collation({ locale: "en", strength: 2 })
+        .lean()
+        .exec();
 
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate Staff identity' })
+    if (duplicateIdentityNumber) {
+        return res.status(409).json({ message: "Identity Number already exists!" });
     }
 
-    const staff = await Staff.create({ department, staffName, birthday, address, identityNumber, phoneNumber })
+    try {
+        const staff = await Staff.create({
+            departmentID,
+            staffName,
+            gender,
+            birthday,
+            address,
+            identityNumber,
+            position,
+            salary,
+            email,
+            phoneNumber,
+            active,
+        });
 
-    if (staff) { // Created 
-        return res.status(201).json({ message: 'New staff created' })
-    } else {
-        return res.status(400).json({ message: 'Invalid staff data received' })
+        return res
+            .status(201)
+            .json({ message: "Create new staff successfully!" }, staff);
+    } catch (err) {
+        return res.status(500).json({ message: "Failed to create staff" });
     }
-}
+};
 
 const updateStaff = async (req, res) => {
-    const { id, department, staffName, gender, birthday, address, identityNumber, phoneNumber, active } = req.body
+    const {
+        departmentID,
+        staffName,
+        gender,
+        birthday,
+        address,
+        identityNumber,
+        position,
+        salary,
+        email,
+        phoneNumber,
+        active,
+    } = req.body;
 
-    if (id, !department || !staffName || typeof gender !== "boolean" || !birthday || !address || !identityNumber || !phoneNumber, typeof active !== "boolean") {
-        return res.status(400).json({ message: 'All fields are required' })
+    if (!departmentID || !staffName || !gender || !identityNumber || !position || !salary || !phoneNumber) {
+        return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const staff = await Staff.findById(id).exec()
+    const departmentExists = await Department.findById(departmentID).lean().exec();
+    if (!departmentExists) {
+        return res.status(404).json({ message: "Department not found!" });
+    }
 
+    // Check for duplicate identity number, excluding the current staff member
+    const duplicateIdentityNumber = await Staff.findOne({ identityNumber })
+        .collation({ locale: "en", strength: 2 })
+        .lean()
+        .exec();
+
+    if (duplicateIdentityNumber && duplicateIdentityNumber._id.toString() !== req.params.staffId) {
+        return res.status(409).json({ message: "Identity Number already exists!" });
+    }
+
+    const staff = await Staff.findById(req.params.staffId).exec();
     if (!staff) {
-        return res.status(400).json({ message: 'Staff not found' })
+        return res.status(404).json({ message: "Staff not found!" });
     }
 
-    const duplicate = await Staff.findOne({ identityNumber }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    staff.departmentID = departmentID;
+    staff.staffName = staffName;
+    staff.gender = gender;
+    staff.birthday = birthday;
+    staff.address = address;
+    staff.identityNumber = identityNumber;
+    staff.position = position;
+    staff.salary = salary;
+    staff.email = email;
+    staff.phoneNumber = phoneNumber;
+    staff.active = active;
 
-    // if (duplicate) {
-    //     return res.status(409).json({ message: 'Duplicate Staff identity' })
-    // }
-
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate staff identity' })
+    try {
+        const updatedStaff = await staff.save();
+        return res.status(200).json({ message: `'${updatedStaff.staffName}' updated successfully!`, staff: updatedStaff });
+    } catch (err) {
+        console.error("Error updating staff:", err);
+        return res.status(500).json({ message: "Failed to update staff", error: err.message });
     }
-
-    staff.department = department
-    staff.staffName = staffName
-    staff.gender = gender
-    staff.birthday = birthday
-    staff.address = address
-    staff.identityNumber = identityNumber
-    staff.phoneNumber = phoneNumber
-    staff.active = active
-
-    const updateStaff = await staff.save()
-
-    res.json(`'${updateStaff.staffName}' update`)
-}
+};
 
 const deleteStaff = async (req, res) => {
+    try {
+        const staff = await Staff.findByIdAndDelete(req.params.staffId);
 
-}
+        if (!staff) {
+            return res.status(404).json({ message: "Staff not found!" });
+        }
+
+        return res.status(204).json({message: "Staff deleted successfully!"});
+    } catch (err) {
+        return res.status(500).json({ message: "Failed to delete staff", error: err.message });
+    }
+};
 
 module.exports = {
     getAllStaffs,
-    getStaff,
-    newStaff,
+    getStaffById,
+    createNewStaff,
     updateStaff,
-    deleteStaff
-}
+    deleteStaff,
+};
