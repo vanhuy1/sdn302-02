@@ -1,139 +1,127 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Tab, Nav, Row, Col, ListGroup, Container, Alert } from 'react-bootstrap';
 import ServiceItem from './serviceItem';
 import { useFetchServicesQuery } from "../../../app/api/apiSlice";
+import ChosenList from './chosenList';
 
 const Content = () => {
-    const [activeTab, setActiveTab] = useState('choose'); // 'choose' or 'chosen'
+    const [activeTab, setActiveTab] = useState('choose');
     const [selectedService, setSelectedService] = useState(null);
+    const [chosenServices, setChosenServices] = useState([]);
 
     const { data: serviceList, error, isLoading } = useFetchServicesQuery();
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (isLoading) return <Alert variant="info">Loading...</Alert>;
+    if (error) return <Alert variant="danger">Error: {error.message}</Alert>;
+
+    const handleServiceClick = (service) => {
+        setSelectedService(service);
+    };
+
+    const handleItemClick = (item) => {
+        if (chosenServices.some(chosenItem => chosenItem._id === item._id)) {
+            setChosenServices(chosenServices.filter(chosenItem => chosenItem._id !== item._id));
+        } else {
+            setChosenServices([...chosenServices, { ...item, serviceId: selectedService._id, serviceName: selectedService.serviceName }]);
+        }
+    };
+
+    const handleRequestService = () => {
+        const requestData = chosenServices.map(item => ({
+            serviceId: item.serviceId,
+            itemId: item._id,
+            itemName: item.itemName,
+            cost: item.cost
+        }));
+
+        fetch('/api/request-service', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ services: requestData })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Service request sent successfully!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error sending the service request.');
+        });
+    };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.innerContainer}>
-                {/* Tabs for Choose Services / Chosen List */}
-                <div style={styles.tabs}>
-                    <div
-                        style={{
-                            ...styles.tab,
-                            backgroundColor: activeTab === 'choose' ? 'lightgray' : 'transparent'
-                        }}
-                        onClick={() => setActiveTab('choose')}
-                    >
-                        Choose Services
-                    </div>
-                    <div
-                        style={{
-                            ...styles.tab,
-                            backgroundColor: activeTab === 'chosen' ? 'lightgray' : 'transparent'
-                        }}
-                        onClick={() => setActiveTab('chosen')}
-                    >
-                        Chosen List
-                    </div>
-                </div>
+        <Container className="my-4">
+            <Tab.Container activeKey={activeTab} onSelect={setActiveTab}>
+                <Nav variant="tabs" className="mb-4">
+                    <Nav.Item>
+                        <Nav.Link eventKey="choose">Choose Services</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="chosen">Chosen List</Nav.Link>
+                    </Nav.Item>
+                </Nav>
 
-                {/* Content based on active tab */}
-                <div style={styles.row}>
-                    <div style={styles.column}>
-                        <ul>
-                            {serviceList && serviceList.map(service => (
-                                <li 
-                                    key={service._id} 
-                                    style={styles.option}
-                                    onClick={() => setSelectedService(service)}
-                                >
-                                    {service.serviceName}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div style={styles.listContainer}>
-                        {selectedService ? (
-                            <div>
-                                <h3>{selectedService.serviceName}</h3>
-                                <p>{selectedService.description}</p>
-                                <div style={styles.grid}>
-                                    {selectedService.serviceItems && selectedService.serviceItems.map(item => (
-                                        <ServiceItem
-                                            key={item._id}
-                                            imageUrl={`https://via.placeholder.com/150?text=${item.itemName}`}
-                                            mainText={item.itemName}
-                                            secondaryText={`$${item.cost}`}
-                                        />
+                <Tab.Content>
+                    <Tab.Pane eventKey="choose">
+                        <Row>
+                            <Col md={4} className="mb-4">
+                                <ListGroup>
+                                    {serviceList && serviceList.map(service => (
+                                        <ListGroup.Item
+                                            key={service._id}
+                                            onClick={() => handleServiceClick(service)}
+                                            active={selectedService && selectedService._id === service._id}
+                                            action
+                                        >
+                                            {service.serviceName}
+                                        </ListGroup.Item>
                                     ))}
-                                </div>
-                            </div>
-                        ) : (
-                            <div>Please select a service from the list.</div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
+                                </ListGroup>
+                            </Col>
+                            <Col md={8}>
+                                {selectedService ? (
+                                    <>
+                                        <h3>{selectedService.serviceName}</h3>
+                                        <p>{selectedService.description}</p>
+                                        <Row>
+                                            {selectedService.serviceItems && selectedService.serviceItems.map(item => (
+                                                <Col xs={6} md={4} lg={3} key={item._id} className="mb-4">
+                                                    <div
+                                                        onClick={() => handleItemClick(item)}
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            border: '1px solid',
+                                                            borderColor: chosenServices.some(chosenItem => chosenItem._id === item._id) ? 'green' : '#ccc',
+                                                            borderRadius: '10px',
+                                                            padding: '10px',
+                                                        }}
+                                                    >
+                                                        <ServiceItem
+                                                            imageUrl={`https://via.placeholder.com/150?text=${item.itemName}`}
+                                                            mainText={item.itemName}
+                                                            secondaryText={`$${item.cost}`}
+                                                        />
+                                                    </div>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                    </>
+                                ) : (
+                                    <Alert variant="secondary">Please select a service from the list.</Alert>
+                                )}
+                            </Col>
+                        </Row>
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="chosen">
+                        <ChosenList chosenServices={chosenServices} onRequestService={handleRequestService} />
+                    </Tab.Pane>
+                </Tab.Content>
+            </Tab.Container>
+        </Container>
     );
-};
-
-const styles = {
-    container: {
-        backgroundColor: 'lightblue',
-        padding: '20px',
-        flex: 1,
-        display: 'flex', // Make the container a flex container
-        flexDirection: 'column', // Stack children vertically
-    },
-    innerContainer: {
-        backgroundColor: 'white',
-        borderRadius: '20px',
-        padding: '20px',
-        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-        flex: 1, // Allow the inner container to expand to fill available space
-    },
-    tabs: {
-        display: 'flex',
-        marginBottom: '20px',
-    },
-    tab: {
-        flex: 1,
-        padding: '10px',
-        textAlign: 'center',
-        cursor: 'pointer',
-    },
-    row: {
-        display: 'flex',
-        flexDirection: 'row',
-        flex: 1, // Ensure the row fills available space
-    },
-    column: {
-        flex: '1',
-        marginRight: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-        padding: '10px',
-        overflowY: 'auto', // Enable vertical scrolling
-        maxHeight: '400px', // Set a maximum height for the container
-    },
-    option: {
-        padding: '10px',
-        borderBottom: '1px solid #ccc',
-        cursor: 'pointer',
-    },
-    listContainer: {
-        flex: 3, // Allow the list container to fill available space
-        padding: '10px',
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-        overflowY: 'auto', // Enable vertical scrolling
-        maxHeight: '400px', // Set a maximum height for the container
-    },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '10px',
-    },
 };
 
 export default Content;
