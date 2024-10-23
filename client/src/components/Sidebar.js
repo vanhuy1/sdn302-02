@@ -32,7 +32,7 @@ const Sidebar = () => {
                     <FaConciergeBell className="me-3 ms-4 fs-5" /> Services
                 </Nav.Link>
                 <Nav.Link
-                    href="/manage"
+                    href="/manage/staff"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaCog className="me-3 ms-4 fs-5" /> Manage

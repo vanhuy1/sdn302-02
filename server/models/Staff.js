@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const staffSchema = new mongoose.Schema({
     departmentID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'Department'
     },
     staffName: {
