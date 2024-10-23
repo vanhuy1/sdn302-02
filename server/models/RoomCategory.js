@@ -8,7 +8,11 @@ const roomCategorySchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true
+    },
+    amount: {
+        type: Number,
+        required: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('RoomCategory', roomCategorySchema);

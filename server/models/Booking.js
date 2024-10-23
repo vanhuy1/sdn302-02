@@ -8,7 +8,6 @@ const bookingSchema = new mongoose.Schema({
     },
     staffID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'Staff'
     },
     roomID: {
@@ -28,6 +27,6 @@ const bookingSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Booking', bookingSchema);

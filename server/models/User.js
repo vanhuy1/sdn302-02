@@ -14,8 +14,9 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     gender: {
-        type: Boolean,
-        default: true
+        type: String,
+        required: true,
+        enum: ['Male', 'Female', 'Other'],
     },
     address: {
         type: String,
@@ -41,7 +42,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     }
-
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('User', userSchema)

@@ -1,24 +1,47 @@
 import React, { useState } from 'react';
 import { Button, Form, Row, Col, Container, Nav, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { bookRoom } from './BookingSlice';
 import Header from '../../components/landing-page/header';
 import Footer from '../../components/landing-page/footer';
 import Sidebar from '../../components/landing-page/sidebar';
+import useAuth from '../../hooks/useAuth';
 
 const Booking = () => {
-    const [roomId, setRoomId] = useState([]);
+    const [categoryRoomId, setCategoryRoomId] = useState([]);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [amountBook, setAmountBook] = useState(1);
+    const { userID, username } = useAuth();
+    const dispatch = useDispatch();
+    const { loading, error, bookingDetails } = useSelector((state) => state.booking);
+    const customerID = { userID };
+    console.log('Redux State:', useSelector((state) => state));
 
     const handleRoomChange = (e) => {
         const value = e.target.value;
-        if (roomId.includes(value)) {
-            setRoomId(roomId.filter((room) => room !== value));
+        if (categoryRoomId.includes(value)) {
+            setCategoryRoomId(categoryRoomId.filter((room) => room !== value));
         } else {
-            setRoomId([...roomId, value]);
+            setCategoryRoomId([...categoryRoomId, value]);
         }
     };
+
+    const handleSubmitBooking = (e) => {
+        e.preventDefault();
+
+        const bookingData = {
+            username,
+            customerID,
+            categoryRoomId,
+            startDate,
+            endDate,
+            amountBook
+        };
+
+        dispatch(bookRoom(bookingData));
+    }
 
     return (
         <>
@@ -49,7 +72,7 @@ const Booking = () => {
                                 <Nav.Item className="mx-4">
                                     <Nav.Link
                                         as={Link}
-                                        to="/view-booking"
+                                        to="/viewroom"
                                         className="text-white fw-bold bg-success rounded p-2"
                                         style={{ transition: 'background-color 0.3s' }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
@@ -58,46 +81,20 @@ const Booking = () => {
                                         View Your Booking
                                     </Nav.Link>
                                 </Nav.Item>
-
-                                <Nav.Item className="mx-4">
-                                    <Nav.Link
-                                        as={Link}
-                                        to="/edit-booking"
-                                        className="text-white fw-bold bg-warning rounded p-2"
-                                        style={{ transition: 'background-color 0.3s' }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffc107'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffd600'}
-                                    >
-                                        Change Room
-                                    </Nav.Link>
-                                </Nav.Item>
-
-                                <Nav.Item className="mx-4">
-                                    <Nav.Link
-                                        as={Link}
-                                        to="/cancel-booking"
-                                        className="text-white fw-bold bg-danger rounded p-2"
-                                        style={{ transition: 'background-color 0.3s' }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#dc3545'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#c82333'}
-                                    >
-                                        Cancel Booking
-                                    </Nav.Link>
-                                </Nav.Item>
                             </Nav>
 
                             <h2 className="mb-1 text-center">Booking Room</h2>
 
                             {/* Form */}
-                            <Form className="p-4 shadow-sm bg-light rounded">
+                            <Form className="p-4 shadow-sm bg-light rounded" onSubmit={handleSubmitBooking}>
                                 <Form.Group controlId="formRoomType" className="mb-4">
                                     <Form.Label className="fw-bold">Room Categories</Form.Label>
                                     <Row>
                                         <Col md={4}>
                                             <Form.Check
                                                 type="checkbox"
-                                                label="Classic Room"
-                                                value="classic"
+                                                label="Basic Room"
+                                                value="670108b4cd419eb477134f34"
                                                 onChange={handleRoomChange}
                                                 className="my-2"
                                             />
@@ -106,8 +103,8 @@ const Booking = () => {
                                         <Col md={4}>
                                             <Form.Check
                                                 type="checkbox"
-                                                label="Chill Room"
-                                                value="chill"
+                                                label="Modern Room"
+                                                value="670108b4cd419eb477134f35"
                                                 onChange={handleRoomChange}
                                                 className="my-2"
                                             />
@@ -117,7 +114,7 @@ const Booking = () => {
                                             <Form.Check
                                                 type="checkbox"
                                                 label="Luxury Room"
-                                                value="luxury"
+                                                value="670108b4cd419eb477134f36"
                                                 onChange={handleRoomChange}
                                                 className="my-2"
                                             />
@@ -174,6 +171,10 @@ const Booking = () => {
                                     </Col>
                                 </Row>
                             </Form>
+                            {/* Loading and Error Handling */}
+                            {loading && <p>Loading...</p>}
+                            {error && <p>Error: {error}</p>}
+                            {bookingDetails && <p>Booking Success: {JSON.stringify(bookingDetails)}</p>}
                         </Container>
                     </Col>
                 </Row>

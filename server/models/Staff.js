@@ -1,21 +1,18 @@
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema({
-
-    department: {
+    departmentID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'Department'
     },
     staffName: {
         type: String,
-        required: true,
-        maxlength: 20
+        required: true
     },
     gender: {
-        type: Boolean,
+        type: String,
         required: true,
-        default: false
+        enum: ['Male', 'Female', 'Other'],
     },
     birthday: {
         type: Date,
@@ -23,21 +20,31 @@ const staffSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        maxlength: 20,
         default: null
     },
     identityNumber: {
         type: Number,
         required: true
     },
+    position: {
+        type: String,
+        required: true
+    },
+    salary: {
+        type: Number,
+        required: true
+    },
+    email: {
+        type: String
+    },
     phoneNumber: {
         type: String,
-        default: null
+        required: true,
     },
     active: {
         type: Boolean,
         default: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Staff', staffSchema);

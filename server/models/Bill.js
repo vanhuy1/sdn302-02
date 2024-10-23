@@ -57,7 +57,11 @@ const billSchema = new mongoose.Schema({
     leaveDate: {
         type: Date,
         required: true
+    },
+    isPaid: {
+        type: Boolean,
+        required: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Bill', billSchema);

@@ -18,11 +18,7 @@ const roomSchema = new mongoose.Schema({
     description: {
         type: String,
         default: null
-    },
-    amount: {
-        type: Number,
-        required: true
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Room', roomSchema);
