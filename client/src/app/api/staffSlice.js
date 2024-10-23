@@ -1,7 +1,6 @@
-import "dotenv/config";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const API_URL = process.env.API_URL;
+const API_URL = "http://localhost:3500";
 
 const initialState = {
     staffDetail: null,
@@ -12,7 +11,7 @@ const initialState = {
 
 // POST CREATE booking
 export const addStaff = createAsyncThunk(
-    "manage/staff/add",
+    "staff/add",
     async (staffData, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs`, {
@@ -36,18 +35,17 @@ export const addStaff = createAsyncThunk(
 
 // GET all staffs
 export const getAllStaffs = createAsyncThunk(
-    "manage/staff/getAllStaffs",
-    async (thunkAPI) => {
+    "staff/getAllStaffs",
+    async (_, thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/manage/staffs`, {
-                method: "GET",
-            });
+            const response = await fetch(`${API_URL}/manage/staffs`);
 
             if (!response.ok) {
                 throw new Error("Failed to get all staffs");
             }
 
             const data = await response.json();
+
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
@@ -57,15 +55,12 @@ export const getAllStaffs = createAsyncThunk(
 
 // GET staff by staffId
 export const getStaffById = createAsyncThunk(
-    "manage/staff/getStaffById",
-    async (_staffId, thunkAPI) => {
+    "staff/getStaffById",
+    async (_id, thunkAPI) => {
         try {
-            const response = await fetch(
-                `${API_URL}/manage/staffs/${_staffId}`,
-                {
-                    method: "GET",
-                }
-            );
+            const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
+                method: "GET",
+            });
 
             if (!response.ok) {
                 throw new Error("Failed to get staff detail!");
@@ -80,19 +75,16 @@ export const getStaffById = createAsyncThunk(
 
 // PUT a staff by staffId
 export const updateStaff = createAsyncThunk(
-    "manage/staff/edit",
-    async ({ _staffId, updatedData }, thunkAPI) => {
+    "staff/edit",
+    async ({ _id, updatedData }, thunkAPI) => {
         try {
-            const response = await fetch(
-                `${API_URL}/manage/staffs/${_staffId}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(updatedData),
-                }
-            );
+            const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedData),
+            });
 
             if (!response.ok) {
                 throw new Error("Failed to update staff!");
@@ -108,21 +100,19 @@ export const updateStaff = createAsyncThunk(
 
 // DELETE a staff by staffId
 export const deleteStaff = createAsyncThunk(
-    "manage/staff/delete",
-    async (_staffId, thunkAPI) => {
+    "staff/delete",
+    async ({ _id }, thunkAPI) => {
         try {
-            const response = await fetch(
-                `${API_URL}/manage/staffs/${_staffId}`,
-                {
-                    method: "DELETE",
-                }
-            );
+            console.log(_id);
+            const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
+                method: "DELETE",
+            });
 
             if (!response.ok) {
                 throw new Error("Failed to delete staff!");
             }
 
-            return _staffId;
+            return _id;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }
@@ -142,9 +132,9 @@ const staffSlice = createSlice({
             state.isLoading = false;
             state.staffs = action.payload;
         });
-        builder.addCase(login.rejected, (state, action) => {
+        builder.addCase(getAllStaffs.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload.message;
+            state.errorMessage = action.payload;
         });
 
         // GET staff by staff Id
@@ -157,7 +147,7 @@ const staffSlice = createSlice({
         });
         builder.addCase(getStaffById.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload.message;
+            state.errorMessage = action.payload;
         });
 
         // POST new staff
@@ -170,7 +160,7 @@ const staffSlice = createSlice({
         });
         builder.addCase(addStaff.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload.message;
+            state.errorMessage = action.payload;
         });
 
         // PUT staff by Id
@@ -180,7 +170,7 @@ const staffSlice = createSlice({
         builder.addCase(updateStaff.fulfilled, (state, action) => {
             state.isLoading = false;
             const index = state.staffs.findIndex(
-                (staff) => staff._staffId === action.payload.staffId
+                (staff) => staff._id === action.payload._id
             );
             if (index !== -1) {
                 state.staffs[index] = action.payload;
@@ -188,7 +178,7 @@ const staffSlice = createSlice({
         });
         builder.addCase(updateStaff.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload.message;
+            state.errorMessage = action.payload;
         });
 
         // DELETE staff by Id
@@ -197,19 +187,20 @@ const staffSlice = createSlice({
         });
         builder.addCase(deleteStaff.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.bookings = state.bookings.filter(
-                (booking) => booking.id !== action.payload
+            state.staffs = state.staffs.filter(
+                (staff) => staff._id !== action.payload
             );
         });
         builder.addCase(deleteStaff.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload.message;
+            state.errorMessage = action.payload;
         });
     },
 });
 
 // Export the state selectors
 export const selectAllStaffs = (state) => state.staff.staffs;
+export const selectStaffDetail = (state) => state.staff.staffDetail;
 export const selectLoading = (state) => state.staff.isLoading;
 export const selectErrorMessage = (state) => state.staff.errorMessage;
 
