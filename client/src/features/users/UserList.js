@@ -1,101 +1,177 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useGetUsersQuery } from './usersApiSlice';
+import { useSelector } from 'react-redux';
+import { selectUserIds, selectAllUsers } from './usersApiSlice';
+import { Link } from 'react-router-dom'; // Import Link for routing
 
 const UserList = () => {
+    // State for search input
+    const [searchTerm, setSearchTerm] = useState("");
 
+    // State for filter (active, inactive, or all)
+    const [filterStatus, setFilterStatus] = useState("all");
 
+    // Fetch users using the query hook
+    const {
+        data: users, // Normalized data
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetUsersQuery();
 
-    const users = [
-        {
-            name: 'John Doe',
-            username: 'johndoe',
-            gender: 'Male',
-            address: '123 Main St',
-            birthday: '1990-01-01',
-            identifyNumber: '123456789',
-            phoneNumber: '555-1234',
-        },
-        {
-            name: 'Jane Smith',
-            username: 'janesmith',
-            gender: 'Female',
-            address: '456 Oak St',
-            birthday: '1985-05-05',
-            identifyNumber: '987654321',
-            phoneNumber: '555-5678',
-        },
-        // Add more users as needed
-    ];
+    const userIds = useSelector(selectUserIds); // Array of user IDs
+    const allUsers = useSelector(selectAllUsers); // Full list of users
 
-    const styles = {
-        container: {
-            maxWidth: '800px',
-            margin: '50px auto',
-            padding: '20px',
-            backgroundColor: '#f9f9f9',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        },
-        heading: {
-            textAlign: 'center',
-            fontSize: '24px',
-            fontWeight: 'bold',
-            marginBottom: '20px',
-        },
-        table: {
-            width: '100%',
-            borderCollapse: 'collapse',
-            marginBottom: '20px',
-        },
-        th: {
-            padding: '10px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            textAlign: 'left',
-            fontWeight: 'bold',
-        },
-        td: {
-            padding: '10px',
-            borderBottom: '1px solid #ddd',
-        },
-        row: {
-            backgroundColor: '#fff',
-        },
-        rowAlt: {
-            backgroundColor: '#f1f1f1',
-        },
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value.toLowerCase());
     };
 
-    return (
-        <div style={styles.container}>
-            <h2 style={styles.heading}>User List</h2>
-            <table style={styles.table}>
+    // Handle filter change for active/inactive/all users
+    const handleFilterChange = (e) => {
+        setFilterStatus(e.target.value);
+    };
+
+    let content;
+
+    if (isLoading) {
+        content = <p>Loading...</p>;
+    } else if (isError) {
+        content = <p>{error?.message || "Error fetching users."}</p>; // Improved error handling
+    } else if (isSuccess && users) {
+        // Filter users based on search term and active/inactive status
+        const filteredUserIds = userIds.filter(userId => {
+            const user = allUsers.find(u => u.id === userId);
+            const matchesSearch = user &&
+                (user.name.toLowerCase().includes(searchTerm) || user.username.toLowerCase().includes(searchTerm) || user.identifyNumber.includes(searchTerm));
+
+            const matchesFilter = filterStatus === 'all' ||
+                (filterStatus === 'active' && user.active) ||
+                (filterStatus === 'inactive' && !user.active);
+
+            return user && !user.roles.includes('Manager') && matchesSearch && matchesFilter;
+        });
+
+        content = (
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                 <thead>
                     <tr>
-                        <th style={styles.th}>Name</th>
-                        <th style={styles.th}>Username</th>
-                        <th style={styles.th}>Gender</th>
-                        <th style={styles.th}>Address</th>
-                        <th style={styles.th}>Birthday</th>
-                        <th style={styles.th}>Identify Number</th>
-                        <th style={styles.th}>Phone Number</th>
+                        <th style={headerStyle}>Username</th>
+                        <th style={headerStyle}>Name</th>
+                        <th style={headerStyle}>Gender</th>
+                        <th style={headerStyle}>Address</th>
+                        <th style={headerStyle}>Birth Date</th>
+                        <th style={headerStyle}>Identify Number</th>
+                        <th style={headerStyle}>Phone Number</th>
+                        <th style={headerStyle}>Active</th>
+                        <th style={headerStyle}>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user, index) => (
-                        <tr key={user.username} style={index % 2 === 0 ? styles.row : styles.rowAlt}>
-                            <td style={styles.td}>{user.name}</td>
-                            <td style={styles.td}>{user.username}</td>
-                            <td style={styles.td}>{user.gender}</td>
-                            <td style={styles.td}>{user.address}</td>
-                            <td style={styles.td}>{user.birthday}</td>
-                            <td style={styles.td}>{user.identifyNumber}</td>
-                            <td style={styles.td}>{user.phoneNumber}</td>
-                        </tr>
-                    ))}
+                    {filteredUserIds.map(userId => {
+                        const user = allUsers.find(u => u.id === userId);
+
+                        return user ? (
+                            <tr key={userId}>
+                                <td style={cellStyle}>{user.username}</td>
+                                <td style={cellStyle}>{user.name}</td>
+                                <td style={cellStyle}>{user.gender}</td>
+                                <td style={cellStyle}>{user.address}</td>
+                                <td style={cellStyle}>{new Date(user.birthDay).toLocaleDateString()}</td>
+                                <td style={cellStyle}>{user.identifyNumber}</td>
+                                <td style={cellStyle}>{user.phoneNumber}</td>
+                                <td style={cellStyle}>{user.active ? 'Active' : 'Inactive'}</td>
+                                <td style={cellStyle}>
+                                    <Link to={`/dash/users/${userId}`} style={editButtonStyle}>Edit</Link>
+                                </td>
+                            </tr>
+                        ) : null;
+                    })}
                 </tbody>
             </table>
-        </div>
+        );
+    }
+
+    return (
+        <section style={sectionStyle}>
+            <h2 style={{ textAlign: 'center', color: '#333' }}>Customer List</h2>
+
+            {/* Search and Filter Inputs */}
+            <div style={filterContainerStyle}>
+                <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    style={searchInputStyle}
+                />
+
+                <select value={filterStatus} onChange={handleFilterChange} style={filterSelectStyle}>
+                    <option value="all">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            {content}
+        </section>
     );
+};
+
+// Inline styles
+const sectionStyle = {
+    padding: '20px',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    marginTop: '30px',
+    marginBottom: '30px'
+};
+
+const headerStyle = {
+    padding: '10px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    textAlign: 'left',
+    border: '1px solid #ddd',
+};
+
+const cellStyle = {
+    padding: '10px',
+    border: '1px solid #ddd',
+    textAlign: 'left',
+    backgroundColor: '#fff',
+};
+
+const editButtonStyle = {
+    backgroundColor: '#007BFF',
+    color: 'white',
+    padding: '5px 10px',
+    borderRadius: '5px',
+    textDecoration: 'none',
+};
+
+const filterContainerStyle = {
+    marginBottom: '20px',
+    textAlign: 'center',
+};
+
+const searchInputStyle = {
+    padding: '10px',
+    width: '50%',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    marginRight: '10px',
+};
+
+const filterSelectStyle = {
+    padding: '10px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    backgroundColor: '#fff',
 };
 
 export default UserList;
