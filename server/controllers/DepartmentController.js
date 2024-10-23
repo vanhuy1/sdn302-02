@@ -1,54 +1,82 @@
-const Department = require('../models/Department')
+const Department = require("../models/Department");
 
-const getAllDepartment = async (req, res) => {
+const getAllDepartments = async (req, res) => {
     try {
-        const department = await Department.find({})
-        res.status(200).json(department)
-    } catch (err) {
-        res.status(500).json({ message: err.message })
-    }
-}
-
-const getDepartment = async (req, res) => {
-    try {
-        const { id } = req.params
-        const department = await Department.findById(id); 
-        res.status(200).json(department)
-    } catch (err) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-const newDepartment = async (req, res) => {
-    try {
-        const departments = await Department.create(req.body)
-        res.status(200).json(departments)
+        const departments = await Department.find({});
+        res.status(200).json(departments);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-}
+};
 
-const deleteDepartment = async (req, res) => {
-
+const getDepartmentById = async (req, res) => {
     try {
-        const { id } = req.params
-        const department = await Department.findByIdAndDelete(id)
+        const department = await Department.findById(req.params.departmentId);
 
         if (!department) {
-            return res.status(404).json({ message: "Department not found!" })
+            return res.status(404).json({ message: "Department not found" });
         }
 
-        res.status(200).json({ message: "Department deleted successfully!" })
+        res.status(200).json(department);
     } catch (err) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const createNewDepartment = async (req, res) => {
+    try {
+        const department = await Department.create(req.body);
+        res.status(200).json(department);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const updateDepartment = async (req, res) => {
+    const { departmentName } = req.body;
+
+    const department = await Department.findById(req.params.departmentId);
+
+    if (!department) {
+        return res.status(404).json({ message: "Department not found!" });
     }
 
-}
+    department.departmentName = departmentName;
+
+    try {
+        const updatedDepartment = await department.save();
+        return res.status(200).json({
+            message: `'${updatedDepartment.departmentName}' updated successfully!`,
+            department: updatedDepartment,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            message: "Failed to update department",
+            error: err.message,
+        });
+    }
+};
+
+const deleteDepartment = async (req, res) => {
+    try {
+        const department = await Department.findByIdAndDelete(
+            req.params.departmentId
+        );
+
+        if (!department) {
+            return res.status(404).json({ message: "Department not found!" });
+        }
+
+        res.status(204).json({ message: "Department deleted successfully!" });
+    } catch (err) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 module.exports = {
-    getAllDepartment,
-    getDepartment,
-    newDepartment,
-    deleteDepartment
-
-}
+    getAllDepartments,
+    getDepartmentById,
+    createNewDepartment,
+    updateDepartment,
+    deleteDepartment,
+};
