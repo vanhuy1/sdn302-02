@@ -4,9 +4,9 @@ import HomePage from './features/auth/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './features/auth/Login'
 import Public from './components/Public';
-import About from './components/about/About';
-import Service from './components/services/services';
-import Contact from './components/contact/Contact';
+import About from './components/about/about';
+import Service from './features/services/services';
+import Contact from './components/contact/contact';
 import Layout from './components/Layout';
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
@@ -18,6 +18,8 @@ import RegisterForm from './features/users/RegisterForm';
 import UserList from './features/users/UserList';
 import UpdateUser from './features/users/UpdateUser';
 import Bill from './features/bill/Bill';
+import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
+import EditBooking from './features/booking/EditBooking';
 
 function App() {
   return (
@@ -52,7 +54,6 @@ function App() {
               <Route path="/booking" element={<Booking />} />
               <Route path="/viewroom" element={<ViewAllRoomBook />} />
               <Route path="/edit-booking/:id" element={<EditBooking />} />
-              <Route path="/delete-booking/:id" element={<DeleteBooking />} />
               <Route path='/bill' element={<Bill />} />
 
             </Route>
