@@ -9,7 +9,7 @@ const initialState = {
     errorMessage: "",
 };
 
-// POST CREATE booking
+// POST CREATE staff
 export const addStaff = createAsyncThunk(
     "staff/add",
     async (staffData, thunkAPI) => {
@@ -36,7 +36,7 @@ export const addStaff = createAsyncThunk(
 // GET all staffs
 export const getAllStaffs = createAsyncThunk(
     "staff/getAllStaffs",
-    async (_, thunkAPI) => {
+    async (thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs`);
 
@@ -58,9 +58,7 @@ export const getStaffById = createAsyncThunk(
     "staff/getStaffById",
     async (_id, thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
-                method: "GET",
-            });
+            const response = await fetch(`${API_URL}/manage/staffs/${_id}`);
 
             if (!response.ok) {
                 throw new Error("Failed to get staff detail!");
@@ -101,7 +99,7 @@ export const updateStaff = createAsyncThunk(
 // DELETE a staff by staffId
 export const deleteStaff = createAsyncThunk(
     "staff/delete",
-    async ({ _id }, thunkAPI) => {
+    async (_id, thunkAPI) => {
         try {
             console.log(_id);
             const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
