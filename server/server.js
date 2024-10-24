@@ -35,6 +35,10 @@ app.use('/departments', require('./routes/departmentRoutes'))
 app.use('/', require('./routes/ServiceRoutes'))
 app.use('/service', require('./routes/ServiceItemRoutes'))
 app.use('/bill', require('./routes/billRoutes'))
+app.use('/booking', require('./routes/bookingRoutes'))
+app.use('/category', require('./routes/roomCategoryRoutes'))
+app.use('/room', require('./routes/roomRoutes'))
+
 //mongodb
 
 app.use(errorHandler)

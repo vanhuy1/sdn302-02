@@ -4,9 +4,9 @@ import HomePage from './features/auth/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './features/auth/Login'
 import Public from './components/Public';
-import About from './components/about/About';
+import About from './components/about/about';
 import Service from './components/services/services';
-import Contact from './components/contact/Contact';
+import Contact from './components/contact/contact';
 import Layout from './components/Layout';
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
@@ -15,9 +15,14 @@ import Prefetch from './features/auth/Prefetch'
 import DashLayout from './components/DashLayout'
 import Booking from './features/booking/BookingRoom';
 import RegisterForm from './features/users/RegisterForm';
-import UserList from './features/users/UserList';
-import UpdateUser from './features/users/UpdateUser';
+import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
+import EditBooking from './features/booking/EditBooking';
+// import UserList from './features/users/';
+// import UpdateUser from './features/users/UpdateUser';
 import Bill from './features/bill/Bill';
+
+import ViewAllRoom from './features/room/ViewAllRooms';
+import ViewAllCategory from './features/room/ViewAllCategory'
 
 function App() {
   return (
@@ -41,8 +46,8 @@ function App() {
                 <Route index element={<HomePage />} />
 
                 <Route path='users'>
-                  <Route index elements={<UserList />} />
-                  <Route path=':id' element={<UpdateUser />} />
+                  {/* <Route index elements={<UserList />} />
+                  <Route path=':id' element={<UpdateUser />} /> */}
 
                 </Route>
 
@@ -52,9 +57,10 @@ function App() {
               <Route path="/booking" element={<Booking />} />
               <Route path="/viewroom" element={<ViewAllRoomBook />} />
               <Route path="/edit-booking/:id" element={<EditBooking />} />
-              <Route path="/delete-booking/:id" element={<DeleteBooking />} />
               <Route path='/bill' element={<Bill />} />
-
+              {/* Manage room routes */}
+              <Route path='/room' element={<ViewAllRoom />} />
+              <Route path='/category' element={<ViewAllCategory/>} />
             </Route>
           </Route>
         </Route>

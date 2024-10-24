@@ -10,11 +10,11 @@ const bookingSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Staff'
     },
-    roomID: {
+    roomID: [{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Room'
-    },
+    }],
     startDate: {
         type: Date,
         required: true

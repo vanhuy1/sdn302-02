@@ -13,10 +13,9 @@ const Booking = () => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [amountBook, setAmountBook] = useState(1);
-    const { userID, username } = useAuth();
+    const { username } = useAuth();
     const dispatch = useDispatch();
     const { loading, error, bookingDetails } = useSelector((state) => state.booking);
-    const customerID = { userID };
     console.log('Redux State:', useSelector((state) => state));
 
     const handleRoomChange = (e) => {
@@ -33,7 +32,6 @@ const Booking = () => {
 
         const bookingData = {
             username,
-            customerID,
             categoryRoomId,
             startDate,
             endDate,
