@@ -4,7 +4,8 @@ import { setupListeners } from "@reduxjs/toolkit/query"
 import authReducer from '../features/auth/authSlice.js'
 import bookingReducer from '../features/booking/BookingSlice.js'
 import roomReducer from '../features/room/RoomSlice.js'
-import staffReducer from './api/staffSlice.js'
+import staffReducer from '../store/staffSlice.js'
+import departmentReducer from "../store/departmentSlice.js"
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
         booking: bookingReducer,
         room: roomReducer,
         staff: staffReducer,
+        department: departmentReducer
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(apiSlice.middleware),

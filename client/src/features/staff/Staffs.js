@@ -13,7 +13,7 @@ import {
     selectAllStaffs,
     getAllStaffs,
     deleteStaff
-} from "../../app/api/staffSlice";
+} from "../../store/staffSlice";
 import { useNavigate } from "react-router-dom";
 
 const Staffs = () => {
