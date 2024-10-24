@@ -5,7 +5,7 @@ import Header from "../../components/landing-page/header";
 import Footer from "../../components/landing-page/footer";
 import Sidebar from "../../components/Sidebar";
 
-const Bill = () => {
+const BillDetail = () => {
     const [customerName, setCustomerName] = useState("");
     const [phone, setPhone] = useState("");
     const [roomDetails, setRoomDetails] = useState([]);
@@ -15,7 +15,7 @@ const Bill = () => {
     const [leaveDate, setLeaveDate] = useState(null);
     const [isPaid, setIsPaid] = useState(true);
 
-    const apiUrl = process.env.BACKEND_URL;
+    const apiUrl = process.env.API_URL;
 
     // useEffect(async () => {
     //     const {data} = await axios.get(`${apiUrl}/bill`);
@@ -165,4 +165,4 @@ const Bill = () => {
     );
 };
 
-export default Bill;
+export default BillDetail;

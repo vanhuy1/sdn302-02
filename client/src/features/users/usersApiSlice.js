@@ -19,35 +19,39 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             }),
             transformResponse: responseData => {
                 const loadedUsers = responseData.map(user => {
-                    user.id = user._id
-                    return user
+                    user.id = user._id;
+                    return user;
                 });
-                return usersAdapter.setAll(initialState, loadedUsers)
+                return usersAdapter.setAll(initialState, loadedUsers);
             },
             providesTags: (result, error, arg) => {
                 if (result?.ids) {
                     return [
                         { type: 'User', id: 'LIST' },
                         ...result.ids.map(id => ({ type: 'User', id }))
-                    ]
-                } else return [{ type: 'User', id: 'LIST' }]
+                    ];
+                } else return [{ type: 'User', id: 'LIST' }];
             }
+        }),
+        getUserById: builder.query({
+            query: (id) => `/users/${id}`,
+            transformResponse: (responseData) => {
+                responseData.id = responseData._id;
+                return responseData;
+            },
+            providesTags: (result, error, arg) => [{ type: 'User', id: arg }]
         }),
         addNewUser: builder.mutation({
             query: initialUserData => ({
                 url: '/users',
                 method: 'POST',
-                body: {
-                    ...initialUserData,
-                }
+                body: { ...initialUserData }
             }),
-            invalidatesTags: [
-                { type: 'User', id: "LIST" }
-            ]
+            invalidatesTags: [{ type: 'User', id: "LIST" }]
         }),
         updateUser: builder.mutation({
-            query: initialUserData => ({
-                url: '/users',
+            query: ({ id, ...initialUserData }) => ({
+                url: `/users/${id}`, // Ensure the ID is part of the URL
                 method: 'PATCH',
                 body: {
                     ...initialUserData,
@@ -59,37 +63,35 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         }),
         deleteUser: builder.mutation({
             query: ({ id }) => ({
-                url: `/users`,
+                url: `/users/${id}`,
                 method: 'DELETE',
                 body: { id }
             }),
-            invalidatesTags: (result, error, arg) => [
-                { type: 'User', id: arg.id }
-            ]
+            invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }]
         }),
-    }),
+    })
 })
 
 export const {
     useGetUsersQuery,
+    useGetUserByIdQuery, // New hook for fetching a single user by ID
     useAddNewUserMutation,
     useUpdateUserMutation,
     useDeleteUserMutation,
-} = usersApiSlice
+} = usersApiSlice;
 
 // returns the query result object
-export const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
+export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();
 
 // creates memoized selector
 const selectUsersData = createSelector(
     selectUsersResult,
     usersResult => usersResult.data // normalized state object with ids & entities
-)
+);
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
+// getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
     selectAll: selectAllUsers,
     selectById: selectUserById,
     selectIds: selectUserIds
-    // Pass in a selector that returns the users slice of state
-} = usersAdapter.getSelectors(state => selectUsersData(state) ?? initialState)
+} = usersAdapter.getSelectors(state => selectUsersData(state) ?? initialState);

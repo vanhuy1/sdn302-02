@@ -22,10 +22,17 @@ const createNewUser = async (req, res) => {
     }
 
     // Check for duplicate username
-    const duplicate = await User.findOne({ username }).lean().exec()
+    const duplicateUsername = await User.findOne({ username }).lean().exec()
 
-    if (duplicate) {
+    if (duplicateUsername) {
         return res.status(409).json({ message: 'Duplicate username' })
+    }
+
+    // Check for duplicate identifyNumber
+    const duplicateIdentifyNumber = await User.findOne({ identifyNumber }).lean().exec()
+
+    if (duplicateIdentifyNumber) {
+        return res.status(409).json({ message: 'Duplicate identifyNumber' })
     }
 
     // Hash password 
@@ -38,64 +45,119 @@ const createNewUser = async (req, res) => {
     // Create and store new user 
     const user = await User.create(userObject)
 
-    if (user) { //created 
+    if (user) { // created 
         res.status(201).json({ message: `New user ${username} created` })
     } else {
         res.status(400).json({ message: 'Invalid user data received' })
     }
 
+
 }
 
 const updateUser = async (req, res) => {
-    const { id, username, password, name, gender, address, birthDay, identifyNumber, phoneNumber, roles, active } = req.body
+    const { id } = req.params; // Get the user ID from the URL parameters
+    const {
+        username,
+        name,
+        gender,
+        address,
+        birthDay,
+        identifyNumber,
+        phoneNumber,
+        roles,
+        active
+    } = req.body; // Destructure the body to get the updated fields
 
-    // Confirm data 
-    if (!id || !username || !name || !gender || !address || !birthDay || !identifyNumber || !phoneNumber || !Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
-        return res.status(400).json({ message: 'All fields except password are required' })
+    try {
+        // Check for duplicate username or identifyNumber (excluding the current user)
+        const duplicateUsername = await User.findOne({ username, _id: { $ne: id } });
+        const duplicateIdentifyNumber = await User.findOne({ identifyNumber, _id: { $ne: id } });
+
+        if (duplicateUsername) {
+            return res.status(400).json({ message: 'Username already exists.' });
+        }
+
+        if (duplicateIdentifyNumber) {
+            return res.status(400).json({ message: 'Identify number already exists.' });
+        }
+
+        // Find the user by ID and update their details
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            {
+                username,
+                name,
+                gender,
+                address,
+                birthDay,
+                identifyNumber,
+                phoneNumber,
+                roles,
+                active
+            },
+            { new: true, runValidators: true } // Options: return the updated document and run validation
+        );
+
+        // Check if the user was found and updated
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Respond with the updated user data, excluding the password for security
+        const { password, ...userWithoutPassword } = updatedUser._doc;
+        res.status(200).json(userWithoutPassword);
+    } catch (error) {
+        // Handle errors (e.g., validation errors)
+        console.error(error);
+        res.status(500).json({ message: 'Error updating user', error });
     }
-
-    // Does the user exist to update?
-    const user = await User.findById(id).exec()
-
-    if (!user) {
-        return res.status(400).json({ message: 'User not found' })
-    }
-
-    // Check for duplicate 
-    const duplicate = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
-
-    // Allow updates to the original user 
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate username' })
-    }
-
-    user.username = username
-    user.name = name
-    user.gender = gender
-    user.address = address
-    user.birthDay = birthDay
-    user.identifyNumber = identifyNumber
-    user.phoneNumber = phoneNumber
-    user.roles = roles
-    user.active = active
-
-    if (password) {
-        // Hash password 
-        user.password = await bcrypt.hash(password, 10) // salt rounds 
-    }
-
-    const updatedUser = await user.save()
-
-    res.json({ message: `${updatedUser.username} updated` })
 }
+
 
 const getUser = async (req, res) => {
+    const { id } = req.params; // Get the user ID from the request parameters
 
+    try {
+        // Find the user by ID
+        const user = await User.findById(id).exec(); // Use exec() for better error handling
+
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Send the user data as response
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 }
+
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Find the user by ID and delete
+        const user = await User.findByIdAndDelete(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Respond with success message
+        return res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
 
 module.exports = {
     getAllUsers,
     createNewUser,
     updateUser,
-    getUser
+    getUser,
+    deleteUser
 }

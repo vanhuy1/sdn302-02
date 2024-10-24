@@ -4,9 +4,9 @@ import HomePage from './features/auth/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './features/auth/Login'
 import Public from './components/Public';
-import About from './components/about/About';
-import Service from './components/services/services';
-import Contact from './components/contact/Contact';
+import About from './components/about/about';
+import Service from './features/services/services';
+import Contact from './components/contact/contact';
 import Layout from './components/Layout';
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
@@ -20,6 +20,8 @@ import EditBooking from './features/booking/EditBooking';
 import UserList from './features/users/';
 import UpdateUser from './features/users/UpdateUser';
 import Bill from './features/bill/Bill';
+import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
+import EditBooking from './features/booking/EditBooking';
 
 import ViewAllRoom from './features/room/ViewAllRooms';
 import ViewAllCategory from './features/room/ViewAllCategory'

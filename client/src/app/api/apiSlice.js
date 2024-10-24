@@ -46,6 +46,29 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReauth,
-    tagTypes: ['User'],
-    endpoints: builder => ({})
+    tagTypes: ['User', 'Service', 'ServiceItem'],
+    endpoints: builder => ({
+        fetchServices: builder.query({
+            query: () => '/services',
+            providesTags: ['Service']
+        }),
+        addService: builder.mutation({
+            query: (newService) => ({
+                url: '/services',
+                method: 'POST',
+                body: newService,
+            }),
+            invalidatesTags: ['Service']
+        }),
+        addServiceItem: builder.mutation({
+            query: (newServiceItem) => ({
+                url: '/serviceItems',
+                method: 'POST',
+                body: newServiceItem,
+            }),
+            invalidatesTags: ['ServiceItem']
+        })
+    })
 })
+
+export const { useFetchServicesQuery, useAddServiceMutation, useAddServiceItemMutation } = apiSlice;

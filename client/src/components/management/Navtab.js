@@ -7,7 +7,7 @@ const Navtab = () => {
             <Nav.Item>
                 <Nav.Link
                     as={NavLink}
-                    to="/staff"
+                    to="/manage/staff"
                     className={({ isActive }) => (isActive ? "active" : "")}
                 >
                     Staff
@@ -16,7 +16,7 @@ const Navtab = () => {
             <Nav.Item>
                 <Nav.Link
                     as={NavLink}
-                    to="/room"
+                    to="/manage/room"
                     className={({ isActive }) => (isActive ? "active" : "")}
                 >
                     Room
@@ -25,7 +25,7 @@ const Navtab = () => {
             <Nav.Item>
                 <Nav.Link
                     as={NavLink}
-                    to="/service"
+                    to="/manage/service"
                     className={({ isActive }) => (isActive ? "active" : "")}
                 >
                     Service
@@ -34,7 +34,7 @@ const Navtab = () => {
             <Nav.Item>
                 <Nav.Link
                     as={NavLink}
-                    to="/customer"
+                    to="/manage/customer"
                     className={({ isActive }) => (isActive ? "active" : "")}
                 >
                     Customer
