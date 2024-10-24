@@ -4,9 +4,9 @@ import HomePage from './features/auth/home';
 import { Route, Routes } from 'react-router-dom';
 import Login from './features/auth/Login'
 import Public from './components/Public';
-import About from './components/about/about';
+import About from './components/about/About';
 import Service from './features/services/services';
-import Contact from './components/contact/contact';
+import Contact from './components/contact/Contact';
 import Layout from './components/Layout';
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
@@ -22,6 +22,9 @@ import UpdateUser from './features/users/UpdateUser';
 import Bill from './features/bill/Bill';
 import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
 import EditBooking from './features/booking/EditBooking';
+import Staffs from './features/staff/Staffs';
+import StaffDetail from './features/staff/StaffDetail';
+import AddStaff from './features/staff/AddStaff';
 
 import ViewAllRoom from './features/room/ViewAllRooms';
 import ViewAllCategory from './features/room/ViewAllCategory'
@@ -37,6 +40,9 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="services" element={<Service />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="manage/staff" element={<Staffs />} />
+        <Route path="manage/staff/:id" element={<StaffDetail />} />
+        <Route path="manage/staff/update/:id" element={<AddStaff />} />
 
         {/* Protected Routes */}
         <Route element={<PersistLogin />}>

@@ -5,15 +5,6 @@ const getAllStaffs = async (req, res) => {
     try {
         const staffs = await Staff.find({}).lean();
         res.status(200).json(staffs);
-
-        // if (!staffs.length) {
-        //     return res.status(400).json({ message: 'No staffs found' })
-        // }
-
-        // const staffWithDepartment = await Promise.all(staffs.map(async (staff) => {
-        //     const department = await Department.findById(staff.departmentID).lean().exec()
-        //     return { ...staff, departmentName: department.departmentName }
-        // }))
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
