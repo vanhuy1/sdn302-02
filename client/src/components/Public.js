@@ -1,5 +1,7 @@
-import { Container, Row, Col, Image, Button, Navbar, Nav } from 'react-bootstrap'
+import { Container, Row, Col, Button, Navbar, Nav, Carousel } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import Header from './landing-page/header'
+import './style.css'
 const Public = () => {
     const content = (
         <section>
@@ -37,40 +39,122 @@ const Public = () => {
                     </Navbar.Collapse>
                 </Navbar>
             </header>
-            <div className="banner"
-                style={{
-                    backgroundImage: 'url(https://images7.alphacoders.com/134/1342217.png)',
-                    height: '27vh',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    color: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
-            </div>
-            <Container className="mt-5">
-                <Row className="mb-4">
-                    <Col md={6}>
-                        <Image
-                            src="https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/b9422a2eaf6f6f0900e38430221bae4d.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp"
-                            rounded fluid
-                            style={{
-                                width: '300px',
-                                height: '300px'
-                            }}
+            <section className="banner_main">
+                <Carousel interval={2000} fade>
+                    {/* First Slide */}
+                    <Carousel.Item>
+                        <img
+                            className="d-block w-100"
+                            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1920&h=1080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="First slide"
+                            style={{ width: '1920px', height: '800px', objectFit: 'cover' }}
                         />
-                    </Col>
-                    <Col md={6}>
-                        <h2>About Our Hotel</h2>
-                        <p>
-                            Experience luxury at our hotel with top-notch facilities and outstanding services.
-                            Whether you're traveling for business or leisure, we provide a tranquil and sophisticated environment that guarantees a memorable stay.
-                        </p>
-                        <Button variant="primary" href="#book">Book Now</Button>
-                    </Col>
-                </Row>
-            </Container>
+                        <div className="form-overlay">
+                            <Container>
+                                <Row>
+                                    <Col md={5} className="mx-auto">
+                                        <div
+                                            className="book_room text-center"
+                                            style={{
+                                                marginTop: '300px',
+                                                backgroundColor: 'rgb(183, 255, 244, 0.5)',
+                                                border: '2px solid rgb(183, 255, 244, 0.5)',
+                                                padding: '20px',
+                                                borderRadius: '10px'
+                                            }}
+                                        >
+                                            <h1 >Welcome!</h1>
+                                            <p style={{ fontStyle: 'italic' }}>We offer luxurious accommodations with excellent service to ensure you have a memorable experience. Book your room today!</p>
+                                            <Link to="/booking">
+                                                <Button className="book_btn" type="button" style={{ marginTop: '20px' }}>
+                                                    Book Now
+                                                </Button>
+                                            </Link>
+                                        </div>
+
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </div>
+
+                    </Carousel.Item>
+
+                    {/* Second Slide */}
+                    <Carousel.Item>
+                        <img
+                            className="d-block w-100"
+                            src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1920&h=1080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Second slide"
+                            style={{ width: '1920px', height: '800px', objectFit: 'cover' }}
+                        />
+                        <div className="form-overlay">
+                            <Container>
+                                <Row>
+                                    <Col md={5} className="mx-auto">
+                                        <div
+                                            className="book_room text-center"
+                                            style={{
+                                                marginTop: '300px',
+                                                backgroundColor: 'rgb(183, 255, 244, 0.5)',
+                                                border: '2px solid rgb(183, 255, 244, 0.5)',
+                                                padding: '20px',
+                                                borderRadius: '10px'
+                                            }}
+                                        >
+                                            <h1 >Welcome!</h1>
+                                            <p style={{ fontStyle: 'italic' }}>We offer luxurious accommodations with excellent service to ensure you have a memorable experience. Book your room today!</p>
+                                            <Link to="/booking">
+                                                <Button className="book_btn" type="button" style={{ marginTop: '20px' }}>
+                                                    Book Now
+                                                </Button>
+                                            </Link>
+                                        </div>
+
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </div>
+                    </Carousel.Item>
+
+                    {/* Third Slide */}
+                    <Carousel.Item>
+                        <img
+                            className="d-block w-100"
+                            src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1920&h=1080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Third slide"
+                            style={{ width: '1920px', height: '800px', objectFit: 'cover' }}
+                        />
+                        <div className="form-overlay">
+                            <Container>
+                                <Row>
+                                    <Col md={5} className="mx-auto">
+                                        <div
+                                            className="book_room text-center"
+                                            style={{
+                                                marginTop: '300px',
+                                                backgroundColor: 'rgb(183, 255, 244, 0.5)',
+                                                border: '2px solid rgb(183, 255, 244, 0.5)',
+                                                padding: '20px',
+                                                borderRadius: '10px'
+                                            }}
+                                        >
+                                            <h1 >Welcome!</h1>
+                                            <p style={{ fontStyle: 'italic' }}>We offer luxurious accommodations with excellent service to ensure you have a memorable experience. Book your room today!</p>
+                                            <Link to="/booking">
+                                                <Button className="book_btn" type="button" style={{ marginTop: '20px' }}>
+                                                    Book Now
+                                                </Button>
+                                            </Link>
+                                        </div>
+
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </div>
+                    </Carousel.Item>
+                </Carousel>
+            </section>
+
             <footer className="bg-light text-center text-lg-start">
                 <Container className="p-4">
                     <Row>

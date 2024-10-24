@@ -15,11 +15,16 @@ import Prefetch from './features/auth/Prefetch'
 import DashLayout from './components/DashLayout'
 import Booking from './features/booking/BookingRoom';
 import RegisterForm from './features/users/RegisterForm';
-import UserList from './features/users/UserList';
+import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
+import EditBooking from './features/booking/EditBooking';
+import UserList from './features/users/';
 import UpdateUser from './features/users/UpdateUser';
 import Bill from './features/bill/Bill';
 import ViewAllRoomBook from './features/booking/ViewAllRoomBook';
 import EditBooking from './features/booking/EditBooking';
+
+import ViewAllRoom from './features/room/ViewAllRooms';
+import ViewAllCategory from './features/room/ViewAllCategory'
 
 function App() {
   return (
@@ -55,7 +60,9 @@ function App() {
               <Route path="/viewroom" element={<ViewAllRoomBook />} />
               <Route path="/edit-booking/:id" element={<EditBooking />} />
               <Route path='/bill' element={<Bill />} />
-
+              {/* Manage room routes */}
+              <Route path='/room' element={<ViewAllRoom />} />
+              <Route path='/category' element={<ViewAllCategory />} />
             </Route>
           </Route>
         </Route>

@@ -68,14 +68,14 @@ const bookingRoom = async (req, res) => {
 
         // Save booking
         const booking = new Booking({
-            customerID,
+            userID: customerID,
             roomID: [pickRoom],
             startDate,
             endDate,
             amountBook
         });
+        console.log(booking)
         await booking.save();
-        res.status(201).json(booking);
 
         const changeRoomStatus = await Room.findByIdAndUpdate(
             pickRoom,
@@ -88,6 +88,7 @@ const bookingRoom = async (req, res) => {
             console.log('Room not found or update failed');
         }
 
+        res.status(201).json(booking);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
