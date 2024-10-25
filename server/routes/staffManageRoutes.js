@@ -3,7 +3,7 @@ const router = express.Router()
 const StaffManageController = require('../controllers/StaffManageController')
 const verifyJWT = require('../middleware/verifyJWT')
 
-// router.use(verifyJWT)
+router.use(verifyJWT)
 
 router.get('/', StaffManageController.getAllStaffs)
 router.get('/:staffId', StaffManageController.getStaffById)
