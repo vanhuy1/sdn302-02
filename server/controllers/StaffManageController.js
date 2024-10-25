@@ -104,20 +104,20 @@ const updateStaff = async (req, res) => {
         return res.status(400).json({ message: "All fields are required!" });
     }
 
-    // const departmentExists = await Department.findById(departmentID).lean().exec();
-    // if (!departmentExists) {
-    //     return res.status(404).json({ message: "Department not found!" });
-    // }
+    const departmentExists = await Department.findById(departmentID).lean().exec();
+    if (!departmentExists) {
+        return res.status(404).json({ message: "Department not found!" });
+    }
 
     // Check for duplicate identity number, excluding the current staff member
-    // const duplicateIdentityNumber = await Staff.findOne({ identityNumber })
-    //     .collation({ locale: "en", strength: 2 })
-    //     .lean()
-    //     .exec();
+    const duplicateIdentityNumber = await Staff.findOne({ identityNumber })
+        .collation({ locale: "en", strength: 2 })
+        .lean()
+        .exec();
 
-    // if (duplicateIdentityNumber && duplicateIdentityNumber._id.toString() !== req.params._id) {
-    //     return res.status(409).json({ message: "Identity Number already exists!" });
-    // }
+    if (duplicateIdentityNumber && duplicateIdentityNumber._id.toString() !== req.params._id) {
+        return res.status(409).json({ message: "Identity Number already exists!" });
+    }
 
     const staff = await Staff.findById(req.params.staffId).exec();
     if (!staff) {
