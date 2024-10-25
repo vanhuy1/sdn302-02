@@ -26,8 +26,12 @@ const verifyJWT = (req, res, next) => {
                     return res.status(404).json({ message: 'User not found' })
                 }
 
-                req.user.id = decoded.UserInfo.id
-                req.user.username = decoded.UserInfo.username
+                const userInfo = {
+                    id: decoded.UserInfo.id,
+                    username: decoded.UserInfo.username
+                }
+
+                req.user = userInfo
                 req.roles = decoded.UserInfo.roles
                 next()
             }
