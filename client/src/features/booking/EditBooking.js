@@ -4,8 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { updateBooking, fetchCurrentBookings, selectAllBookings } from './BookingSlice';
 import { Form, Button, Container, Nav, Row, Col, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import Header from '../../components/landing-page/header';
-import Footer from '../../components/landing-page/footer';
 
 const EditBooking = () => {
     const { id } = useParams();
@@ -52,7 +50,6 @@ const EditBooking = () => {
     return (
 
         <Container className="my-4">
-            <Header />
             {/* Navigate */}
             <Nav className="mb-4 justify-content-center" >
                 <Nav.Item className="mx-4">
@@ -151,7 +148,6 @@ const EditBooking = () => {
                     Save Changes
                 </Button>
             </Form>
-            <Footer />
         </Container>
     );
 };

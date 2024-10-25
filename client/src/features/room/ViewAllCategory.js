@@ -3,8 +3,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Table, Button, Pagination, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError, ViewRoomCategory, AddRoomCategory, UpdateRoomCategory, DeleteRoomCategory, ViewRoomCategoryById } from '../../features/room/RoomSlice'; // Adjust the import path based on your project structure
-import Header from "../../components/landing-page/header";
-import Footer from "../../components/landing-page/footer";
 import Sidebar from "../../components/landing-page/sidebar";
 import Navtab from "../../components/management/Navtab";
 
@@ -154,8 +152,6 @@ const ViewAllRooms = () => {
 
     return (
         <>
-            <Header />
-            <Container fluid>
                 <Row>
                     <Col md={2} className="bg-light shadow-sm">
                         <Sidebar />
@@ -227,8 +223,6 @@ const ViewAllRooms = () => {
                         </Col>
                     </Col>
                 </Row>
-            </Container>
-            <Footer />
             {/* Category Modal */}
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>

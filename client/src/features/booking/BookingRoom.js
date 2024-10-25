@@ -3,8 +3,6 @@ import { Button, Form, Row, Col, Container, Nav, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { bookRoom } from './BookingSlice';
-import Header from '../../components/landing-page/header';
-import Footer from '../../components/landing-page/footer';
 import Sidebar from '../../components/landing-page/sidebar';
 import useAuth from '../../hooks/useAuth';
 
@@ -43,8 +41,6 @@ const Booking = () => {
 
     return (
         <>
-            <Header />
-            <Container fluid>
                 <Row>
                     <Col md={2} className="bg-light">
                         <Sidebar />
@@ -176,8 +172,6 @@ const Booking = () => {
                         </Container>
                     </Col>
                 </Row>
-            </Container>
-            <Footer />
         </>
     );
 };
