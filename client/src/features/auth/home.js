@@ -1,12 +1,9 @@
 import React from 'react';
 import { Container, Row, Col, Button, Image } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 const HomePage = () => {
     return (
         <div>
-            {/* <Header /> */}
-
             <div className="banner"
                 style={{
                     backgroundImage: 'url(https://images7.alphacoders.com/134/1342217.png)',
@@ -41,8 +38,6 @@ const HomePage = () => {
                     </Col>
                 </Row>
             </Container>
-
-            {/* <Footer /> */}
         </div>
     );
 };

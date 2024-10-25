@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Row, Col, Container, Nav, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../../components/landing-page/header';
-import Footer from '../../components/landing-page/footer';
 import Sidebar from '../../components/landing-page/sidebar';
 import useAuth from '../../hooks/useAuth';
 import { fetchUserBookings, selectAllBookings, deleteBooking } from './BookingSlice'; // Update to match your new thunk
@@ -33,8 +31,6 @@ const ViewAllRoomBook = () => {
 
     return (
         <>
-            <Header />
-            <Container fluid>
                 <Row>
                     <Col md={2} className="bg-light">
                         <Sidebar />
@@ -131,8 +127,6 @@ const ViewAllRoomBook = () => {
                         </Container>
                     </Col>
                 </Row>
-            </Container>
-            <Footer />
         </>
     );
 };
