@@ -9,6 +9,7 @@ import About from "./components/about/About";
 import Service from "./features/services/services";
 import Contact from "./components/contact/Contact";
 import Layout from "./components/Layout";
+import DashLayout from "./components/DashLayout";
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from "./config/roles";
@@ -44,7 +45,7 @@ function App() {
             element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}
           >
             <Route element={<Prefetch />}>
-              <Route path="dash" element={<Layout />}>
+              <Route path="dash" element={<DashLayout />}>
                 <Route index element={<HomePage />} />
 
                 <Route path="users">
