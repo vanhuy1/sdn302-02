@@ -129,15 +129,15 @@ const AddStaff = () => {
       data.imagePath = imagePath;
     }
 
-    // if (id !== "add") {
-    //   dispatch(updateStaff({ _id: id, updatedData: data })).then(() => {
-    //     navigate("/manage/staff");
-    //   });
-    // } else {
-    //   dispatch(addStaff({ data })).then(() => {
-    //     navigate("/manage/staff");
-    //   });
-    // }
+    if (id !== "add") {
+      dispatch(updateStaff({ _id: id, updatedData: data })).then(() => {
+        navigate("/manage/staff");
+      });
+    } else {
+      dispatch(addStaff({ data })).then(() => {
+        navigate("/manage/staff");
+      });
+    }
   };
 
   const validateEmail = (email) => {
