@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Row, Col, Image, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Logo from "../../assets/images/logo192.png";
-import Sidebar from "../../components/Sidebar";
-import Navtab from "../../components/management/Navtab";
+
 import {
   getStaffById,
   selectStaffDetail,
@@ -131,11 +130,11 @@ const AddStaff = () => {
 
     if (id !== "add") {
       dispatch(updateStaff({ _id: id, updatedData: data })).then(() => {
-        navigate("/manage/staff");
+        navigate("dash/manage/staff");
       });
     } else {
       dispatch(addStaff({ data })).then(() => {
-        navigate("/manage/staff");
+        navigate("dash/manage/staff");
       });
     }
   };
@@ -190,12 +189,9 @@ const AddStaff = () => {
   return (
     <>
       <Row>
-        <Col md={2} className="bg-light shadow-sm">
-          <Sidebar />
-        </Col>
         <Col md={10} className="mt-3 mb-5">
           <p className="fs-4 fw-semibold">Manage</p>
-          <Navtab />
+
           <div className="mt-5 mx-2 py-4 border rounded">
             <h3 className="text-center">
               {id === "add" ? "Add Staff" : "Update Staff"}

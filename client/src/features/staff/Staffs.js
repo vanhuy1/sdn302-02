@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { Button, Row, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
-import Sidebar from "../../components/Sidebar";
-import Navtab from "../../components/management/Navtab";
+import { Link } from 'react-router-dom'
 
 import {
   selectLoading,
@@ -26,7 +25,7 @@ const Staffs = () => {
     e.preventDefault();
 
     dispatch(deleteStaff({ _id: id })).then(() => {
-      navigate("/manage/staff");
+      navigate("dash/manage/staff");
     });
   };
 
@@ -37,11 +36,9 @@ const Staffs = () => {
   return (
     <>
       <Row>
-        <Col md={2} className="bg-light shadow-sm">
-          <Sidebar />
-        </Col>
+
         <Col md={10} className="mt-3 mb-5">
-          <Navtab />
+
           <div className="mt-5 mx-2 py-4 border rounded">
             <h3 className="ms-4">Staff</h3>
             {isLoading && <p className="ms-4">Loading staff data...</p>}
@@ -106,8 +103,9 @@ const Staffs = () => {
               </tbody>
             </Table>
             <div className="ms-4 my-3">
-              <Button variant="primary" href="/manage/staff/update/add">
-                Add
+              <Button variant="primary" >
+                <Link to='dash/manage/staff/update/add'>Add</Link>
+
               </Button>
             </div>
           </div>

@@ -1,44 +1,37 @@
-import { Nav } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Nav, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 
 const Navtab = () => {
     return (
-        <Nav variant="tabs" defaultActiveKey="/staff">
+        <Nav variant="tabs" >
             <Nav.Item>
-                <Nav.Link
-                    as={NavLink}
-                    to="/manage/staff"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                    Staff
-                </Nav.Link>
+                <LinkContainer to="/dash/manage/staff">
+                    <Button variant="outline-primary" className="me-2">
+                        Staff
+                    </Button>
+                </LinkContainer>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link
-                    as={NavLink}
-                    to="/manage/room"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                    Room
-                </Nav.Link>
+                <LinkContainer to="/dash/manage/viewroom">
+                    <Button variant="outline-primary" className="me-2">
+                        Room
+                    </Button>
+                </LinkContainer>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link
-                    as={NavLink}
-                    to="/manage/service"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                    Service
-                </Nav.Link>
+                <LinkContainer to="/dash/manage">
+                    <Button variant="outline-primary" className="me-2">
+                        Service
+                    </Button>
+                </LinkContainer>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link
-                    as={NavLink}
-                    to="/manage/customer"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                    Customer
-                </Nav.Link>
+                <LinkContainer to="/dash/manage/users">
+                    <Button variant="outline-primary" className="me-2">
+                        ManageCustomer
+                    </Button>
+                </LinkContainer>
             </Nav.Item>
         </Nav>
     );

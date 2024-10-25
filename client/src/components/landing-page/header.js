@@ -65,10 +65,11 @@ const Header = () => {
           style={{ marginRight: "30px" }}
         >
           <Nav className="me-5">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/about">About</Nav.Link>
-            <Nav.Link href="/services">Services</Nav.Link>
+            <Nav.Link href="/dash">Home</Nav.Link>
+            <Nav.Link href="/dash/about">About</Nav.Link>
+            <Nav.Link href="/dash/services">Services</Nav.Link>
             <Nav.Link href="/contact">Contact</Nav.Link>
+
           </Nav>
           {username ? (
             <>
@@ -92,17 +93,6 @@ const Header = () => {
                         Profile
                       </a>
                     </li>
-                    {username && isManager ? (
-                      <>
-                        <li>
-                          <Link className="dropdown-item" to="/dash/userList">
-                            Manage Customer
-                          </Link>
-                        </li>
-                      </>
-                    ) : (
-                      <></>
-                    )}
                     <li>
                       <Link
                         className="dropdown-item"

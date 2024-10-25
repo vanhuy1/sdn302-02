@@ -9,8 +9,6 @@ import {
   selectErrorMessage,
   deleteStaff,
 } from "../../store/staffSlice";
-import Sidebar from "../../components/Sidebar";
-import Navtab from "../../components/management/Navtab";
 
 const StaffDetail = () => {
   const { id } = useParams();
@@ -44,11 +42,7 @@ const StaffDetail = () => {
   return (
     <>
       <Row>
-        <Col md={2} className="bg-light shadow-sm">
-          <Sidebar />
-        </Col>
         <Col md={10} className="mt-3 mb-5">
-          <Navtab />
           <div className="mt-5 mx-2 py-4 border rounded">
             <h3 className="ms-4">Staff Details</h3>
             {isLoading && <p className="ms-4">Loading staff details...</p>}

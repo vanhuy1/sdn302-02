@@ -83,7 +83,7 @@ const UserList = () => {
                                 <td style={cellStyle}>{user.phoneNumber}</td>
                                 <td style={cellStyle}>{user.active ? 'Active' : 'Inactive'}</td>
                                 <td style={cellStyle}>
-                                    <Link to={`/dash/users/${userId}`} style={editButtonStyle}>Edit</Link>
+                                    <Link to={`/dash/manage/users/${userId}`} style={editButtonStyle}>Update</Link>
                                 </td>
                             </tr>
                         ) : null;

@@ -1,5 +1,6 @@
 import React from "react";
-import { Container, Nav } from "react-bootstrap";
+import { Link } from 'react-router-dom'
+import { Container, Nav, Button } from "react-bootstrap";
 import {
     FaHome,
     FaBook,
@@ -8,37 +9,31 @@ import {
     FaUser,
     FaClipboardList,
 } from "react-icons/fa";
-
+import useAuth from "../hooks/useAuth";
 const Sidebar = () => {
+    const { isManager } = useAuth()
     return (
         <Container fluid>
             <Nav className="flex-column mt-3 bg-light vh-100">
                 <Nav.Link
-                    href="/"
+                    href="/dash"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaHome className="me-3 ms-4 fs-5" /> Home
                 </Nav.Link>
+                <Button variant="outline-primary" className="me-2">< FaBook className="me-3 ms-4 fs-5 align-items-left" />
+                    <Link to="/dash/booking" style={{ textDecoration: 'none' }}>  Booking</Link>
+                </Button>
+                <Button variant="outline-primary" className="me-2">
+                    <Link to="/dash/services" style={{ textDecoration: 'none' }}> services</Link>
+                </Button>
+
+                {(isManager) && <Button variant="outline-primary" className="me-2"> <FaCog className="me-3 ms-4 fs-5 align-items-left" />
+                    <Link to="/dash/manage/users" style={{ textDecoration: 'none' }}> Manange</Link>
+                </Button>}
+
                 <Nav.Link
-                    href="/booking"
-                    className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
-                >
-                    <FaBook className="me-3 ms-4 fs-5" /> Booking
-                </Nav.Link>
-                <Nav.Link
-                    href="/services"
-                    className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
-                >
-                    <FaConciergeBell className="me-3 ms-4 fs-5" /> Services
-                </Nav.Link>
-                <Nav.Link
-                    href="/manage/staff"
-                    className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
-                >
-                    <FaCog className="me-3 ms-4 fs-5" /> Manage
-                </Nav.Link>
-                <Nav.Link
-                    href="/bill"
+                    href="/dash"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaClipboardList className="me-3 ms-4 fs-5" /> Bill

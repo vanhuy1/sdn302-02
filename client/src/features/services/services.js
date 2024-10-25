@@ -6,14 +6,11 @@ import Sidebar from "../../components/Sidebar";
 const Services = () => {
   return (
     <>
-        <Row className="flex-grow-1">
-          <Col xs={12} md={2} className="bg-light shadow-sm">
-            <Sidebar />
-          </Col>
-          <Col xs={12} md={10} className="mt-3 mb-5">
-            <Content />
-          </Col>
-        </Row>
+      <Row className="flex-grow-1">
+        <Col xs={12} md={10} className="mt-3 mb-5">
+          <Content />
+        </Col>
+      </Row>
     </>
   );
 };

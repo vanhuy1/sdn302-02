@@ -54,7 +54,7 @@ const UserUpdate = () => {
             await updateUser({ id, ...formData }).unwrap(); // Call the update mutation
             // Show success notification
             toast.success('User updated successfully!', {
-                onClose: () => navigate('/dash/users') // Navigate to user list after the toast closes
+                onClose: () => navigate('/dash/manage/users') // Navigate to user list after the toast closes
             });
         } catch (error) {
             console.error('Failed to update user:', error);
@@ -66,7 +66,7 @@ const UserUpdate = () => {
         try {
             await deleteUser({ id }).unwrap(); // Call the delete mutation
             toast.success('User deleted successfully!', {
-                onClose: () => navigate('/dash/users') // Navigate to user list after the toast closes
+                onClose: () => navigate('/dash/manage/users') // Navigate to user list after the toast closes
             });
         } catch (error) {
             console.error('Failed to delete user:', error);
