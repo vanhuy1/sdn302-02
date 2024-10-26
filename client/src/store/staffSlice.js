@@ -12,7 +12,7 @@ const initialState = {
 // POST CREATE staff
 export const addStaff = createAsyncThunk(
     "staff/add",
-    async (staffData, thunkAPI) => {
+    async ({staffData}, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs`, {
                 method: "POST",
@@ -22,7 +22,8 @@ export const addStaff = createAsyncThunk(
                 body: JSON.stringify(staffData),
             });
             if (!response.ok) {
-                throw new Error("Failed to add new staff");
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to add new staff!");
             }
 
             const data = await response.json();
@@ -36,7 +37,7 @@ export const addStaff = createAsyncThunk(
 // GET all staffs
 export const getAllStaffs = createAsyncThunk(
     "staff/getAllStaffs",
-    async (thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs`);
 
@@ -56,7 +57,7 @@ export const getAllStaffs = createAsyncThunk(
 // GET staff by staffId
 export const getStaffById = createAsyncThunk(
     "staff/getStaffById",
-    async (_id, thunkAPI) => {
+    async ({_id}, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs/${_id}`);
 
@@ -85,7 +86,8 @@ export const updateStaff = createAsyncThunk(
             });
 
             if (!response.ok) {
-                throw new Error("Failed to update staff!");
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to update staff!");
             }
 
             const data = await response.json();
@@ -99,7 +101,7 @@ export const updateStaff = createAsyncThunk(
 // DELETE a staff by staffId
 export const deleteStaff = createAsyncThunk(
     "staff/delete",
-    async (_id, thunkAPI) => {
+    async ({_id}, thunkAPI) => {
         try {
             console.log(_id);
             const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {

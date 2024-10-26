@@ -25,7 +25,7 @@ const Sidebar = () => {
                     <Link to="/dash/booking" style={{ textDecoration: 'none' }}>  Booking</Link>
                 </Button>
                 <Button variant="outline-primary" className="me-2">
-                    <Link to="/dash/services" style={{ textDecoration: 'none' }}> services</Link>
+                    <Link to="/dash/services" style={{ textDecoration: 'none' }}> Services</Link>
                 </Button>
 
                 {(isManager) && <Button variant="outline-primary" className="me-2"> <FaCog className="me-3 ms-4 fs-5 align-items-left" />
@@ -33,13 +33,13 @@ const Sidebar = () => {
                 </Button>}
 
                 <Nav.Link
-                    href="/dash"
+                    href="/dash/bill"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaClipboardList className="me-3 ms-4 fs-5" /> Bill
                 </Nav.Link>
                 <Nav.Link
-                    href="/user"
+                    href="/dash/profile"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaUser className="me-3 ms-4 fs-5" /> User

@@ -91,7 +91,9 @@ const logout = (req, res) => {
 
 const viewProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    console.log(req.UserInfo._id)
+    console.log(req.id)
+    const user = await User.findById(req.id).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
@@ -105,7 +107,7 @@ const changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.id);
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
@@ -128,7 +130,7 @@ const editProfile = async (req, res) => {
   try {
     const { username, name, email, gender, address, birthDay, identifyNumber, phoneNumber } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
     }

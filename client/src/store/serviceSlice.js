@@ -9,12 +9,12 @@ const initialState = {
     errorMessage: "",
 };
 
-// POST CREATE Service Item
-export const addServiceItem = createAsyncThunk(
-    "services/add",
+// POST CREATE service
+export const addService = createAsyncThunk(
+    "service/add",
     async (serviceData, thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/service/serviceItems`, {
+            const response = await fetch(`${API_URL}/services`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -22,8 +22,9 @@ export const addServiceItem = createAsyncThunk(
                 body: JSON.stringify(serviceData),
             });
             if (!response.ok) {
-                throw new Error("Failed to add new service item");
+                throw new Error("Failed to add new service");
             }
+
             const data = await response.json();
             return data;
         } catch (error) {
@@ -32,16 +33,19 @@ export const addServiceItem = createAsyncThunk(
     }
 );
 
-// GET all Service Items
-export const getAllServiceItems = createAsyncThunk(
-    "services/getAll",
-    async (_, thunkAPI) => {
+// GET all services
+export const getAllServices = createAsyncThunk(
+    "service/getAllServices",
+    async (thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/service/serviceItems`);
+            const response = await fetch(`${API_URL}/services`);
+
             if (!response.ok) {
-                throw new Error("Failed to fetch all service items");
+                throw new Error("Failed to get all services");
             }
+
             const data = await response.json();
+
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
@@ -49,14 +53,15 @@ export const getAllServiceItems = createAsyncThunk(
     }
 );
 
-// GET Service Item by ID
-export const getServiceItemById = createAsyncThunk(
-    "services/getById",
+// GET service by serviceId
+export const getServiceById = createAsyncThunk(
+    "service/getServiceById",
     async (_id, thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/service/serviceItems/${_id}`);
+            const response = await fetch(`${API_URL}/services/${_id}`);
+
             if (!response.ok) {
-                throw new Error("Failed to fetch service item details");
+                throw new Error("Failed to get service detail!");
             }
             const data = await response.json();
             return data;
@@ -66,21 +71,23 @@ export const getServiceItemById = createAsyncThunk(
     }
 );
 
-// UPDATE Service Item by ID
-export const updateServiceItem = createAsyncThunk(
-    "services/update",
+// PUT a service by serviceId
+export const updateService = createAsyncThunk(
+    "service/edit",
     async ({ _id, updatedData }, thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/service/serviceItems/${_id}`, {
-                method: "PATCH",
+            const response = await fetch(`${API_URL}/services/${_id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(updatedData),
             });
+
             if (!response.ok) {
-                throw new Error("Failed to update service item");
+                throw new Error("Failed to update service!");
             }
+
             const data = await response.json();
             return data;
         } catch (error) {
@@ -89,17 +96,19 @@ export const updateServiceItem = createAsyncThunk(
     }
 );
 
-// DELETE Service Item by ID
-export const deleteServiceItem = createAsyncThunk(
-    "services/delete",
+// DELETE a service by serviceId
+export const deleteService = createAsyncThunk(
+    "service/delete",
     async (_id, thunkAPI) => {
         try {
-            const response = await fetch(`${API_URL}/service/serviceItems/${_id}`, {
+            const response = await fetch(`${API_URL}/services/${_id}`, {
                 method: "DELETE",
             });
+
             if (!response.ok) {
-                throw new Error("Failed to delete service item");
+                throw new Error("Failed to delete service!");
             }
+
             return _id;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
@@ -130,55 +139,55 @@ export const addServiceItemsToUser = createAsyncThunk(
     }
 );
 
-// Service Slice
+// Service slice
 const serviceSlice = createSlice({
     name: "service",
     initialState,
     extraReducers: (builder) => {
-        // GET all service items
-        builder.addCase(getAllServiceItems.pending, (state) => {
+        // GET all services
+        builder.addCase(getAllServices.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(getAllServiceItems.fulfilled, (state, action) => {
+        builder.addCase(getAllServices.fulfilled, (state, action) => {
             state.isLoading = false;
             state.services = action.payload;
         });
-        builder.addCase(getAllServiceItems.rejected, (state, action) => {
+        builder.addCase(getAllServices.rejected, (state, action) => {
             state.isLoading = false;
             state.errorMessage = action.payload;
         });
 
-        // GET service item by ID
-        builder.addCase(getServiceItemById.pending, (state) => {
+        // GET service by serviceId
+        builder.addCase(getServiceById.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(getServiceItemById.fulfilled, (state, action) => {
+        builder.addCase(getServiceById.fulfilled, (state, action) => {
             state.isLoading = false;
             state.serviceDetail = action.payload;
         });
-        builder.addCase(getServiceItemById.rejected, (state, action) => {
+        builder.addCase(getServiceById.rejected, (state, action) => {
             state.isLoading = false;
             state.errorMessage = action.payload;
         });
 
-        // POST new service item
-        builder.addCase(addServiceItem.pending, (state) => {
+        // POST new service
+        builder.addCase(addService.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(addServiceItem.fulfilled, (state, action) => {
+        builder.addCase(addService.fulfilled, (state, action) => {
             state.isLoading = false;
             state.services.push(action.payload);
         });
-        builder.addCase(addServiceItem.rejected, (state, action) => {
+        builder.addCase(addService.rejected, (state, action) => {
             state.isLoading = false;
             state.errorMessage = action.payload;
         });
 
-        // UPDATE service item by ID
-        builder.addCase(updateServiceItem.pending, (state) => {
+        // PUT service by serviceId
+        builder.addCase(updateService.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(updateServiceItem.fulfilled, (state, action) => {
+        builder.addCase(updateService.fulfilled, (state, action) => {
             state.isLoading = false;
             const index = state.services.findIndex(
                 (service) => service._id === action.payload._id
@@ -187,27 +196,25 @@ const serviceSlice = createSlice({
                 state.services[index] = action.payload;
             }
         });
-        builder.addCase(updateServiceItem.rejected, (state, action) => {
+        builder.addCase(updateService.rejected, (state, action) => {
             state.isLoading = false;
             state.errorMessage = action.payload;
         });
 
-        // DELETE service item by ID
-        builder.addCase(deleteServiceItem.pending, (state) => {
+        // DELETE service by serviceId
+        builder.addCase(deleteService.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(deleteServiceItem.fulfilled, (state, action) => {
+        builder.addCase(deleteService.fulfilled, (state, action) => {
             state.isLoading = false;
             state.services = state.services.filter(
                 (service) => service._id !== action.payload
             );
         });
-        builder.addCase(deleteServiceItem.rejected, (state, action) => {
+        builder.addCase(deleteService.rejected, (state, action) => {
             state.isLoading = false;
             state.errorMessage = action.payload;
         });
-
-        // POST service items to user
         builder.addCase(addServiceItemsToUser.pending, (state) => {
             state.isLoading = true;
         });
@@ -222,10 +229,10 @@ const serviceSlice = createSlice({
     },
 });
 
-// Export selectors
+// Export the state selectors
 export const selectAllServices = (state) => state.service.services;
 export const selectServiceDetail = (state) => state.service.serviceDetail;
-export const selectLoading = (state) => state.service.isLoading;
-export const selectErrorMessage = (state) => state.service.errorMessage;
+export const selectServiceLoading = (state) => state.service.isLoading;
+export const selectServiceErrorMessage = (state) => state.service.errorMessage;
 
 export default serviceSlice.reducer;

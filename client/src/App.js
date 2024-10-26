@@ -27,6 +27,10 @@ import AddStaff from "./features/staff/AddStaff";
 import ViewAllRoom from "./features/room/ViewAllRooms";
 import ViewAllCategory from "./features/room/ViewAllCategory";
 import ManageLayout from "./components/ManageLayout";
+import Profile from "./features/profile/Profile";
+import UpdateProfile from "./features/profile/UpdateProfile";
+import ServiceList from "./features/services/manage/serviceList";
+import ServiceDetail from "./features/services/manage/serviceDetail";
 
 function App() {
   return (
@@ -55,6 +59,9 @@ function App() {
                 <Route path="booking" element={<Booking />} />
                 <Route path="viewroom" element={<ViewAllRoomBook />} />
                 <Route path="edit-booking/:id" element={<EditBooking />} />
+                <Route path="bill" element={<Bill />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="profile/update" element={<UpdateProfile />} />
 
                 <Route path="services" element={<Service />} />
 
@@ -74,6 +81,11 @@ function App() {
 
                     <Route path="room" element={<ViewAllRoom />} />
                     <Route path="category" element={<ViewAllCategory />} />
+
+                    <Route path="service" >
+                      <Route index element={<ServiceList />} />
+                      <Route path=':id' element={<ServiceDetail />} />
+                    </Route>
 
 
 
