@@ -103,7 +103,6 @@ export const deleteStaff = createAsyncThunk(
     "staff/delete",
     async ({_id}, thunkAPI) => {
         try {
-            console.log(_id);
             const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
                 method: "DELETE",
             });
