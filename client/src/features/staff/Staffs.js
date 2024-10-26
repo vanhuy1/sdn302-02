@@ -23,6 +23,7 @@ const Staffs = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortField, setSortField] = useState("staffName");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleDelete = (e, id) => {
     e.preventDefault();
@@ -111,21 +112,38 @@ const Staffs = () => {
     }
   });
 
+  const totalPages = Math.ceil(sortedStaffs.length / 5);
+  const indexOfLastStaff = currentPage * 5;
+  const indexOfFirstStaff = indexOfLastStaff - 5;
+  const currentStaffs = sortedStaffs.slice(indexOfFirstStaff, indexOfLastStaff);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <>
       <div className="mx-2 border rounded">
-        <h2 className="text-center mt-3 mb-5">Staffs</h2>
+        <h2 className="text-center mt-3 mb-3">Staffs</h2>
         {isLoading && <p className="ms-4">Loading staff data...</p>}
 
         {/* Search and Filter */}
         <div className="mx-4 mb-3">
           <Row>
-            <Col md={1}>
-              <Form.Label className="fw-bold m-0 mt-2 " htmlFor="search">
+            <Col md={12} xs={12}>
+              <Form.Label className="fw-bold m-0 mt-2 mb-sm-2" htmlFor="search">
                 Search:
               </Form.Label>
             </Col>
-            <Col md={8}>
+            <Col md={8} xs={8}>
               <Form.Control
                 id="search"
                 type="text"
@@ -134,7 +152,7 @@ const Staffs = () => {
                 onChange={handleSearchChange}
               />
             </Col>
-            <Col md={3}>
+            <Col md={4} xs={4}>
               <Form.Select
                 value={searchField}
                 onChange={handleFieldChange}
@@ -150,12 +168,24 @@ const Staffs = () => {
           </Row>
         </div>
         <div className="mx-4 d-flex justify-content-between align-items-center mb-3">
-          <Form.Select className="me-2" value={filterStatus} onChange={handleFilterChange}>
+          <Form.Label className="fw-bold m-0 me-2" htmlFor="filter">
+            Filter:
+          </Form.Label>
+          <Form.Select
+            id="filter"
+            className="me-5"
+            value={filterStatus}
+            onChange={handleFilterChange}
+          >
             <option value="all">All</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </Form.Select>
+          <Form.Label className="fw-bold m-0 me-2" htmlFor="sort">
+            Sort:
+          </Form.Label>
           <Form.Select
+            id="sort"
             value={sortField}
             onChange={handleSortFieldChange}
             className="me-2"
@@ -183,10 +213,7 @@ const Staffs = () => {
           <thead>
             <tr>
               <th></th>
-              <th>
-                Staff Name
-                <FaArrowUpShortWide />
-              </th>
+              <th>Staff Name</th>
               <th>Gender</th>
               <th>Identity Number</th>
               <th>Position</th>
@@ -196,10 +223,10 @@ const Staffs = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedStaffs.length > 0 ? (
-              sortedStaffs.map((staff, index) => (
+            {currentStaffs.length > 0 ? (
+              currentStaffs.map((staff, index) => (
                 <tr key={staff._id}>
-                  <td>{index + 1}</td>
+                  <td>{index + 1 + (currentPage - 1) * 5}</td>
                   <td>{staff.staffName}</td>
                   <td>{staff.gender}</td>
                   <td>{staff.identityNumber}</td>
@@ -240,8 +267,23 @@ const Staffs = () => {
             )}
           </tbody>
         </Table>
+        {/* Pagination Controls */}
+        <div className="d-flex justify-content-between mx-4 my-3">
+          <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+            Previous
+          </Button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
         <div className="ms-4 my-3">
-          <Link className="btn btn-primary" to="update/add">
+          <Link className="btn btn-warning" to="update/add">
             Add
           </Link>
         </div>
