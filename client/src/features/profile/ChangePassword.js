@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Row, Col, Form } from "react-bootstrap";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import {
   changePassword,
@@ -17,6 +18,9 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validatePassword = (password) => {
     const minLength = 8;
@@ -88,35 +92,59 @@ const ChangePassword = () => {
           <Col md={3}></Col>
           <Col md={6}>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="currentPassword">
+              <Form.Group controlId="currentPassword" className="mb-3 position-relative">
                 <Form.Label>Current Password</Form.Label>
                 <Form.Control
-                  type="password"
+                  type={showCurrentPassword ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Enter current password"
                   required
                 />
+                <Button
+                  variant="link"
+                  className="translate-middle-y text-dark"
+                  style={{position: "absolute", top: 50, right: 0}}
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                >
+                  {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+                </Button>
               </Form.Group>
-              <Form.Group controlId="newPassword">
+              <Form.Group controlId="newPassword" className="mb-3 position-relative">
                 <Form.Label>New Password</Form.Label>
                 <Form.Control
-                  type="password"
+                  type={showNewPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password"
                   required
                 />
+                <Button
+                  variant="link"
+                  className="translate-middle-y text-dark"
+                  style={{position: "absolute", top: 50, right: 0}}
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                </Button>
               </Form.Group>
-              <Form.Group controlId="confirmPassword">
+              <Form.Group controlId="confirmPassword" className="mb-3 position-relative">
                 <Form.Label>Confirm New Password</Form.Label>
                 <Form.Control
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm new password"
                   required
                 />
+                <Button
+                  variant="link"
+                  className="translate-middle-y text-dark"
+                  style={{position: "absolute", top: 50, right: 0}}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </Button>
               </Form.Group>
               <div className="text-center">
                 <Button
