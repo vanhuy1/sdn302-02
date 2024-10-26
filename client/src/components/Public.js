@@ -33,7 +33,7 @@ const Public = () => {
                         to ensure you have a memorable experience. Book your room
                         today!
                       </p>
-                      <Link to="/booking">
+                      <Link to="/dash/booking">
                         <Button
                           className="book_btn"
                           type="button"
@@ -76,7 +76,7 @@ const Public = () => {
                         to ensure you have a memorable experience. Book your room
                         today!
                       </p>
-                      <Link to="/booking">
+                      <Link to="/dash/booking">
                         <Button
                           className="book_btn"
                           type="button"
@@ -119,7 +119,7 @@ const Public = () => {
                         to ensure you have a memorable experience. Book your room
                         today!
                       </p>
-                      <Link to="/booking">
+                      <Link to="/dash/booking">
                         <Button
                           className="book_btn"
                           type="button"

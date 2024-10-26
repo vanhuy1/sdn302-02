@@ -22,11 +22,11 @@ const ViewAllRooms = () => {
     const totalPages = Math.ceil(rooms.length / itemsPerPage);
 
     const handleViewRoom = () => {
-        navigate('/dash/room');
+        navigate('/dash/manage/room');
     };
 
     const handleViewCategory = () => {
-        navigate('/dash/category');
+        navigate('/dash/manage/category');
     };
 
     const handlePageChange = (page) => {
@@ -65,11 +65,13 @@ const ViewAllRooms = () => {
                     window.location.reload();
                 } else if (AddRoomCategory.rejected.match(result)) {
                     alert("Failed to add room: " + result.error.message);
+                    window.location.reload();
                 }
             })
             .catch((error) => {
                 console.error("Add error:", error);
                 alert("Something went wrong: " + error.message);
+                window.location.reload();
             });
 
         handleCloseModal();
@@ -87,11 +89,13 @@ const ViewAllRooms = () => {
                     window.location.reload();
                 } else if (UpdateRoomCategory.rejected.match(result)) {
                     alert("Failed to edit room: " + result.error.message);
+                    window.location.reload();
                 }
             })
             .catch((error) => {
                 console.error("Edit error:", error);
                 alert("Something went wrong: " + error.message);
+                window.location.reload();
             });
 
         handleCloseModal2();
@@ -108,11 +112,13 @@ const ViewAllRooms = () => {
                     window.location.reload();
                 } else if (DeleteRoomCategory.rejected.match(result)) {
                     alert("Failed to delete room: " + result.error.message);
+                    window.location.reload();
                 }
             })
             .catch((error) => {
                 console.error("Delete error:", error);
                 alert("Something went wrong: " + error.message);
+                window.location.reload();
             });
     };
 
@@ -133,6 +139,7 @@ const ViewAllRooms = () => {
                 setShowModal2(true);
             } else {
                 console.error("Failed to fetch room category:", result.error.message);
+                window.location.reload();
             }
         });
     };
@@ -153,8 +160,6 @@ const ViewAllRooms = () => {
             <Row>
                 <Col md={10} className="mt-3 mb-5">
                     <p className="fs-4 fw-semibold">Manage</p>
-                    <Col xs={10}>
-                        {/* Guests Table */}
                         <Row className="mb-3">
                             <Col>
                                 <h5>Room management</h5>
@@ -213,7 +218,6 @@ const ViewAllRooms = () => {
                                 disabled={currentPage === totalPages}
                             />
                         </Pagination>
-                    </Col>
                 </Col>
             </Row>
             {/* Category Modal */}

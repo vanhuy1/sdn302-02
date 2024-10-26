@@ -41,9 +41,9 @@ const Header = () => {
         >
           <Nav className="me-5">
             <Nav.Link href="/dash">Home</Nav.Link>
-            <Nav.Link href="/dash/about">About</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
             <Nav.Link href="/dash/services">Services</Nav.Link>
-            <Nav.Link href="/dash/contact">Contact</Nav.Link>
+            <Nav.Link href="/contact">Contact</Nav.Link>
           </Nav>
           {username ? (
             <>

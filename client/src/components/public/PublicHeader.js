@@ -25,10 +25,10 @@ const PublicHeader = () => {
           style={{ marginRight: "30px" }}
         >
           <Nav className="me-5">
-            <Nav.Link href="/dash">Home</Nav.Link>
-            <Nav.Link href="/dash/about">About</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
             <Nav.Link href="/dash/services">Services</Nav.Link>
-            <Nav.Link href="/dash/contact">Contact</Nav.Link>
+            <Nav.Link href="/contact">Contact</Nav.Link>
           </Nav>
           <Button variant="outline-primary" className="me-2">
             <Link to="/register" style={{ textDecoration: "none" }}>

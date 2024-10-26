@@ -14,15 +14,13 @@ const Booking = () => {
     const { username } = useAuth();
     const dispatch = useDispatch();
 
-    // Lấy thông tin categories phòng từ Redux store
     const { loading, error } = useSelector((state) => state.booking);
-    const roomCategories = useSelector((state) => state.room.roomCategories); // Lấy roomCategories từ RoomSlice
+    const roomCategories = useSelector((state) => state.room.roomCategories); 
     console.log('Redux State:', useSelector((state) => state));
 
-    // State for modal
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
-    const [modalVariant, setModalVariant] = useState('success'); // Can be 'success' or 'danger'
+    const [modalVariant, setModalVariant] = useState('success'); 
 
     useEffect(() => {
         dispatch(ViewRoomCategory());
