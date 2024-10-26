@@ -32,22 +32,28 @@ const AddStaff = () => {
   const [image, setImage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const [active, setActive] = useState(true);
+  const [formMode, setFormMode] = useState("add");
 
   const errorMessage = useSelector(selectErrorMessage);
 
   const errors = {
     staffName: "Staff name is required",
     gender: "Gender is required",
-    identityNumber: "Identity number is required and must contain at least 12 numbers",
+    identityNumber:
+      "Identity number is required and must contain at least 12 numbers",
     position: "Position is required",
     salary: "Salary is required",
-    phoneNumber: "Phone number is required and must contain at least 10 numbers",
+    phoneNumber:
+      "Phone number is required and must contain at least 10 numbers",
     departmentID: "Department is required",
     email: "Please input a valid Outlook or Gmail address",
+    birthday: "Birthday is required",
   };
 
   const renderErrorMessage = (name) =>
-    errorMessages[name] && <p className="text-danger mb-3">{errorMessages[name]}</p>;
+    errorMessages[name] && (
+      <p className="text-danger mb-3">{errorMessages[name]}</p>
+    );
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -100,11 +106,16 @@ const AddStaff = () => {
     }
 
     if (identityNumber && !validateIdentityNumber(identityNumber)) {
-      newErrors.identityNumber = "Identity number must contain at least 12 numbers";
+      newErrors.identityNumber =
+        "Identity number must contain at least 12 numbers";
     }
 
     if (phoneNumber && !validatePhoneNumber(phoneNumber)) {
       newErrors.phoneNumber = "Phone number must contain at least 10 numbers";
+    }
+
+    if (birthday && !validateDate(birthday)) {
+      newErrors.birthday = errors.birthday;
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -121,19 +132,24 @@ const AddStaff = () => {
       data.imagePath = imagePath;
     }
 
-    const action = id !== "add"
-      ? updateStaff({ _id: id, updatedData: data })
-      : addStaff({ staffData: data });
+    const action =
+      id !== "add"
+        ? updateStaff({ _id: id, updatedData: data })
+        : addStaff({ staffData: data });
 
     try {
       await dispatch(action).unwrap();
-      const successMessage = id !== "add" ? "Staff updated successfully!" : "Staff added successfully!";
+      const successMessage =
+        id !== "add"
+          ? "Staff updated successfully!"
+          : "Staff added successfully!";
       Swal.fire({
         icon: "success",
         title: successMessage,
         showConfirmButton: false,
         timer: 1500,
       });
+      resetFormState();
       navigate("/dash/manage/staff");
     } catch (error) {
       Swal.fire({
@@ -159,15 +175,41 @@ const AddStaff = () => {
     return regex.test(phone);
   };
 
+  const validateDate = (dateString) => {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+  };
+
+  const resetFormState = () => {
+    setStaffName("");
+    setGender("");
+    setBirthday("");
+    setAddress("");
+    setIdentityNumber("");
+    setPosition("");
+    setSalary(0);
+    setEmail("");
+    setPhoneNumber("");
+    setDepartmentID("");
+    setActive(true);
+    setImage("");
+    setErrorMessages({});
+  };
+
   useEffect(() => {
     if (id !== "add") {
+      setFormMode("edit");
       dispatch(getStaffById({ _id: id }));
+      dispatch(getAllDepartments());
+    } else {
+      setFormMode("add");
+      resetFormState();
+      dispatch(getAllDepartments());
     }
-    dispatch(getAllDepartments());
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (staffDetail) {
+    if (id !== "add" && staffDetail) {
       setStaffName(staffDetail.staffName);
       setGender(staffDetail.gender);
       setBirthday(formatDate(staffDetail.birthday) || "");
@@ -181,7 +223,7 @@ const AddStaff = () => {
       setActive(staffDetail.active);
       setImage(staffDetail.image || "");
     }
-  }, [staffDetail]);
+  }, [staffDetail, id]);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -233,7 +275,7 @@ const AddStaff = () => {
                 name="staffName"
                 value={staffName}
                 onChange={(e) => setStaffName(e.target.value)}
-                placeholder="Enter staff name"
+                placeholder="Staff name..."
               />
               {renderErrorMessage("staffName")}
               <Form.Label htmlFor="gender">
@@ -348,9 +390,7 @@ const AddStaff = () => {
                 ))}
               </Form.Select>
               {renderErrorMessage("departmentID")}
-              <Form.Label htmlFor="active">
-                Status
-              </Form.Label>
+              <Form.Label htmlFor="active">Status</Form.Label>
               <Form.Select
                 id="active"
                 className="mb-3"
@@ -361,13 +401,11 @@ const AddStaff = () => {
                 <option value="true">Active</option>
                 <option value="false">Inactive</option>
               </Form.Select>
-              <Form.Label htmlFor="image">
-                Upload Image
-              </Form.Label>
+              <Form.Label htmlFor="image">Upload Image</Form.Label>
               <Form.Control
                 id="image"
                 type="file"
-                accept="image/*"
+                accept="image/"
                 onChange={handleImageChange}
                 className={errorMessages.image ? "" : "mb-3"}
               />
