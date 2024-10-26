@@ -7,5 +7,6 @@ router.get('/serviceItems', ServiceItemController.getAllServiceItems);
 router.get('/serviceItems/:id', ServiceItemController.getServiceItemById);
 router.patch('/serviceItems/:id', ServiceItemController.updateServiceItemById);
 router.delete('/serviceItems/:id', ServiceItemController.deleteServiceItemById);
+router.post('/serviceItems/request', ServiceItemController.addServiceItemsToUser);
 
 module.exports = router;

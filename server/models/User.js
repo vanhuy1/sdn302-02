@@ -41,7 +41,11 @@ const userSchema = new mongoose.Schema({
     active: {
         type: Boolean,
         default: true
-    }
+    },
+    services: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ServiceItem'
+    }]
 }, { timestamps: true })
 
 module.exports = mongoose.model('User', userSchema)
