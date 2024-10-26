@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import {
   viewProfile,
   selectUserProfile,
   selectLoading,
 } from "../../store/profileSlice";
 import NavProfile from "./NavProfile";
-import { Link } from "react-router-dom";
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -58,12 +58,12 @@ const Profile = () => {
                     <strong>Phone Number:</strong> {userProfile.phoneNumber}
                   </p>
                   <div>
-                    <Link className="me-2 btn btn-warning" to="/profile/update">
+                    <Button className="me-2 btn btn-warning" onClick={() => navigate("/dash/profile/update")}>
                     Edit
-                    </Link>
-                    <Link className="btn btn-primary" onClick={() => navigate(-1)}>
+                    </Button>
+                    <Button className="btn btn-primary" onClick={() => navigate(-1)}>
                     Back
-                    </Link>
+                    </Button>
                   </div>
                 </div>
               )}
