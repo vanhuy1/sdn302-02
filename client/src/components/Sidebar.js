@@ -33,13 +33,13 @@ const Sidebar = () => {
                 </Button>}
 
                 <Nav.Link
-                    href="/dash"
+                    href="/dash/bill"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaClipboardList className="me-3 ms-4 fs-5" /> Bill
                 </Nav.Link>
                 <Nav.Link
-                    href="/user"
+                    href="/dash/profile"
                     className="text-dark d-flex align-items-center nav-item-custom rounded py-3 fs-6"
                 >
                     <FaUser className="me-3 ms-4 fs-5" /> User
