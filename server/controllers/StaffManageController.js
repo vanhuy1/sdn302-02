@@ -63,7 +63,7 @@ const createNewStaff = async (req, res) => {
     }
 
     try {
-        const staff = await Staff.create({
+        const staff = await Staff.save({
             departmentID,
             staffName,
             gender,
@@ -76,6 +76,8 @@ const createNewStaff = async (req, res) => {
             phoneNumber,
             active,
         });
+
+        console.log("Test")
 
         return res
             .status(201)
@@ -100,26 +102,31 @@ const updateStaff = async (req, res) => {
         departmentID
     } = req.body;
 
+    // Validate required fields
     if (!staffName || !gender || !identityNumber || !position || !salary || !phoneNumber) {
         return res.status(400).json({ message: "All fields are required!" });
     }
 
+    // Check if the department exists
     const departmentExists = await Department.findById(departmentID).lean().exec();
     if (!departmentExists) {
         return res.status(404).json({ message: "Department not found!" });
     }
 
-    // Check for duplicate identity number, excluding the current staff member
-    const duplicateIdentityNumber = await Staff.findOne({ identityNumber })
-        .collation({ locale: "en", strength: 2 })
-        .lean()
-        .exec();
+    const staffId = req.params.staffId;
+    const duplicateIdentityNumber = await Staff.findOne({ 
+        identityNumber,
+        _id: { $ne: staffId }
+    })
+    .collation({ locale: "en", strength: 2 })
+    .lean()
+    .exec();
 
-    if (duplicateIdentityNumber && duplicateIdentityNumber._id.toString() !== req.params._id) {
+    if (duplicateIdentityNumber) {
         return res.status(409).json({ message: "Identity Number already exists!" });
     }
 
-    const staff = await Staff.findById(req.params.staffId).exec();
+    const staff = await Staff.findById(staffId).exec();
     if (!staff) {
         return res.status(404).json({ message: "Staff not found!" });
     }
