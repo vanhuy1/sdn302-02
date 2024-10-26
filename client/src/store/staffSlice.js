@@ -12,7 +12,7 @@ const initialState = {
 // POST CREATE staff
 export const addStaff = createAsyncThunk(
     "staff/add",
-    async ({staffData}, thunkAPI) => {
+    async ({ staffData }, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs`, {
                 method: "POST",
@@ -57,7 +57,7 @@ export const getAllStaffs = createAsyncThunk(
 // GET staff by staffId
 export const getStaffById = createAsyncThunk(
     "staff/getStaffById",
-    async ({_id}, thunkAPI) => {
+    async ({ _id }, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs/${_id}`);
 
@@ -101,7 +101,7 @@ export const updateStaff = createAsyncThunk(
 // DELETE a staff by staffId
 export const deleteStaff = createAsyncThunk(
     "staff/delete",
-    async ({_id}, thunkAPI) => {
+    async ({ _id }, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/manage/staffs/${_id}`, {
                 method: "DELETE",

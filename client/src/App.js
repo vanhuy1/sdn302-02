@@ -31,22 +31,21 @@ import Profile from "./features/profile/Profile";
 import UpdateProfile from "./features/profile/UpdateProfile";
 import ServiceList from "./features/services/manage/serviceList";
 import ChangePassword from "./features/profile/ChangePassword";
+import PublicLayout from "./components/public/PublicLayout";
 
 function App() {
   return (
 
     <Routes>
       <Route path='/' element={<Layout />} >
-        {/* public routes */}
-        <Route index element={<Public />} />
-
-
-        <Route path="contact" element={<Contact />} />
-        <Route path='login' element={<Login />} />
-        <Route path='register' element={<RegisterForm />} />
-        {/* <Route path="about" element={<About />} /> */}
-
-        {/* <Route path="contact" element={<Contact />} /> */}
+        {/* Public Routes */}
+        <Route path='/' element={<PublicLayout />} >
+          <Route index element={<Public />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path='login' element={<Login />} />
+          <Route path='register' element={<RegisterForm />} />
+        </Route>
 
         {/* Protected Routes */}
         <Route element={<PersistLogin />}>
@@ -56,10 +55,12 @@ function App() {
 
                 <Route index element={<HomePage />} />
                 <Route path="about" element={<About />} />
+                <Route path="contact" element={<Contact />} />
                 <Route path="booking" element={<Booking />} />
                 <Route path="viewroom" element={<ViewAllRoomBook />} />
                 <Route path="edit-booking/:id" element={<EditBooking />} />
                 <Route path="bill" element={<Bill />} />
+
                 <Route path="profile" element={<Profile />} />
                 <Route path="profile/update" element={<UpdateProfile />} />
                 <Route path="profile/change-password" element={<ChangePassword />} />
@@ -87,12 +88,9 @@ function App() {
                       <Route index element={<ServiceList />} />
                     </Route>
 
-
-
                   </Route>
                 </Route>
               </Route>
-
             </Route>
           </Route>
         </Route>

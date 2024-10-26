@@ -18,6 +18,22 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUppercase &&
+      hasLowercase &&
+      hasNumbers &&
+      hasSpecialChars
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,6 +41,16 @@ const ChangePassword = () => {
       Swal.fire({
         title: "Error!",
         text: "New passwords do not match.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      Swal.fire({
+        title: "Error!",
+        text: "New password must be at least 8 characters long and contain uppercase letters, lowercase letters, numbers, and special characters.",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -39,7 +65,6 @@ const ChangePassword = () => {
         icon: "success",
         confirmButtonText: "OK",
       });
-      // Reset fields after successful change
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");

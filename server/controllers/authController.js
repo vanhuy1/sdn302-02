@@ -106,14 +106,16 @@ const viewProfile = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    const user = await User.findById(req.id);
+    const username = req.user
+
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
 
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Old password is incorrect!" });
     }
@@ -132,10 +134,9 @@ const editProfile = async (req, res) => {
     const {
       username,
       name,
-      email,
       gender,
-      address,
       birthDay,
+      address,
       identifyNumber,
       phoneNumber,
     } = req.body;
@@ -148,7 +149,6 @@ const editProfile = async (req, res) => {
     if (
       !username ||
       !name ||
-      !email ||
       !gender ||
       !address ||
       !birthDay ||
@@ -174,7 +174,6 @@ const editProfile = async (req, res) => {
 
     user.username = username || user.username;
     user.name = name || user.name;
-    user.email = email || user.email;
     user.gender = gender || user.gender;
     user.address = address || user.address;
     user.birthDay = birthDay || user.birthDay;

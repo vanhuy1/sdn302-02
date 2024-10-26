@@ -3,7 +3,7 @@ import { Tab, Nav, Row, Col, ListGroup, Container, Alert } from 'react-bootstrap
 import ServiceItem from './serviceItem';
 import { useFetchServicesQuery } from "../../../app/api/apiSlice";
 import ChosenList from './chosenList';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addServiceItemsToUser } from '../../../store/serviceSlice';
 import useAuth from '../../../hooks/useAuth';
 

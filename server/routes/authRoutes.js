@@ -14,7 +14,7 @@ router.route('/logout')
     .post(authController.logout)
 
 router.route('/profile').get(verifyJWT, authController.viewProfile)
-router.route('/profile').put(verifyJWT, authController.editProfile)
-router.route('/change-password').post(verifyJWT, authController.changePassword)
+router.route('/profile/update').put(verifyJWT, authController.editProfile)
+router.route('/profile/change-password').post(verifyJWT, authController.changePassword)
 
 module.exports = router

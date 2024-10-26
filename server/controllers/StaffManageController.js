@@ -63,7 +63,7 @@ const createNewStaff = async (req, res) => {
     }
 
     try {
-        const staff = await Staff.save({
+        const staff = await Staff.create({
             departmentID,
             staffName,
             gender,
@@ -110,13 +110,13 @@ const updateStaff = async (req, res) => {
     }
 
     const staffId = req.params.staffId;
-    const duplicateIdentityNumber = await Staff.findOne({ 
+    const duplicateIdentityNumber = await Staff.findOne({
         identityNumber,
         _id: { $ne: staffId }
     })
-    .collation({ locale: "en", strength: 2 })
-    .lean()
-    .exec();
+        .collation({ locale: "en", strength: 2 })
+        .lean()
+        .exec();
 
     if (duplicateIdentityNumber) {
         return res.status(409).json({ message: "Identity Number already exists!" });
@@ -155,7 +155,7 @@ const deleteStaff = async (req, res) => {
             return res.status(404).json({ message: "Staff not found!" });
         }
 
-        return res.status(204).json({message: "Staff deleted successfully!"});
+        return res.status(204).json({ message: "Staff deleted successfully!" });
     } catch (err) {
         return res.status(500).json({ message: "Failed to delete staff", error: err.message });
     }

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Button, Form, Row, Col, Container, Nav, Image } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Row, Col, Container, Nav, Image, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { bookRoom } from './BookingSlice';
+import { ViewRoomCategory } from '../room/RoomSlice';
 import useAuth from '../../hooks/useAuth';
 
 const Booking = () => {
@@ -12,8 +13,20 @@ const Booking = () => {
     const [amountBook, setAmountBook] = useState(1);
     const { username } = useAuth();
     const dispatch = useDispatch();
-    const { loading, error, bookingDetails } = useSelector((state) => state.booking);
+
+    // Lấy thông tin categories phòng từ Redux store
+    const { loading, error } = useSelector((state) => state.booking);
+    const roomCategories = useSelector((state) => state.room.roomCategories); // Lấy roomCategories từ RoomSlice
     console.log('Redux State:', useSelector((state) => state));
+
+    // State for modal
+    const [showModal, setShowModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalVariant, setModalVariant] = useState('success'); // Can be 'success' or 'danger'
+
+    useEffect(() => {
+        dispatch(ViewRoomCategory());
+    }, [dispatch]);
 
     const handleRoomChange = (e) => {
         const value = e.target.value;
@@ -34,9 +47,26 @@ const Booking = () => {
             endDate,
             amountBook
         };
+        console.log(bookingData);
 
-        dispatch(bookRoom(bookingData));
-    }
+        dispatch(bookRoom(bookingData)).unwrap() // Assuming bookRoom is a thunk
+            .then((response) => {
+                // Assuming response contains the booking details on success
+                setModalMessage('Booking successful!');
+                setModalVariant('success');
+                setShowModal(true);
+            })
+            .catch((error) => {
+                setModalMessage('Booking failed. Please try again.');
+                setModalVariant('danger');
+                setShowModal(true);
+            });
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        window.location.reload(); // Reload the page when closing the modal
+    };
 
     return (
         <>
@@ -79,36 +109,25 @@ const Booking = () => {
                             <Form.Group controlId="formRoomType" className="mb-4">
                                 <Form.Label className="fw-bold">Room Categories</Form.Label>
                                 <Row>
-                                    <Col md={4}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label="Basic Room"
-                                            value="670108b4cd419eb477134f34"
-                                            onChange={handleRoomChange}
-                                            className="my-2"
-                                        />
-                                        <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                                    </Col>
-                                    <Col md={4}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label="Modern Room"
-                                            value="670108b4cd419eb477134f35"
-                                            onChange={handleRoomChange}
-                                            className="my-2"
-                                        />
-                                        <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                                    </Col>
-                                    <Col md={4}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label="Luxury Room"
-                                            value="670108b4cd419eb477134f36"
-                                            onChange={handleRoomChange}
-                                            className="my-2"
-                                        />
-                                        <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                                    </Col>
+                                    {loading ? (
+                                        <p>Loading room categories...</p>
+                                    ) : error ? (
+                                        <p>Error: {error}</p>
+                                    ) : (
+                                        roomCategories.map((room) => (
+                                            <Col md={4} key={room._id}>
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    label={room.roomCategoryName}
+                                                    value={room._id}
+                                                    onChange={handleRoomChange}
+                                                    className="my-2"
+                                                />
+                                                <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
+                                                <p> Price: {room.price}</p>
+                                            </Col>
+                                        ))
+                                    )}
                                 </Row>
                             </Form.Group>
 
@@ -163,10 +182,24 @@ const Booking = () => {
                         {/* Loading and Error Handling */}
                         {loading && <p>Loading...</p>}
                         {error && <p>Error: {error}</p>}
-                        {bookingDetails && <p>Booking Success: {JSON.stringify(bookingDetails)}</p>}
                     </Container>
                 </Col>
             </Row>
+
+            {/* Modal for Success/Error Messages */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalVariant === 'success' ? 'Success' : 'Error'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalMessage}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

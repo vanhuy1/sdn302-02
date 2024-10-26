@@ -101,15 +101,15 @@ export const updateBooking = createAsyncThunk(
 // DELETE a booking by ID
 export const deleteBooking = createAsyncThunk(
     'booking/deleteBooking',
-    async (id, thunkAPI) => {
+    async (bookingID, thunkAPI) => {
         try {
-            const response = await fetch(`http://localhost:3500/booking/${id}`, {
+            const response = await fetch(`http://localhost:3500/booking/${bookingID}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
                 throw new Error('Failed to delete booking');
             }
-            return id; // Return the deleted booking ID
+            return bookingID; // Return the deleted booking ID
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }
