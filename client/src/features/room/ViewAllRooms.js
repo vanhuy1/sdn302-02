@@ -17,11 +17,11 @@ const ViewAllRooms = () => {
     const totalPages = Math.ceil(rooms.length / itemsPerPage);
 
     const handleViewRoom = () => {
-        navigate('/room');  // Programmatically navigate to /viewroom
+        navigate('/dash/manage/room');  // Programmatically navigate to /viewroom
     };
 
     const handleViewCategory = () => {
-        navigate('/category');  // Programmatically navigate to /viewroom
+        navigate('/dash/manage/category');  // Programmatically navigate to /viewroom
     };
 
     const handlePageChange = (page) => {

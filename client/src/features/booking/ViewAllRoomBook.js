@@ -23,7 +23,7 @@ const ViewAllRoomBook = () => {
     const handleDelete = (bookingId) => {
         if (window.confirm('Are you sure you want to cancel this booking?')) {
             dispatch(deleteBooking(bookingId)).then(() => {
-                navigate('/viewroom');
+                navigate('/dash/viewroom');
             });
         }
     };
