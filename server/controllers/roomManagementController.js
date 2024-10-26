@@ -7,6 +7,7 @@ const moment = require('moment');
 const addRoomCategory = async (req, res) => {
     try {
         const { roomCategoryName, price, amount } = req.body;
+        console.log({ roomCategoryName, price, amount });
         // Validation
         if (!roomCategoryName || !price || !amount) {
             return res.status(400).json({ message: 'All fields are required' });

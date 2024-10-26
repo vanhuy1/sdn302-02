@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Table, Button, Pagination, Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Row, Col, Table, Button, Pagination, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError, ViewRoomCategory, AddRoomCategory, UpdateRoomCategory, DeleteRoomCategory, ViewRoomCategoryById } from '../../features/room/RoomSlice'; // Adjust the import path based on your project structure
-import Sidebar from "../../components/landing-page/sidebar";
-import Navtab from "../../components/management/Navtab";
 
 const ViewAllRooms = () => {
     const dispatch = useDispatch();
@@ -24,11 +22,11 @@ const ViewAllRooms = () => {
     const totalPages = Math.ceil(rooms.length / itemsPerPage);
 
     const handleViewRoom = () => {
-        navigate('/room');
+        navigate('/dash/room');
     };
 
     const handleViewCategory = () => {
-        navigate('/category');
+        navigate('/dash/category');
     };
 
     const handlePageChange = (page) => {
@@ -152,77 +150,72 @@ const ViewAllRooms = () => {
 
     return (
         <>
-                <Row>
-                    <Col md={2} className="bg-light shadow-sm">
-                        <Sidebar />
-                    </Col>
-                    <Col md={10} className="mt-3 mb-5">
-                        <p className="fs-4 fw-semibold">Manage</p>
-                        <Navtab />
-                        <Outlet />
-                        <Col xs={10}>
-                            {/* Guests Table */}
-                            <Row className="mb-3">
-                                <Col>
-                                    <h5>Room management</h5>
-                                </Col>
-                                <Col className="text-end mt-4">
-                                    <Button onClick={() => handleAddRoom()} variant="outline-primary" className="me-2">Add new room</Button>
-                                    <Button onClick={handleViewCategory} variant="outline-primary" className="me-2">View room category</Button>
-                                    <Button onClick={handleViewRoom} variant="outline-primary" className="me-2">View room </Button>
-                                </Col>
-                            </Row>
+            <Row>
+                <Col md={10} className="mt-3 mb-5">
+                    <p className="fs-4 fw-semibold">Manage</p>
+                    <Col xs={10}>
+                        {/* Guests Table */}
+                        <Row className="mb-3">
+                            <Col>
+                                <h5>Room management</h5>
+                            </Col>
+                            <Col className="text-end mt-4">
+                                <Button onClick={() => handleAddRoom()} variant="outline-primary" className="me-2">Add new room</Button>
+                                <Button onClick={handleViewCategory} variant="outline-primary" className="me-2">View room category</Button>
+                                <Button onClick={handleViewRoom} variant="outline-primary" className="me-2">View room </Button>
+                            </Col>
+                        </Row>
 
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Room name</th>
-                                        <th>Price</th>
-                                        <th>Amount</th>
-                                        <th>Action</th>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Room name</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {roomCategories.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((room, index) => (
+                                    <tr key={`${room._id}-${index}`}>
+                                        <td>{index + 1}</td>
+                                        <td>{room.roomCategoryName}</td>
+                                        <td>{room.price}</td>
+                                        <td>{room.amount}</td>
+                                        <td>
+                                            <Button onClick={() => handleDelete(room._id)} variant="outline-danger" className="me-2">Delete</Button>
+                                            <Button onClick={() => handleEdit(room._id)} variant="outline-success" className="me-2">Edit</Button>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {roomCategories.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((room, index) => (
-                                        <tr key={`${room._id}-${index}`}>
-                                            <td>{index + 1}</td>
-                                            <td>{room.roomCategoryName}</td>
-                                            <td>{room.price}</td>
-                                            <td>{room.amount}</td>
-                                            <td>
-                                                <Button onClick={() => handleDelete(room._id)} variant="outline-danger" className="me-2">Delete</Button>
-                                                <Button onClick={() => handleEdit(room._id)} variant="outline-success" className="me-2">Edit</Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-
-                            </Table>
-
-                            {/* Pagination */}
-                            <Pagination className="justify-content-center">
-                                <Pagination.Prev
-                                    onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                                    disabled={currentPage === 1}
-                                />
-                                {Array.from({ length: totalPages }).map((_, idx) => (
-                                    <Pagination.Item
-                                        key={idx + 1}
-                                        active={idx + 1 === currentPage}
-                                        onClick={() => handlePageChange(idx + 1)}
-                                    >
-                                        {idx + 1}
-                                    </Pagination.Item>
                                 ))}
-                                <Pagination.Next
-                                    onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                                    disabled={currentPage === totalPages}
-                                />
-                            </Pagination>
-                        </Col>
+                            </tbody>
+
+                        </Table>
+
+                        {/* Pagination */}
+                        <Pagination className="justify-content-center">
+                            <Pagination.Prev
+                                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                                disabled={currentPage === 1}
+                            />
+                            {Array.from({ length: totalPages }).map((_, idx) => (
+                                <Pagination.Item
+                                    key={idx + 1}
+                                    active={idx + 1 === currentPage}
+                                    onClick={() => handlePageChange(idx + 1)}
+                                >
+                                    {idx + 1}
+                                </Pagination.Item>
+                            ))}
+                            <Pagination.Next
+                                onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                            />
+                        </Pagination>
                     </Col>
-                </Row>
+                </Col>
+            </Row>
             {/* Category Modal */}
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>

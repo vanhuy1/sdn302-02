@@ -15,7 +15,7 @@ const login = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const match = await bcrypt.compare(password, foundUser.password)
+  const match = await bcrypt.compare(password, foundUser.password);
 
   if (!match) return res.status(401).json({ message: "Unauthorized" });
 
@@ -71,7 +71,6 @@ const refresh = (req, res) => {
       const accessToken = jwt.sign(
         {
           UserInfo: {
-            id: foundUser._id,
             username: foundUser.username,
             roles: foundUser.roles,
           },
@@ -94,7 +93,8 @@ const logout = (req, res) => {
 
 const viewProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const username = req.user;
+    const user = await User.findOne({ username }).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
@@ -106,14 +106,16 @@ const viewProfile = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const username = req.user
+
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
 
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Old password is incorrect!" });
     }
@@ -129,38 +131,49 @@ const changePassword = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
-    const { username, name, email, gender, address, birthDay, identifyNumber, phoneNumber } = req.body;
+    const {
+      username,
+      name,
+      gender,
+      birthDay,
+      address,
+      identifyNumber,
+      phoneNumber,
+    } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findOne({ username });
     if (!user) {
       res.status(404).json({ message: "User not found" });
     }
 
     if (
-        !username ||
-        !name ||
-        !email ||
-        !gender ||
-        !address ||
-        !birthDay ||
-        !identifyNumber ||
-        !phoneNumber
+      !username ||
+      !name ||
+      !gender ||
+      !address ||
+      !birthDay ||
+      !identifyNumber ||
+      !phoneNumber
     ) {
-        return res.status(400).json({ message: "All fields are required!" });
+      return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const duplicateIdentityNumber = await User.findOne({ identifyNumber })
-        .collation({ locale: "en", strength: 2 })
-        .lean()
-        .exec();
+    const duplicateIdentityNumber = await User.findOne({
+      identifyNumber,
+      _id: { $ne: user._id },
+    })
+      .collation({ locale: "en", strength: 2 })
+      .lean()
+      .exec();
 
     if (duplicateIdentityNumber) {
-        return res.status(409).json({ message: "Identity Number already exists!" });
+      return res
+        .status(409)
+        .json({ message: "Identity Number already exists!" });
     }
 
     user.username = username || user.username;
     user.name = name || user.name;
-    user.email = email || user.email;
     user.gender = gender || user.gender;
     user.address = address || user.address;
     user.birthDay = birthDay || user.birthDay;
@@ -173,7 +186,6 @@ const editProfile = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 module.exports = {
   login,
   refresh,

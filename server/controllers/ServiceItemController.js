@@ -1,5 +1,6 @@
 const ServiceItem = require('../models/ServiceItem'); // Adjust the path as necessary
 const Service = require('../models/Service'); // Adjust the path as necessary
+const User = require('../models/User');
 
 // Create a new service item
 exports.createServiceItem = async (req, res) => {
@@ -84,6 +85,29 @@ exports.deleteServiceItemById = async (req, res) => {
         );
 
         res.status(200).send(serviceItem);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+exports.addServiceItemsToUser = async (req, res) => {
+    const { userId, serviceItemIds } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+
+        // Filter out items already in user's services and add new ones
+        const newServiceItems = serviceItemIds.filter(
+            itemId => !user.services.includes(itemId)
+        );
+
+        user.services.push(...newServiceItems);
+        await user.save();
+
+        res.status(200).send(user);
     } catch (error) {
         res.status(500).send(error);
     }

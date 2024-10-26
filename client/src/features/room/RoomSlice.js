@@ -37,14 +37,14 @@ export const ViewRoomById = createAsyncThunk(
 // Add Room Category
 export const AddRoomCategory = createAsyncThunk(
     'room/addRoomCategory',
-    async ({ roomName, price, amount }, thunkAPI) => {  // Wrap parameters in an object
+    async ({ roomCategoryName, price, amount }, thunkAPI) => {  // Wrap parameters in an object
         try {
             const response = await fetch('http://localhost:3500/category', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ roomName, price, amount }),  // Properly format request body
+                body: JSON.stringify({ roomCategoryName, price, amount }),  // Properly format request body
             });
             if (!response.ok) {
                 throw new Error('Failed to add room category!');

@@ -109,17 +109,20 @@ const updateStaff = async (req, res) => {
         return res.status(404).json({ message: "Department not found!" });
     }
 
-    // Check for duplicate identity number, excluding the current staff member
-    const duplicateIdentityNumber = await Staff.findOne({ identityNumber })
+    const staffId = req.params.staffId;
+    const duplicateIdentityNumber = await Staff.findOne({
+        identityNumber,
+        _id: { $ne: staffId }
+    })
         .collation({ locale: "en", strength: 2 })
         .lean()
         .exec();
 
-    if (duplicateIdentityNumber && duplicateIdentityNumber._id.toString() !== req.params._id) {
+    if (duplicateIdentityNumber) {
         return res.status(409).json({ message: "Identity Number already exists!" });
     }
 
-    const staff = await Staff.findById(req.params.staffId).exec();
+    const staff = await Staff.findById(staffId).exec();
     if (!staff) {
         return res.status(404).json({ message: "Staff not found!" });
     }
@@ -152,7 +155,7 @@ const deleteStaff = async (req, res) => {
             return res.status(404).json({ message: "Staff not found!" });
         }
 
-        return res.status(204).json({message: "Staff deleted successfully!"});
+        return res.status(204).json({ message: "Staff deleted successfully!" });
     } catch (err) {
         return res.status(500).json({ message: "Failed to delete staff", error: err.message });
     }

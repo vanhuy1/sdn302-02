@@ -3,11 +3,16 @@ import { Tab, Nav, Row, Col, ListGroup, Container, Alert } from 'react-bootstrap
 import ServiceItem from './serviceItem';
 import { useFetchServicesQuery } from "../../../app/api/apiSlice";
 import ChosenList from './chosenList';
+import { useDispatch } from 'react-redux';
+import { addServiceItemsToUser } from '../../../store/serviceSlice';
+import useAuth from '../../../hooks/useAuth';
 
 const Content = () => {
     const [activeTab, setActiveTab] = useState('choose');
     const [selectedService, setSelectedService] = useState(null);
     const [chosenServices, setChosenServices] = useState([]);
+    const dispatch = useDispatch();
+    const { id, roles } = useAuth();
 
     const { data: serviceList, error, isLoading } = useFetchServicesQuery();
 
@@ -26,31 +31,30 @@ const Content = () => {
         }
     };
 
-    const handleRequestService = () => {
-        const requestData = chosenServices.map(item => ({
-            serviceId: item.serviceId,
-            itemId: item._id,
-            itemName: item.itemName,
-            cost: item.cost
-        }));
+    const handleRequestService = (e) => {
+        e.preventDefault();
+        const userRole = roles;
+        if (userRole === "Customer") {
+            if (window.confirm('Are you sure you want to send this request?')) {
+                const userId = id;
+                const serviceItemIds = chosenServices.map(item => item._id);
 
-        fetch('/api/request-service', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ services: requestData })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            alert('Service request sent successfully!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('There was an error sending the service request.');
-        });
-    };
+                const data = {
+                    userId,
+                    serviceItemIds
+                };
+
+                dispatch(addServiceItemsToUser(data));
+
+                // Reload the page after confirmation
+                window.location.reload();
+            }
+        } else {
+            alert('Không thể thực hiện tác vụ này');
+        }
+
+
+    }
 
     return (
         <Container className="my-4">
