@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
-import { Button, Table } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Button, Table, Form, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
+import { FaArrowDownWideShort, FaArrowUpShortWide } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -16,6 +17,12 @@ const Staffs = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
   const staffs = useSelector(selectAllStaffs);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchField, setSearchField] = useState("staffName");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [sortField, setSortField] = useState("staffName");
+  const [sortDirection, setSortDirection] = useState("asc");
 
   const handleDelete = (e, id) => {
     e.preventDefault();
@@ -46,30 +53,151 @@ const Staffs = () => {
     });
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterStatus(e.target.value);
+  };
+
+  const handleFieldChange = (e) => {
+    setSearchField(e.target.value);
+  };
+
+  const handleSortFieldChange = (e) => {
+    const newSortField = e.target.value;
+    if (newSortField === sortField) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(newSortField);
+      setSortDirection("asc");
+    }
+  };
+
   useEffect(() => {
     dispatch(getAllStaffs());
   }, [dispatch]);
 
+  const filteredStaffs = staffs.filter((staff) => {
+    const matchesSearch =
+      (searchField === "staffName" &&
+        staff.staffName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (searchField === "gender" &&
+        staff.gender.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (searchField === "identityNumber" &&
+        staff.identityNumber.toString().includes(searchTerm.toLowerCase())) ||
+      (searchField === "position" &&
+        staff.position.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (searchField === "phoneNumber" &&
+        staff.phoneNumber.toString().includes(searchTerm.toLowerCase()));
+
+    const matchesFilter =
+      filterStatus === "all" ||
+      (filterStatus === "active" && staff.active) ||
+      (filterStatus === "inactive" && !staff.active);
+
+    return matchesSearch && matchesFilter;
+  });
+
+  const sortedStaffs = [...filteredStaffs].sort((a, b) => {
+    const aValue = a[sortField];
+    const bValue = b[sortField];
+
+    if (sortDirection === "asc") {
+      return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+    } else {
+      return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+    }
+  });
+
   return (
     <>
-      <div className="mt-5 mx-2 py-4 border rounded">
-        <h3 className="ms-4">Staffs</h3>
+      <div className="mx-2 border rounded">
+        <h2 className="text-center mt-3 mb-5">Staffs</h2>
         {isLoading && <p className="ms-4">Loading staff data...</p>}
+
+        {/* Search and Filter */}
+        <div className="mx-4 mb-3">
+          <Row>
+            <Col md={1}>
+              <Form.Label className="fw-bold m-0 mt-2 " htmlFor="search">
+                Search:
+              </Form.Label>
+            </Col>
+            <Col md={8}>
+              <Form.Control
+                id="search"
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </Col>
+            <Col md={3}>
+              <Form.Select
+                value={searchField}
+                onChange={handleFieldChange}
+                className="me-2"
+              >
+                <option value="staffName">Staff Name</option>
+                <option value="gender">Gender</option>
+                <option value="identityNumber">Identity Number</option>
+                <option value="position">Position</option>
+                <option value="phoneNumber">Phone Number</option>
+              </Form.Select>
+            </Col>
+          </Row>
+        </div>
+        <div className="mx-4 d-flex justify-content-between align-items-center mb-3">
+          <Form.Select className="me-2" value={filterStatus} onChange={handleFilterChange}>
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </Form.Select>
+          <Form.Select
+            value={sortField}
+            onChange={handleSortFieldChange}
+            className="me-2"
+          >
+            <option value="staffName">Sort by Staff Name</option>
+            <option value="gender">Sort by Gender</option>
+            <option value="identityNumber">Sort by Identity Number</option>
+            <option value="position">Sort by Position</option>
+            <option value="phoneNumber">Sort by Phone Number</option>
+          </Form.Select>
+          <Button
+            onClick={() =>
+              setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+            }
+          >
+            {sortDirection === "asc" ? (
+              <FaArrowUpShortWide />
+            ) : (
+              <FaArrowDownWideShort />
+            )}
+          </Button>
+        </div>
+
         <Table striped bordered hover responsive className="mx-4">
           <thead>
             <tr>
               <th></th>
-              <th>Staff Name</th>
+              <th>
+                Staff Name
+                <FaArrowUpShortWide />
+              </th>
               <th>Gender</th>
               <th>Identity Number</th>
               <th>Position</th>
               <th>Phone Number</th>
+              <th>Active</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {staffs.length > 0 ? (
-              staffs.map((staff, index) => (
+            {sortedStaffs.length > 0 ? (
+              sortedStaffs.map((staff, index) => (
                 <tr key={staff._id}>
                   <td>{index + 1}</td>
                   <td>{staff.staffName}</td>
@@ -78,10 +206,14 @@ const Staffs = () => {
                   <td>{staff.position}</td>
                   <td>{staff.phoneNumber}</td>
                   <td>
-                  <Link
-                      className="btn btn-info me-1"
-                      to={`${staff._id}`}
-                    >
+                    {staff.active ? (
+                      <span className="text-success fw-bolder">Working</span>
+                    ) : (
+                      <span className="text-danger fw-bolder">Left</span>
+                    )}
+                  </td>
+                  <td>
+                    <Link className="btn btn-info me-1" to={`${staff._id}`}>
                       <FaInfoCircle className="m-0 fs-5" />
                     </Link>
                     <Link
@@ -101,7 +233,7 @@ const Staffs = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center">
+                <td colSpan="8" className="text-center">
                   No staff found
                 </td>
               </tr>
