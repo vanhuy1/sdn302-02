@@ -179,7 +179,7 @@ const editBookingRoom = async (req, res) => {
         }
 
         const conflictingBookings = await Booking.find({
-            categoryRoom: new mongoose.Types.ObjectId(check),
+
             $or: [
                 { startDate: { $lt: moment(endDate).toDate() }, endDate: { $gt: moment(startDate).toDate() } }
             ]
