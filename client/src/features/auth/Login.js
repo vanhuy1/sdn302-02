@@ -5,6 +5,8 @@ import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice'
 import usePersist from '../../hooks/usePersist'
 import PulseLoader from 'react-spinners/PulseLoader'
+import { Container, Row, Col, Form, Button, Alert, Card } from 'react-bootstrap';
+
 const Login = () => {
 
     const userRef = useRef()
@@ -58,118 +60,91 @@ const Login = () => {
 
     if (isLoading) return <PulseLoader color={"#FFF"} />
 
-    const styles = {
-        wrapper: {
-            height: '100vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#f4f4f4',
-        },
-        public: {
-            backgroundColor: '#fff',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            maxWidth: '400px',
-            width: '100%',
-        },
-        header: {
-            textAlign: 'center',
-            color: '#333',
-        },
-        form: {
-            width: '100%',
-        },
-        formInput: {
-            width: '100%',
-            padding: '10px',
-            margin: '10px 0',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            fontSize: '16px',
-        },
-        formSubmitButton: {
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            fontSize: '16px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginTop: '10px',
-        },
-        formPersist: {
-            display: 'flex',
-            alignItems: 'center',
-            marginTop: '10px',
-        },
-        errClass: {
-            color: 'red',
-            fontWeight: 'bold',
-            marginBottom: '10px',
-            fontSize: '14px',
-        },
-        footer: {
-            marginTop: '20px',
-            textAlign: 'center',
-        },
-        footerLink: {
-            color: '#007bff',
-            textDecoration: 'none',
-        },
-    };
 
     const content = (
-        <div style={styles.wrapper}>
-            <section style={styles.public}>
-                <header>
-                    <h1 style={styles.header}>Login</h1>
-                </header>
-                <main style={styles.login}>
-                    <p ref={errRef} style={styles[errClass]} aria-live="assertive">{errMsg}</p>
+        <div className="vh-100" style={{ backgroundColor: "#DFF2EB" }}>
+            <Container className="py-5 h-100">
+                <Row className="d-flex justify-content-center align-items-center h-100">
+                    <Col xl={10}>
+                        <Card style={{ borderRadius: "1rem" }}>
+                            <Row className="g-0">
+                                <Col md={6} lg={5} className="d-none d-md-block">
+                                    <img
+                                        src={`${process.env.PUBLIC_URL}/loginbg.png`}
+                                        alt="login form"
+                                        className="img-fluid"
+                                        style={{ borderRadius: "1rem 0 0 1rem" }}
+                                    />
+                                </Col>
+                                <Col md={6} lg={7} className="d-flex align-items-center">
+                                    <Card.Body className="p-4 p-lg-5 text-black">
+                                        <Form onSubmit={handleSubmit}>
+                                            <div className="d-flex align-items-center mb-3 pb-1">
+                                                <i
+                                                    className="fas fa-cubes fa-2x me-3"
+                                                    style={{ color: "#ff6219" }}
+                                                ></i>
+                                                <span className="h1 fw-bold mb-0">Login</span>
+                                            </div>
 
-                    <form style={styles.form} onSubmit={handleSubmit}>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            style={styles.formInput}
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            value={username}
-                            onChange={handleUserInput}
-                            autoComplete="off"
-                            required
-                        />
+                                            <h5
+                                                className="fw-normal mb-3 pb-3"
+                                                style={{ letterSpacing: "1px" }}
+                                            >
+                                                Sign into your account
+                                            </h5>
+                                            <Form.Group controlId="username">
+                                                <Form.Label>Username:</Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    ref={userRef}
+                                                    value={username}
+                                                    onChange={handleUserInput}
+                                                    autoComplete="off"
+                                                    required
+                                                />
+                                            </Form.Group>
 
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            style={styles.formInput}
-                            type="password"
-                            id="password"
-                            onChange={handlePwdInput}
-                            value={password}
-                            required
-                        />
-                        <button style={styles.formSubmitButton}>Sign In</button>
+                                            <Form.Group controlId="password">
+                                                <Form.Label>Password:</Form.Label>
+                                                <Form.Control
+                                                    type="password"
+                                                    onChange={handlePwdInput}
+                                                    value={password}
+                                                    required
+                                                />
+                                            </Form.Group>
 
-                        <label htmlFor="persist" style={styles.formPersist}>
-                            <input
-                                type="checkbox"
-                                className={styles.form__checkbox}
-                                id="persist"
-                                onChange={handleToggle}
-                                checked={persist}
-                            />
-                            Trust This Device
-                        </label>
-                    </form>
-                </main>
-                <footer style={styles.footer}>
-                    <Link to="/" style={styles.footerLink}>Back to Home</Link>
-                </footer>
-            </section>
+                                            <Button type="submit" className="w-100 mt-3">
+                                                Sign In
+                                            </Button>
+
+                                            <Form.Group controlId="persist" className="mt-3">
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    id="persist"
+                                                    label="Trust This Device"
+                                                    onChange={handleToggle}
+                                                    checked={persist}
+                                                />
+                                            </Form.Group>
+                                            <p
+                                                className="mb-5 pb-lg-2"
+                                                style={{ color: "#393f81" }}
+                                            >
+                                                Don't have an account?{" "}
+                                                <a href="/register" style={{ color: "#393f81" }}>
+                                                    Register here
+                                                </a>
+                                            </p>
+                                        </Form>
+                                    </Card.Body>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     )
 

@@ -61,6 +61,7 @@ const ViewAllRooms = () => {
                 })
                 .catch((error) => {
                     window.alert("Failed to create room: " + error);
+                    window.location.reload();
                 });
 
             handleCloseModal();
@@ -98,81 +99,76 @@ const ViewAllRooms = () => {
     return (
         <>
             <Row>
-                <Col md={2} className="bg-light shadow-sm">
-
-                </Col>
                 <Col md={10} className="mt-3 mb-5">
                     <p className="fs-4 fw-semibold">Manage</p>
-                    <Col xs={10}>
-                        {/* Guests Table */}
-                        <Row className="mb-3">
-                            <Col>
-                                <h5>Room management</h5>
-                            </Col>
-                            <Col className="text-end mt-4">
-                                <Button onClick={() => handleAddRoom()} variant="outline-primary" className="me-2">Add new room</Button>
-                                <Button onClick={handleViewCategory} variant="outline-primary" className="me-2">View room category</Button>
-                                <Button onClick={handleViewRoom} variant="outline-primary" className="me-2">View room </Button>
-                            </Col>
-                        </Row>
+                    {/* Guests Table */}
+                    <Row className="mb-3">
+                        <Col>
+                            <h5>Room management</h5>
+                        </Col>
+                        <Col className="text-end mt-4">
+                            <Button onClick={() => handleAddRoom()} variant="outline-primary" className="me-2">Add new room</Button>
+                            <Button onClick={handleViewCategory} variant="outline-primary" className="me-2">View room category</Button>
+                            <Button onClick={handleViewRoom} variant="outline-primary" className="me-2">View room </Button>
+                        </Col>
+                    </Row>
 
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Room number</th>
-                                    <th>Room category</th>
-                                    <th>Start Date</th>
-                                    <th>End date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Room number</th>
+                                <th>Room category</th>
+                                <th>Start Date</th>
+                                <th>End date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rooms.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((room, index) => (
+                                <tr key={room.roomID}>
+                                    <td>{index + 1}</td>
+                                    <td>{room.roomNumber}</td>
+                                    <td>{room.roomCategoryName}</td>
+                                    <td>{room.startDate ? room.startDate : 'Empty booking'}</td>
+                                    <td>{room.endDate ? room.endDate : 'Empty booking'}</td>
+                                    <td>
+                                        <Badge bg={room.status === 'B' ? 'success' :
+                                            room.status === 'R' ? 'danger' :
+                                                room.status === 'E' ? 'warning' :
+                                                    'info'}>
+                                            {room.status}
+                                        </Badge>
+                                    </td>
+                                    <td>
+                                        <Button onClick={() => handleDelete(room.roomID)} variant="outline-danger" className="me-2">Delete</Button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {rooms.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((room, index) => (
-                                    <tr key={room.roomID}>
-                                        <td>{index + 1}</td>
-                                        <td>{room.roomNumber}</td>
-                                        <td>{room.roomCategoryName}</td>
-                                        <td>{room.startDate ? room.startDate : 'Empty booking'}</td>
-                                        <td>{room.endDate ? room.endDate : 'Empty booking'}</td>
-                                        <td>
-                                            <Badge bg={room.status === 'B' ? 'success' :
-                                                room.status === 'R' ? 'danger' :
-                                                    room.status === 'E' ? 'warning' :
-                                                        'info'}>
-                                                {room.status}
-                                            </Badge>
-                                        </td>
-                                        <td>
-                                            <Button onClick={() => handleDelete(room.roomID)} variant="outline-danger" className="me-2">Delete</Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-
-                        {/* Pagination */}
-                        <Pagination className="justify-content-center">
-                            <Pagination.Prev
-                                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                                disabled={currentPage === 1}
-                            />
-                            {Array.from({ length: totalPages }).map((_, idx) => (
-                                <Pagination.Item
-                                    key={idx + 1}
-                                    active={idx + 1 === currentPage}
-                                    onClick={() => handlePageChange(idx + 1)}
-                                >
-                                    {idx + 1}
-                                </Pagination.Item>
                             ))}
-                            <Pagination.Next
-                                onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                            />
-                        </Pagination>
-                    </Col>
+                        </tbody>
+                    </Table>
+
+                    {/* Pagination */}
+                    <Pagination className="justify-content-center">
+                        <Pagination.Prev
+                            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                            disabled={currentPage === 1}
+                        />
+                        {Array.from({ length: totalPages }).map((_, idx) => (
+                            <Pagination.Item
+                                key={idx + 1}
+                                active={idx + 1 === currentPage}
+                                onClick={() => handlePageChange(idx + 1)}
+                            >
+                                {idx + 1}
+                            </Pagination.Item>
+                        ))}
+                        <Pagination.Next
+                            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        />
+                    </Pagination>
                 </Col>
             </Row>
             {/* Category Modal */}

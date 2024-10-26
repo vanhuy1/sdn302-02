@@ -86,6 +86,24 @@ const updateRoomCategory = async (req, res) => {
 // Delete a room category (Delete)
 const deleteRoomCategory = async (req, res) => {
     try {
+        // Find rooms with the specified category ID and status
+        const room = await Room.find({
+            categoryRoomID: req.params.categoryRoomId,
+            status: { $in: ['R', 'B'] }
+        });
+
+        console.log("Found rooms: ", room); 
+
+        // Check if any rooms are found
+        if (room.length > 0) {
+            return res.status(400).json({ message: 'There are rooms in use!' });
+        }
+
+        // Delete rooms (although this will be empty if no rooms are found)
+        const deleteRoom = await Room.deleteMany({
+            categoryRoomID: req.params.categoryRoomId
+        });
+
         // Find and delete the room category
         const roomCategory = await RoomCategory.findByIdAndDelete(req.params.categoryRoomId);
 
@@ -95,9 +113,11 @@ const deleteRoomCategory = async (req, res) => {
 
         res.status(200).json({ message: 'Room category deleted successfully' });
     } catch (error) {
+        console.error("Error deleting room category:", error); 
         res.status(500).json({ message: error.message });
     }
 };
+
 
 //Create a room
 const createRoom = async (req, res) => {

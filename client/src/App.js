@@ -54,8 +54,6 @@ function App() {
               <Route path="dash" element={<DashLayout />}>
 
                 <Route index element={<HomePage />} />
-                <Route path="about" element={<About />} />
-                <Route path="contact" element={<Contact />} />
                 <Route path="booking" element={<Booking />} />
                 <Route path="viewroom" element={<ViewAllRoomBook />} />
                 <Route path="edit-booking/:id" element={<EditBooking />} />
