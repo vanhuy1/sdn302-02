@@ -86,7 +86,6 @@ function App() {
 
                     <Route path="service" >
                       <Route index element={<ServiceList />} />
-                      <Route path=':id' element={<ServiceDetail />} />
                     </Route>
 
 

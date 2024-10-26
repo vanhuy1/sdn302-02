@@ -12,7 +12,7 @@ const Content = () => {
     const [selectedService, setSelectedService] = useState(null);
     const [chosenServices, setChosenServices] = useState([]);
     const dispatch = useDispatch();
-    const { id } = useAuth();
+    const { id, roles } = useAuth();
 
     const { data: serviceList, error, isLoading } = useFetchServicesQuery();
 
@@ -33,16 +33,27 @@ const Content = () => {
 
     const handleRequestService = (e) => {
         e.preventDefault();
+        const userRole = roles;
+        if (userRole === "Customer") {
+            if (window.confirm('Are you sure you want to send this request?')) {
+                const userId = id;
+                const serviceItemIds = chosenServices.map(item => item._id);
 
-        const userId = id; // Replace with actual user ID, e.g., from auth state
-        const serviceItemIds = chosenServices.map(item => item._id);
+                const data = {
+                    userId,
+                    serviceItemIds
+                };
 
-        const data = {
-            userId,
-            serviceItemIds
-        };
+                dispatch(addServiceItemsToUser(data));
 
-        dispatch(addServiceItemsToUser(data));
+                // Reload the page after confirmation
+                window.location.reload();
+            }
+        } else {
+            alert('Không thể thực hiện tác vụ này');
+        }
+
+
     }
 
     return (
