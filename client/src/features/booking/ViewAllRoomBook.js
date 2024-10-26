@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Row, Col, Container, Nav, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { fetchUserBookings, selectAllBookings, deleteBooking } from './BookingSlice'; // Update to match your new thunk
+import { fetchUserBookings, selectAllBookings, deleteBooking, fetchCurrentBookings } from './BookingSlice'; // Update to match your new thunk
 
 const ViewAllRoomBook = () => {
     const dispatch = useDispatch();
@@ -28,6 +28,25 @@ const ViewAllRoomBook = () => {
         }
     };
 
+    const handleChange = (bookingId) => {
+        dispatch(fetchCurrentBookings(bookingId)).then((action) => {
+            console.log(action)
+            // Kiểm tra nếu action là fulfilled
+            if (fetchCurrentBookings.fulfilled.match(action)) {
+                const bookingDetails = action.payload;
+                if (bookingDetails) {
+                    navigate(`/dash/edit-booking/${bookingId}`);
+                } else {
+                    console.error('No booking details found');
+                }
+            } else {
+                console.error('Failed to fetch booking details');
+            }
+        });
+    };
+
+
+
     return (
         <>
             <Row>
@@ -38,7 +57,7 @@ const ViewAllRoomBook = () => {
                             <Nav.Item className="mx-4">
                                 <Nav.Link
                                     as={Link}
-                                    to="/booking"
+                                    to="/dash/booking"
                                     className="text-white fw-bold bg-primary rounded p-2"
                                     style={{ transition: 'background-color 0.3s' }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
@@ -51,7 +70,7 @@ const ViewAllRoomBook = () => {
                             <Nav.Item className="mx-4">
                                 <Nav.Link
                                     as={Link}
-                                    to="/viewroom"
+                                    to="/dash/viewroom"
                                     className="text-white fw-bold bg-success rounded p-2"
                                     style={{ transition: 'background-color 0.3s' }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
@@ -91,8 +110,7 @@ const ViewAllRoomBook = () => {
                                             <td>{booking.amountBook}</td>
                                             <td>
                                                 <Button
-                                                    as={Link}
-                                                    to={`/edit-booking/${booking._id}`}
+                                                    onClick={() => handleChange(booking._id)}
                                                     className="text-white fw-bold bg-warning rounded p-2 mx-4"
                                                     style={{ transition: 'background-color 0.3s' }}
                                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffc107'}

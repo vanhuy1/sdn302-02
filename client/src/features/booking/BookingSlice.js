@@ -50,6 +50,7 @@ export const fetchCurrentBookings = createAsyncThunk(
                 throw new Error('Failed to fetch bookings for user');
             }
             const data = await response.json();
+            console.log(data)
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
@@ -158,6 +159,22 @@ const bookingSlice = createSlice({
                 state.error = action.payload;
             });
 
+        // GET current booking
+        builder
+            .addCase(fetchCurrentBookings.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchCurrentBookings.fulfilled, (state, action) => {
+                state.loading = false;
+                state.bookingDetails = action.payload;
+                state.error = null;
+            })
+            .addCase(fetchCurrentBookings.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
+
         // READ all bookings
         builder
             .addCase(fetchBookings.pending, (state) => {
@@ -182,10 +199,11 @@ const bookingSlice = createSlice({
             })
             .addCase(updateBooking.fulfilled, (state, action) => {
                 state.loading = false;
-                const index = state.bookings.findIndex(booking => booking.id === action.payload.id);
-                if (index !== -1) {
-                    state.bookings[index] = action.payload; // Update the booking
-                }
+                const updatedBooking = action.payload;
+                state.bookings = state.bookings.map(booking =>
+                    booking._id === updatedBooking._id ? updatedBooking : booking
+                );
+                console.log(state.bookings)
                 state.error = null;
             })
             .addCase(updateBooking.rejected, (state, action) => {
@@ -213,5 +231,4 @@ const bookingSlice = createSlice({
 
 // Export the state selectors
 export const selectAllBookings = (state) => state.booking.bookings;
-
 export default bookingSlice.reducer;

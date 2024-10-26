@@ -3,23 +3,22 @@ const Booking = require('../models/Booking');
 const Room = require('../models/Room');
 const RoomCategory = require('../models/RoomCategory');
 const moment = require('moment');
-
+const mongoose = require('mongoose');
 
 const bookingRoom = async (req, res) => {
     try {
         const { username, categoryRoomId, startDate, endDate, amountBook } = req.body;
         let customerID;
 
-        // Check input
-        console.log(username);
-        console.log(categoryRoomId);
-        console.log(startDate);
-        console.log(endDate);
-        console.log(amountBook);
+        // Log input
+        console.log({ username, categoryRoomId, startDate, endDate, amountBook });
 
-        // Find user by username and assign customerID
-        const user = await User.findOne({ username: username });
-        customerID = user ? user._id : null;
+        // Find user by username
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        customerID = user._id;
 
         // Input validation
         if (!categoryRoomId || !startDate || !endDate || !amountBook) {
@@ -36,24 +35,31 @@ const bookingRoom = async (req, res) => {
 
         const categoryRoom = categoryRoomId[0];
 
-        const room = await RoomCategory.findById(categoryRoom);
-        if (!room) {
-            return res.status(403).json({ message: 'Room not found' });
+        // Find room category
+        const roomCategory = await RoomCategory.findById(categoryRoom);
+        if (!roomCategory) {
+            return res.status(403).json({ message: 'Room category not found' });
         }
 
+        // Find conflicting bookings
         const conflictingBookings = await Booking.find({
-            categoryRoom,
             $or: [
                 { startDate: { $lt: moment(endDate).toDate() }, endDate: { $gt: moment(startDate).toDate() } }
             ]
         }).distinct('roomID');
-
+        console.log(conflictingBookings)
+        // Find available rooms in the category that are not conflicting
         const availableRooms = await Room.aggregate([
-            { $match: { categoryRoomID: categoryRoom, status: { $in: ['E'] } } }
+            {
+                $match: {
+                    categoryRoomID: new mongoose.Types.ObjectId(categoryRoom),
+                    status: 'E' // Available rooms with status 'E'
+                }
+            }
         ]);
 
         const filteredRooms = availableRooms.filter(room => {
-            return !(room.status === 'R' && conflictingBookings.includes(room._id.toString()));
+            return !conflictingBookings.includes(room._id.toString());
         });
 
         const availableRoomIDs = filteredRooms.map(room => room._id);
@@ -74,43 +80,47 @@ const bookingRoom = async (req, res) => {
             endDate,
             amountBook
         });
-        console.log(booking)
+
         await booking.save();
 
+        // Update room status
         const changeRoomStatus = await Room.findByIdAndUpdate(
             pickRoom,
-            { status: 'R' },
+            { status: 'R' }, // Mark as reserved
             { new: true }
         );
-        if (changeRoomStatus) {
-            console.log('Room status updated:', changeRoomStatus);
-        } else {
-            console.log('Room not found or update failed');
+
+        if (!changeRoomStatus) {
+            return res.status(500).json({ message: 'Failed to update room status' });
         }
 
+        console.log('Room status updated:', changeRoomStatus);
         res.status(201).json(booking);
+
     } catch (error) {
+        console.error("Error booking room:", error);
         res.status(500).json({ message: error.message });
     }
-}
+};
 
 
 
 // View all bookings with room names
 const viewBookingRoom = async (req, res) => {
     try {
+        console.log(req.params.username)
         // Find user by username and assign customerID
         const user = await User.findOne({ username: req.params.username });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(401).json({ message: 'User not found' });
         }
-        const customerID = user._id;
+        const customerID = user.id;
 
         // Find all bookings for the customer
-        const bookings = await Booking.find({ customerID });
+        const bookings = await Booking.find({ userID: customerID });
 
         if (bookings.length === 0) {
-            return res.status(404).json({ message: 'No bookings found for this user' });
+            return res.status(402).json({ message: 'No bookings found for this user' });
         }
 
         // Loop through bookings and get room name for each booking
@@ -134,6 +144,7 @@ const viewBookingRoom = async (req, res) => {
 const viewBookingById = async (req, res) => {
     try {
         const booking = await Booking.findOne({ _id: req.params.bookingID });
+        console.log(booking)
         res.status(200).json(booking);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -160,7 +171,7 @@ const editBookingRoom = async (req, res) => {
         console.log(check)
         const [bookingChange, room] = await Promise.all([
             Booking.findOne({ _id: req.params.bookingID }),
-            RoomCategory.findById(check)
+            RoomCategory.findById(new mongoose.Types.ObjectId(check))
         ]);
 
         if (!bookingChange || !room) {
@@ -168,14 +179,19 @@ const editBookingRoom = async (req, res) => {
         }
 
         const conflictingBookings = await Booking.find({
-            categoryRoom: check,
+            categoryRoom: new mongoose.Types.ObjectId(check),
             $or: [
                 { startDate: { $lt: moment(endDate).toDate() }, endDate: { $gt: moment(startDate).toDate() } }
             ]
         }).distinct('roomID');
 
         const availableRooms = await Room.aggregate([
-            { $match: { categoryRoomID: check, status: { $in: ['E'] } } }
+            {
+                $match: {
+                    categoryRoomID: new mongoose.Types.ObjectId(check),
+                    status: { $in: ['E'] }
+                }
+            }
         ]);
         if (availableRooms.length === 0) {
             return res.status(403).json({ message: 'No available rooms for the selected period' });
@@ -203,7 +219,7 @@ const editBookingRoom = async (req, res) => {
         if (!updatedBooking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
-
+        console.log("Update: ", updatedBooking)
         res.status(201).json(updatedBooking);
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -48,7 +48,7 @@ const Booking = () => {
                             <Nav.Item className="mx-4">
                                 <Nav.Link
                                     as={Link}
-                                    to="dash/booking"
+                                    to="/dash/booking"
                                     className="text-white fw-bold bg-primary rounded p-2"
                                     style={{ transition: 'background-color 0.3s' }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
@@ -61,7 +61,7 @@ const Booking = () => {
                             <Nav.Item className="mx-4">
                                 <Nav.Link
                                     as={Link}
-                                    to="dash/viewroom"
+                                    to="/dash/viewroom"
                                     className="text-white fw-bold bg-success rounded p-2"
                                     style={{ transition: 'background-color 0.3s' }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#28a745'}

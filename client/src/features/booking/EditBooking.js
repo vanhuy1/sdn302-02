@@ -7,11 +7,10 @@ import { Link } from 'react-router-dom';
 
 const EditBooking = () => {
     const { id } = useParams();
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const bookings = useSelector(selectAllBookings);
-    const bookingToEdit = bookings.find((booking) => booking.id === id);
+    const bookingToEdit = bookings.find((booking) => booking._id === id);
     const [categoryRoomId, setCategoryRoomId] = useState('');
     const [startDate, setStartDate] = useState(bookingToEdit?.startDate || '');
     const [endDate, setEndDate] = useState(bookingToEdit?.endDate || '');
@@ -42,8 +41,14 @@ const EditBooking = () => {
         };
 
         dispatch(updateBooking({ id, updatedData }))
-            .then(() => {
-                navigate('/viewroom');
+            .then((action) => {
+                // Kiểm tra nếu action là fulfilled
+                if (updateBooking.fulfilled.match(action)) {
+                    navigate('/dash/viewroom');
+
+                } else {
+                    console.error('Failed to fetch booking details');
+                }
             });
     };
 
@@ -55,7 +60,7 @@ const EditBooking = () => {
                 <Nav.Item className="mx-4">
                     <Nav.Link
                         as={Link}
-                        to="/booking"
+                        to="/dash/booking"
                         className="text-white fw-bold bg-primary rounded p-2"
                         style={{ transition: 'background-color 0.3s' }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
@@ -68,7 +73,7 @@ const EditBooking = () => {
                 <Nav.Item className="mx-4">
                     <Nav.Link
                         as={Link}
-                        to="/viewroom"
+                        to="/dash/viewroom"
                         className="text-white fw-bold bg-success rounded p-2"
                         style={{ transition: 'background-color 0.3s' }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
