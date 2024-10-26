@@ -1,48 +1,23 @@
 import React from "react";
 import { Navbar, Nav, Button, Image } from "react-bootstrap";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
 import { useEffect } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../../assets/images/logo192.png";
 import useAuth from "../../hooks/useAuth";
-// import PulseLoader from "react-spinners/PulseLoader";
-
-// const DASH_REGEX = /^\/dash(\/)?$/;
 
 const Header = () => {
-  const { username, status, isManager } = useAuth();
+  const { username, isManager } = useAuth();
 
   const navigate = useNavigate();
-  const pathname = useLocation();
 
-  const [sendLogout, { isLoading, isSuccess, isError, error }] =
+  const [sendLogout, { isSuccess }] =
     useSendLogoutMutation();
 
   useEffect(() => {
     if (isSuccess) navigate("/");
   }, [isSuccess, navigate]);
 
-  //   const logoutButton = (
-  //     <button className="icon-button" title="Logout" onClick={sendLogout}>
-  //       <FontAwesomeIcon icon={faRightFromBracket} />
-  //     </button>
-  //   );
-
-  //   let dashClass = null;
-  //   if (!DASH_REGEX.test(pathname)) {
-  //     dashClass = "dash-header__container--small";
-  //   }
-
-  //   const errClass = isError ? "errmsg" : "offscreen";
-
-  //   let buttonContent;
-  //   if (isLoading) {
-  //     buttonContent = <PulseLoader color={"#FFF"} />;
-  //   } else {
-  //     buttonContent = <>{logoutButton}</>;
-  //   }
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -68,8 +43,7 @@ const Header = () => {
             <Nav.Link href="/dash">Home</Nav.Link>
             <Nav.Link href="/dash/about">About</Nav.Link>
             <Nav.Link href="/dash/services">Services</Nav.Link>
-            <Nav.Link href="/contact">Contact</Nav.Link>
-
+            <Nav.Link href="/dash/contact">Contact</Nav.Link>
           </Nav>
           {username ? (
             <>
@@ -87,12 +61,23 @@ const Header = () => {
                     height="40"
                     alt="User Avatar"
                   />
-                  <ul className="dropdown-menu" aria-labelledby="avatar">
+                  <ul
+                    className="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="avatar"
+                  >
                     <li>
-                      <a className="dropdown-item" href="/dash/profile">
+                      <Link className="dropdown-item" to="/dash/profile">
                         Profile
-                      </a>
+                      </Link>
                     </li>
+                    {isManager && (
+                      <li>
+                        <Link className="dropdown-item" to="/dash/manage/users">
+                          Manage
+                        </Link>
+                      </li>
+                    )}
+
                     <li>
                       <Link
                         className="dropdown-item"

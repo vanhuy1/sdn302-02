@@ -1,7 +1,8 @@
+// FooterComponent.js
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Footer = () => {
+const PublicFooter = () => {
     return (
         <footer className="bg-light text-center text-lg-start">
             <Container className="p-4">
@@ -17,13 +18,13 @@ const Footer = () => {
                         <h5 className="text-uppercase">SERVICES</h5>
                         <ul className="list-unstyled">
                             <li>
-                                <a href="/dash/about" className="text-dark">About Us</a>
+                                <a href="/about" className="text-dark">About Us</a>
                             </li>
                             <li>
-                                <a href="/dash/services" className="text-dark">Services</a>
+                                <a href="/services" className="text-dark">Services</a>
                             </li>
                             <li>
-                                <a href="/dash/contact" className="text-dark">Contact</a>
+                                <a href="/contact" className="text-dark">Contact</a>
                             </li>
                         </ul>
                     </Col>
@@ -52,4 +53,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default PublicFooter;

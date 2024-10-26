@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Table, Button, Pagination, Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Row, Col, Table, Button, Pagination, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError, ViewRoomCategory, AddRoomCategory, UpdateRoomCategory, DeleteRoomCategory, ViewRoomCategoryById } from '../../features/room/RoomSlice'; // Adjust the import path based on your project structure
-
 
 const ViewAllRooms = () => {
     const dispatch = useDispatch();
