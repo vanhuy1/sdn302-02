@@ -89,7 +89,7 @@ const Header = () => {
                   />
                   <ul className="dropdown-menu" aria-labelledby="avatar">
                     <li>
-                      <a className="dropdown-item" to="#">
+                      <a className="dropdown-item" href="/dash/profile">
                         Profile
                       </a>
                     </li>

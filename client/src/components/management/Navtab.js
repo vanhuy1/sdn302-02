@@ -13,7 +13,7 @@ const Navtab = () => {
                 </LinkContainer>
             </Nav.Item>
             <Nav.Item>
-                <LinkContainer to="/dash/manage/viewroom">
+                <LinkContainer to="/dash/manage/room">
                     <Button variant="outline-primary" className="me-2">
                         Room
                     </Button>

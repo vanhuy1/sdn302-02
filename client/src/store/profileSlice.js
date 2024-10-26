@@ -66,23 +66,30 @@ export const changePassword = createAsyncThunk(
     "profile/changePassword",
     async (passwordData, thunkAPI) => {
         const token = thunkAPI.getState().auth.token;
+
+        if (!token) {
+            return thunkAPI.rejectWithValue("No authentication token provided.");
+        }
+
         try {
             const response = await fetch(`${API_URL}/auth/profile/change-password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(passwordData),
             });
 
             if (!response.ok) {
-                throw new Error("Failed to change password");
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to change password");
             }
 
             const data = await response.json();
             return data;
         } catch (error) {
+            console.error("Error changing password:", error);
             return thunkAPI.rejectWithValue(error.message);
         }
     }

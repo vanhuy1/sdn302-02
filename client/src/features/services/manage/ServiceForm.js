@@ -12,9 +12,10 @@ const ServiceForm = ({ onSubmit, editingService }) => {
             setServiceData({
                 serviceName: editingService.serviceName,
                 description: editingService.description,
+                price: 0,
             });
         } else {
-            setServiceData({ serviceName: '', description: '' });
+            setServiceData({ serviceName: '', description: '', price: 0 });
         }
     }, [editingService]);
 
@@ -61,7 +62,7 @@ const ServiceForm = ({ onSubmit, editingService }) => {
 
 // Styling
 const formStyle = { marginBottom: '20px', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' };
-const inputStyle = { width: '100%', padding: '8px', margin: '5px 0' };
-const buttonStyle = { padding: '10px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px' };
+const inputStyle = { width: '100%', padding: '8px', margin: '5' };
+const buttonStyle = { padding: '10px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', borderRadius: '5px', margin: 10 };
 
 export default ServiceForm;

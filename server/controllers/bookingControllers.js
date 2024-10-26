@@ -47,7 +47,8 @@ const bookingRoom = async (req, res) => {
                 { startDate: { $lt: moment(endDate).toDate() }, endDate: { $gt: moment(startDate).toDate() } }
             ]
         }).distinct('roomID');
-        console.log(conflictingBookings)
+        console.log(conflictingBookings);
+
         // Find available rooms in the category that are not conflicting
         const availableRooms = await Room.aggregate([
             {
@@ -64,18 +65,19 @@ const bookingRoom = async (req, res) => {
 
         const availableRoomIDs = filteredRooms.map(room => room._id);
 
-        if (availableRoomIDs.length === 0) {
-            return res.status(404).json({ message: 'No available rooms for the selected period' });
+        if (availableRoomIDs.length < amountBook) {
+            return res.status(404).json({ message: 'Not enough available rooms for the selected period' });
         }
 
         console.log("Available roomIDs: ", availableRoomIDs);
 
-        const pickRoom = availableRoomIDs[0];
+        // Pick rooms according to amountBook
+        const pickedRooms = availableRoomIDs.slice(0, amountBook); // Select the required number of rooms
 
         // Save booking
         const booking = new Booking({
             userID: customerID,
-            roomID: [pickRoom],
+            roomID: pickedRooms, // Save all picked rooms
             startDate,
             endDate,
             amountBook
@@ -83,18 +85,16 @@ const bookingRoom = async (req, res) => {
 
         await booking.save();
 
-        // Update room status
-        const changeRoomStatus = await Room.findByIdAndUpdate(
-            pickRoom,
-            { status: 'R' }, // Mark as reserved
-            { new: true }
-        );
+        // Update room statuses
+        await Promise.all(pickedRooms.map(async (roomId) => {
+            return Room.findByIdAndUpdate(
+                roomId,
+                { status: 'R' }, // Mark as reserved
+                { new: true }
+            );
+        }));
 
-        if (!changeRoomStatus) {
-            return res.status(500).json({ message: 'Failed to update room status' });
-        }
-
-        console.log('Room status updated:', changeRoomStatus);
+        console.log('Room status updated for:', pickedRooms);
         res.status(201).json(booking);
 
     } catch (error) {
@@ -102,6 +102,7 @@ const bookingRoom = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 
@@ -151,7 +152,7 @@ const viewBookingById = async (req, res) => {
     }
 }
 
-//Edit booking room
+// Edit booking room
 const editBookingRoom = async (req, res) => {
     try {
         const { categoryRoomId, startDate, endDate, amountBook } = req.body;
@@ -159,6 +160,10 @@ const editBookingRoom = async (req, res) => {
         console.log(startDate);
         console.log(endDate);
         console.log(amountBook);
+        console.log(req.params.bookingID)
+        const bookingChange = await Booking.findOne({ _id: req.params.bookingID })
+
+        // Input validation
         if (![categoryRoomId, startDate, endDate, amountBook].every(Boolean)) {
             return res.status(400).json({ message: 'All fields are required' });
         }
@@ -167,64 +172,83 @@ const editBookingRoom = async (req, res) => {
         if (moment(startDate).isBefore(today, 'day') || moment(endDate).isBefore(startDate, 'day')) {
             return res.status(401).json({ message: 'Invalid date range' });
         }
-        const check = categoryRoomId[0];
-        console.log(check)
-        const [bookingChange, room] = await Promise.all([
-            Booking.findOne({ _id: req.params.bookingID }),
-            RoomCategory.findById(new mongoose.Types.ObjectId(check))
-        ]);
 
-        if (!bookingChange || !room) {
-            return res.status(402).json({ message: 'Booking or room not found' });
+        const categoryRoom = categoryRoomId[0];
+
+        // Find room category
+        const roomCategory = await RoomCategory.findById(categoryRoom);
+        if (!roomCategory) {
+            return res.status(403).json({ message: 'Room category not found' });
         }
 
+        // Find conflicting bookings
         const conflictingBookings = await Booking.find({
-
             $or: [
                 { startDate: { $lt: moment(endDate).toDate() }, endDate: { $gt: moment(startDate).toDate() } }
             ]
         }).distinct('roomID');
+        console.log(conflictingBookings);
 
+        // Find available rooms in the category that are not conflicting
         const availableRooms = await Room.aggregate([
             {
                 $match: {
-                    categoryRoomID: new mongoose.Types.ObjectId(check),
-                    status: { $in: ['E'] }
+                    categoryRoomID: new mongoose.Types.ObjectId(categoryRoom),
+                    status: 'E' // Available rooms with status 'E'
                 }
             }
         ]);
-        if (availableRooms.length === 0) {
-            return res.status(403).json({ message: 'No available rooms for the selected period' });
+
+        const filteredRooms = availableRooms.filter(room => {
+            return !conflictingBookings.includes(room._id.toString());
+        });
+
+        const availableRoomIDs = filteredRooms.map(room => room._id);
+
+        if (availableRoomIDs.length < amountBook) {
+            return res.status(404).json({ message: 'Not enough available rooms for the selected period' });
         }
 
-        const pickRoom = availableRooms[0]._id;
-        const changeRoomStatus = await Room.findByIdAndUpdate(
-            pickRoom,
-            { status: 'R' },
-            { new: true }
-        );
+        // Check if there are enough available rooms
+        console.log("Available roomIDs: ", availableRoomIDs);
 
-        const changeRoomStatusOld = await Room.findByIdAndUpdate(
+        // Pick rooms according to amountBook
+        const pickedRooms = availableRoomIDs.slice(0, amountBook);
+
+        // Update status of the picked rooms
+        await Promise.all(pickedRooms.map(async (roomId) => {
+            return Room.findByIdAndUpdate(
+                roomId,
+                { status: 'R' }, // Mark as reserved
+                { new: true }
+            );
+        }));
+
+        // Update status of the old room back to available
+        await Room.findByIdAndUpdate(
             bookingChange.roomID,
-            { status: 'E' },
+            { status: 'E' }, // Mark as available
             { new: true }
         );
 
+        // Update the booking
         const updatedBooking = await Booking.findByIdAndUpdate(
             req.params.bookingID,
-            { startDate, endDate, amountBook, roomID: pickRoom },
+            { startDate, endDate, amountBook, roomID: pickedRooms }, // Save all picked rooms
             { new: true, runValidators: true }
         );
 
         if (!updatedBooking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
-        console.log("Update: ", updatedBooking)
+        console.log("Update: ", updatedBooking);
         res.status(201).json(updatedBooking);
     } catch (error) {
+        console.error("Error updating booking:", error);
         res.status(500).json({ message: error.message });
     }
-}
+};
+
 
 //Delete a booking
 const deleteBooking = async (req, res) => {

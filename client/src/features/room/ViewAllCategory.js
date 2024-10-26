@@ -23,11 +23,11 @@ const ViewAllRooms = () => {
     const totalPages = Math.ceil(rooms.length / itemsPerPage);
 
     const handleViewRoom = () => {
-        navigate('/room');
+        navigate('/dash/room');
     };
 
     const handleViewCategory = () => {
-        navigate('/category');
+        navigate('/dash/category');
     };
 
     const handlePageChange = (page) => {
