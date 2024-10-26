@@ -77,8 +77,6 @@ const createNewStaff = async (req, res) => {
             active,
         });
 
-        console.log("Test")
-
         return res
             .status(201)
             .json({ message: "Create new staff successfully!" }, staff);
@@ -102,12 +100,10 @@ const updateStaff = async (req, res) => {
         departmentID
     } = req.body;
 
-    // Validate required fields
     if (!staffName || !gender || !identityNumber || !position || !salary || !phoneNumber) {
         return res.status(400).json({ message: "All fields are required!" });
     }
 
-    // Check if the department exists
     const departmentExists = await Department.findById(departmentID).lean().exec();
     if (!departmentExists) {
         return res.status(404).json({ message: "Department not found!" });

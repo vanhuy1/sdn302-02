@@ -20,7 +20,7 @@ const Navtab = () => {
                 </LinkContainer>
             </Nav.Item>
             <Nav.Item>
-                <LinkContainer to="/dash/manage">
+                <LinkContainer to="/dash/manage/service">
                     <Button variant="outline-primary" className="me-2">
                         Service
                     </Button>

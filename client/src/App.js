@@ -29,6 +29,8 @@ import ViewAllCategory from "./features/room/ViewAllCategory";
 import ManageLayout from "./components/ManageLayout";
 import Profile from "./features/profile/Profile";
 import UpdateProfile from "./features/profile/UpdateProfile";
+import ServiceList from "./features/services/manage/serviceList";
+import ServiceDetail from "./features/services/manage/serviceDetail";
 
 function App() {
   return (
@@ -79,6 +81,13 @@ function App() {
 
                     <Route path="room" element={<ViewAllRoom />} />
                     <Route path="category" element={<ViewAllCategory />} />
+
+                    <Route path="service" >
+                      <Route index element={<ServiceList />} />
+                      <Route path=':id' element={<ServiceDetail />} />
+                    </Route>
+
+
 
                   </Route>
                 </Route>
