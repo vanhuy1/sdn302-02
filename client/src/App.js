@@ -30,7 +30,6 @@ import ManageLayout from "./components/ManageLayout";
 import Profile from "./features/profile/Profile";
 import UpdateProfile from "./features/profile/UpdateProfile";
 import ServiceList from "./features/services/manage/serviceList";
-import ServiceDetail from "./features/services/manage/serviceDetail";
 import ChangePassword from "./features/profile/ChangePassword";
 
 function App() {
