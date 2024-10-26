@@ -15,7 +15,7 @@ const Booking = () => {
     const dispatch = useDispatch();
 
     // Lấy thông tin categories phòng từ Redux store
-    const { loading, error, bookingDetails } = useSelector((state) => state.booking);
+    const { loading, error } = useSelector((state) => state.booking);
     const roomCategories = useSelector((state) => state.room.roomCategories); // Lấy roomCategories từ RoomSlice
     console.log('Redux State:', useSelector((state) => state));
 

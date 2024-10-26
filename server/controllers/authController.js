@@ -134,10 +134,9 @@ const editProfile = async (req, res) => {
     const {
       username,
       name,
-      email,
       gender,
-      address,
       birthDay,
+      address,
       identifyNumber,
       phoneNumber,
     } = req.body;
@@ -150,7 +149,6 @@ const editProfile = async (req, res) => {
     if (
       !username ||
       !name ||
-      !email ||
       !gender ||
       !address ||
       !birthDay ||
@@ -176,7 +174,6 @@ const editProfile = async (req, res) => {
 
     user.username = username || user.username;
     user.name = name || user.name;
-    user.email = email || user.email;
     user.gender = gender || user.gender;
     user.address = address || user.address;
     user.birthDay = birthDay || user.birthDay;

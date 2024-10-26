@@ -18,7 +18,6 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Password validation function
   const validatePassword = (password) => {
     const minLength = 8;
     const hasUppercase = /[A-Z]/.test(password);
@@ -38,7 +37,6 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if new passwords match
     if (newPassword !== confirmPassword) {
       Swal.fire({
         title: "Error!",
@@ -49,7 +47,6 @@ const ChangePassword = () => {
       return;
     }
 
-    // Validate new password
     if (!validatePassword(newPassword)) {
       Swal.fire({
         title: "Error!",

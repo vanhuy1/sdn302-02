@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Row, Col, Image, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Logo from "../../assets/images/logo192.png";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2";
 
 import {
   getStaffById,
@@ -38,20 +38,16 @@ const AddStaff = () => {
   const errors = {
     staffName: "Staff name is required",
     gender: "Gender is required",
-    identityNumber:
-      "Identity number is required and must contain at least 12 numbers",
+    identityNumber: "Identity number is required and must contain at least 12 numbers",
     position: "Position is required",
     salary: "Salary is required",
-    phoneNumber:
-      "Phone number is required and must contain at least 10 numbers",
+    phoneNumber: "Phone number is required and must contain at least 10 numbers",
     departmentID: "Department is required",
     email: "Please input a valid Outlook or Gmail address",
   };
 
   const renderErrorMessage = (name) =>
-    errorMessages[name] && (
-      <p className="text-danger mb-3">{errorMessages[name]}</p>
-    );
+    errorMessages[name] && <p className="text-danger mb-3">{errorMessages[name]}</p>;
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -90,7 +86,6 @@ const AddStaff = () => {
       imagePath: "",
     };
 
-
     // Validate input
     const newErrors = {};
     Object.keys(errors).forEach((key) => {
@@ -105,8 +100,7 @@ const AddStaff = () => {
     }
 
     if (identityNumber && !validateIdentityNumber(identityNumber)) {
-      newErrors.identityNumber =
-        "Identity number must contain at least 12 numbers";
+      newErrors.identityNumber = "Identity number must contain at least 12 numbers";
     }
 
     if (phoneNumber && !validatePhoneNumber(phoneNumber)) {
@@ -127,17 +121,13 @@ const AddStaff = () => {
       data.imagePath = imagePath;
     }
 
-    const action =
-      id !== "add"
-        ? updateStaff({ _id: id, updatedData: data })
-        : addStaff({ staffData: data });
+    const action = id !== "add"
+      ? updateStaff({ _id: id, updatedData: data })
+      : addStaff({ staffData: data });
 
     try {
       await dispatch(action).unwrap();
-      const successMessage =
-        id !== "add"
-          ? "Staff updated successfully!"
-          : "Staff added successfully!";
+      const successMessage = id !== "add" ? "Staff updated successfully!" : "Staff added successfully!";
       Swal.fire({
         icon: "success",
         title: successMessage,
