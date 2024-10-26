@@ -25,7 +25,7 @@ const Sidebar = () => {
                     <Link to="/dash/booking" style={{ textDecoration: 'none' }}>  Booking</Link>
                 </Button>
                 <Button variant="outline-primary" className="me-2">
-                    <Link to="/dash/services" style={{ textDecoration: 'none' }}> services</Link>
+                    <Link to="/dash/services" style={{ textDecoration: 'none' }}> Services</Link>
                 </Button>
 
                 {(isManager) && <Button variant="outline-primary" className="me-2"> <FaCog className="me-3 ms-4 fs-5 align-items-left" />
