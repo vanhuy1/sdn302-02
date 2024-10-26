@@ -6,11 +6,13 @@ import bookingReducer from '../features/booking/BookingSlice.js'
 import roomReducer from '../features/room/RoomSlice.js'
 import staffReducer from '../store/staffSlice.js'
 import departmentReducer from "../store/departmentSlice.js"
+import profileReducer from "../store/profileSlice.js"
 
 export const store = configureStore({
     reducer: {
         [apiSlice.reducerPath]: apiSlice.reducer,
         auth: authReducer,
+        profile: profileReducer,
         booking: bookingReducer,
         room: roomReducer,
         staff: staffReducer,

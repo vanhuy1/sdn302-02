@@ -29,12 +29,6 @@ const Bill = () => {
 
   return (
     <>
-      <Row>
-        <Col md={2} className="bg-light shadow-sm">
-          <Sidebar />
-        </Col>
-
-        <Col md={10} className="my-5">
           <div className="border rounded my-4" style={{ margin: "0 10rem" }}>
             <h1 className="py-4 text-center">Bill</h1>
             <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
@@ -151,8 +145,6 @@ const Bill = () => {
               )}
             </div>
           </div>
-        </Col>
-      </Row>
     </>
   );
 };
