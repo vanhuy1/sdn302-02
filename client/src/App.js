@@ -31,6 +31,7 @@ import Profile from "./features/profile/Profile";
 import UpdateProfile from "./features/profile/UpdateProfile";
 import ServiceList from "./features/services/manage/serviceList";
 import ServiceDetail from "./features/services/manage/serviceDetail";
+import ChangePassword from "./features/profile/ChangePassword";
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
                 <Route path="bill" element={<Bill />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="profile/update" element={<UpdateProfile />} />
+                <Route path="profile/change-password" element={<ChangePassword />} />
 
                 <Route path="services" element={<Service />} />
 

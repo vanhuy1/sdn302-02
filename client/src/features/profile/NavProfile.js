@@ -6,7 +6,7 @@ const NavProfile = () => {
         <Nav variant="tabs">
             <Nav.Item>
                 <NavLink
-                    to="/profile"
+                    to="/dash/profile"
                     className={({ isActive }) => (isActive ? "active nav-link" : "nav-link")}
                 >
                     Profile
@@ -14,7 +14,7 @@ const NavProfile = () => {
             </Nav.Item>
             <Nav.Item>
                 <NavLink
-                    to="/profile/update"
+                    to="/dash/profile/update"
                     className={({ isActive }) => (isActive ? "active nav-link" : "nav-link")}
                 >
                     Edit Profile
@@ -22,7 +22,7 @@ const NavProfile = () => {
             </Nav.Item>
             <Nav.Item>
                 <NavLink
-                    to="/profile/change-password"
+                    to="/dash/profile/change-password"
                     className={({ isActive }) => (isActive ? "active nav-link" : "nav-link")}
                 >
                     Change Password
