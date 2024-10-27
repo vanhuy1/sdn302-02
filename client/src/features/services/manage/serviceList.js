@@ -163,16 +163,6 @@ const ServiceList = () => {
         }
     };
 
-    const handleEditItem = (index) => {
-        const item = formData.serviceItems[index];
-        setItemData({
-            itemName: item.itemName,
-            cost: item.cost,
-            itemDescription: item.description,
-        });
-        setEditingItemIndex(index);
-    };
-
     const handleDeleteItem = (index) => {
         const newItems = formData.serviceItems.filter((_, i) => i !== index);
         setFormData({ ...formData, serviceItems: newItems });
@@ -275,7 +265,6 @@ const ServiceList = () => {
                                         <td style={cellStyle}>${item.cost}</td>
                                         <td style={cellStyle}>{item.description}</td>
                                         <td style={cellStyle}>
-                                            <button onClick={() => handleEditItem(index)} className="btn btn-warning me-2">Edit</button>
                                             <button onClick={() => handleDeleteItem(index)} className="btn btn-danger">Delete</button>
                                         </td>
                                     </tr>

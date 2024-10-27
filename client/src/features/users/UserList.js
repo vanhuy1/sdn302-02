@@ -64,6 +64,7 @@ const UserList = () => {
                         <th style={headerStyle}>Birth Date</th>
                         <th style={headerStyle}>Identify Number</th>
                         <th style={headerStyle}>Phone Number</th>
+                        <th style={headerStyle}>Service</th>
                         <th style={headerStyle}>Active</th>
                         <th style={headerStyle}>Actions</th>
                     </tr>
@@ -81,6 +82,11 @@ const UserList = () => {
                                 <td style={cellStyle}>{new Date(user.birthDay).toLocaleDateString()}</td>
                                 <td style={cellStyle}>{user.identifyNumber}</td>
                                 <td style={cellStyle}>{user.phoneNumber}</td>
+                                <td style={cellStyle}>
+                                    {user.services && user.services.length > 0
+                                        ? user.services.map(service => service.itemName).join(', ')
+                                        : 'No services'}
+                                </td>
                                 <td style={cellStyle}>{user.active ? 'Active' : 'Inactive'}</td>
                                 <td style={cellStyle}>
                                     <Link to={`/dash/manage/users/${userId}`} style={editButtonStyle}>Update</Link>

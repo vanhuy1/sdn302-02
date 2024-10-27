@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 
 const getAllUsers = async (req, res) => {
     // Get all users from MongoDB
-    const users = await User.find().select('-password').lean()
+    const users = await User.find().select('-password').lean().populate('services')
 
     // If no users 
     if (!users?.length) {

@@ -34,7 +34,7 @@ const Content = () => {
     const handleRequestService = (e) => {
         e.preventDefault();
         const userRole = roles;
-        if (userRole === "Customer") {
+        if (userRole[0] === "Customer" && chosenServices.length !== 0) {
             if (window.confirm('Are you sure you want to send this request?')) {
                 const userId = id;
                 const serviceItemIds = chosenServices.map(item => item._id);
@@ -50,7 +50,11 @@ const Content = () => {
                 window.location.reload();
             }
         } else {
-            alert('Không thể thực hiện tác vụ này');
+            if (userRole[0] !== "Customer") {
+                alert('You do not have permission to do this action');
+            } else {
+                alert('You have not selected any services yet.');
+            }
         }
 
 
