@@ -1,5 +1,6 @@
 const Staff = require("../models/Staff");
 const Department = require("../models/Department");
+const path = require("path");
 
 const getAllStaffs = async (req, res) => {
     try {
@@ -62,6 +63,8 @@ const createNewStaff = async (req, res) => {
         return res.status(409).json({ message: "Identity Number already exists!" });
     }
 
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : "";
+
     try {
         const staff = await Staff.create({
             departmentID,
@@ -75,17 +78,25 @@ const createNewStaff = async (req, res) => {
             email,
             phoneNumber,
             active,
+            image: imagePath,
         });
 
         return res
             .status(201)
-            .json({ message: "Create new staff successfully!" }, staff);
+            .json({ message: "Create new staff successfully!", staff });
     } catch (err) {
         return res.status(500).json({ message: "Failed to create staff" });
     }
 };
 
 const updateStaff = async (req, res) => {
+    const staffId = req.params.staffId;
+
+    const staff = await Staff.findById(staffId).exec();
+    if (!staff) {
+        return res.status(404).json({ message: "Staff not found!" });
+    }
+
     const {
         staffName,
         gender,
@@ -109,7 +120,6 @@ const updateStaff = async (req, res) => {
         return res.status(404).json({ message: "Department not found!" });
     }
 
-    const staffId = req.params.staffId;
     const duplicateIdentityNumber = await Staff.findOne({
         identityNumber,
         _id: { $ne: staffId }
@@ -120,11 +130,6 @@ const updateStaff = async (req, res) => {
 
     if (duplicateIdentityNumber) {
         return res.status(409).json({ message: "Identity Number already exists!" });
-    }
-
-    const staff = await Staff.findById(staffId).exec();
-    if (!staff) {
-        return res.status(404).json({ message: "Staff not found!" });
     }
 
     staff.staffName = staffName;
@@ -138,6 +143,10 @@ const updateStaff = async (req, res) => {
     staff.phoneNumber = phoneNumber;
     staff.active = active;
     staff.departmentID = departmentID;
+
+    if (req.file) {
+        staff.image = `/uploads/${req.file.filename}`;
+    }
 
     try {
         const updatedStaff = await staff.save();
