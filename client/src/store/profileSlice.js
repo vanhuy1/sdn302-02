@@ -26,7 +26,6 @@ export const viewProfile = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -38,7 +37,6 @@ export const viewProfile = createAsyncThunk(
 export const editProfile = createAsyncThunk(
   "profile/editProfile",
   async ({ updatedData }, thunkAPI) => {
-    console.log(updatedData);
     const token = thunkAPI.getState().auth.token;
     try {
       const response = await fetch(`${API_URL}/auth/profile/update`, {

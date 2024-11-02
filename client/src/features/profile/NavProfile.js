@@ -1,19 +1,15 @@
 import { Nav } from "react-bootstrap";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const NavProfile = () => {
-  const { pathname } = useLocation();
-
-  const isActive = (path) => {
-    return pathname.startsWith(path);
-  };
-
   return (
     <Nav variant="tabs">
       <Nav.Item>
         <NavLink
-          to="/dash/profile"
-          className={isActive("/dash/profile") ? "active nav-link" : "nav-link"}
+          to="/dash/profile/detail"
+          className={({ isActive }) =>
+            isActive ? "active nav-link" : "nav-link"
+          }
         >
           Profile
         </NavLink>
@@ -21,8 +17,8 @@ const NavProfile = () => {
       <Nav.Item>
         <NavLink
           to="/dash/profile/update"
-          className={
-            isActive("/dash/profile/update") ? "active nav-link" : "nav-link"
+          className={({ isActive }) =>
+            isActive ? "active nav-link" : "nav-link"
           }
         >
           Edit Profile
@@ -31,10 +27,8 @@ const NavProfile = () => {
       <Nav.Item>
         <NavLink
           to="/dash/profile/change-password"
-          className={
-            isActive("/dash/profile/change-password")
-              ? "active nav-link"
-              : "nav-link"
+          className={({ isActive }) =>
+            isActive ? "active nav-link" : "nav-link"
           }
         >
           Change Password

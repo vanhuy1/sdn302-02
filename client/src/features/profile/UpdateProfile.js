@@ -91,7 +91,7 @@ const UpdateProfile = () => {
           icon: "success",
           confirmButtonText: "OK",
         });
-        navigate("/dash/profile");
+        navigate("/dash/profile/detail");
       } else {
         throw new Error(resultAction.error?.message || "Update failed. Please try again.");
       }

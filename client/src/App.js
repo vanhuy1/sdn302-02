@@ -59,7 +59,7 @@ function App() {
                 <Route path="edit-booking/:id" element={<EditBooking />} />
                 <Route path="bill" element={<Bill />} />
 
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile/detail" element={<Profile />} />
                 <Route path="profile/update" element={<UpdateProfile />} />
                 <Route path="profile/change-password" element={<ChangePassword />} />
 

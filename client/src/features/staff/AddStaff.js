@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Row, Col, Image, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import Logo from "../../assets/images/logo192.png";
 import Swal from "sweetalert2";
-
+import Logo from "../../assets/images/logo192.png";
 import {
   getStaffById,
   selectStaffDetail,
@@ -47,7 +46,6 @@ const AddStaff = () => {
       "Phone number is required and must contain at least 10 numbers",
     departmentID: "Department is required",
     email: "Please input a valid Outlook or Gmail address",
-    birthday: "Birthday is required",
   };
 
   const renderErrorMessage = (name) =>
@@ -114,23 +112,19 @@ const AddStaff = () => {
       newErrors.phoneNumber = "Phone number must contain at least 10 numbers";
     }
 
-    if (birthday && !validateDate(birthday)) {
-      newErrors.birthday = errors.birthday;
-    }
-
     if (Object.keys(newErrors).length > 0) {
       setErrorMessages(newErrors);
       return;
     }
 
-    if (image) {
-      const formData = new FormData();
-      formData.append("staffImage", image);
-      formData.append("data", JSON.stringify(data));
+    // if (image) {
+    //   const formData = new FormData();
+    //   formData.append("staffImage", image);
+    //   formData.append("data", JSON.stringify(data));
 
-      const imagePath = await uploadImage(formData);
-      data.imagePath = imagePath;
-    }
+    //   const imagePath = await uploadImage(formData);
+    //   data.imagePath = imagePath;
+    // }
 
     const action =
       id !== "add"
@@ -173,11 +167,6 @@ const AddStaff = () => {
   const validatePhoneNumber = (phone) => {
     const regex = /^\d{10,}$/;
     return regex.test(phone);
-  };
-
-  const validateDate = (dateString) => {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
   };
 
   const resetFormState = () => {
@@ -429,10 +418,10 @@ const AddStaff = () => {
   );
 };
 
-const uploadImage = async (formData) => {
-  console.log(formData.get("staffImage").name);
-  const fakePath = "/assets/images/staffs/" + formData.get("staffImage").name;
-  return fakePath;
-};
+// const uploadImage = async (formData) => {
+//   console.log(formData.get("staffImage").name);
+//   const fakePath = "/assets/images/staffs/" + formData.get("staffImage").name;
+//   return fakePath;
+// };
 
 export default AddStaff;

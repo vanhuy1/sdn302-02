@@ -66,7 +66,7 @@ const Header = () => {
                     aria-labelledby="avatar"
                   >
                     <li>
-                      <Link className="dropdown-item" to="/dash/profile">
+                      <Link className="dropdown-item" to="/dash/profile/detail">
                         Profile
                       </Link>
                     </li>

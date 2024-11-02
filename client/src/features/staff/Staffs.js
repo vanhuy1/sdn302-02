@@ -5,7 +5,6 @@ import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { FaArrowDownWideShort, FaArrowUpShortWide } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-
 import {
   selectLoading,
   selectAllStaffs,
@@ -83,14 +82,19 @@ const Staffs = () => {
   const filteredStaffs = staffs.filter((staff) => {
     const matchesSearch =
       (searchField === "staffName" &&
+        staff.staffName &&
         staff.staffName.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (searchField === "gender" &&
+        staff.staffName &&
         staff.gender.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (searchField === "identityNumber" &&
+        staff.staffName &&
         staff.identityNumber.toString().includes(searchTerm.toLowerCase())) ||
       (searchField === "position" &&
+        staff.staffName &&
         staff.position.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (searchField === "phoneNumber" &&
+        staff.staffName &&
         staff.phoneNumber.toString().includes(searchTerm.toLowerCase()));
 
     const matchesFilter =

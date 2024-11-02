@@ -27,7 +27,7 @@ const Sidebar = () => {
   ];
 
   const sidebarUserPaths = [
-    "/dash/profile",
+    "/dash/profile/detail",
     "/dash/profile/update",
     "/dash/profile/change-password",
   ];
@@ -93,7 +93,7 @@ const Sidebar = () => {
             ? "bg-primary text-white"
             : "text-dark"
         }`}
-        to="/dash/profile"
+        to="/dash/profile/detail"
       >
         <FaUser className="me-3 ms-4 fs-5" /> User
       </Link>
