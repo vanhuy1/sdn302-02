@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { updateBooking, fetchCurrentBookings, selectAllBookings } from './BookingSlice';
 import { Form, Button, Container, Nav, Row, Col, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { ViewRoomCategory } from '../room/RoomSlice';
 
 const EditBooking = () => {
     const { id } = useParams();
@@ -15,6 +16,8 @@ const EditBooking = () => {
     const [startDate, setStartDate] = useState(bookingToEdit?.startDate || '');
     const [endDate, setEndDate] = useState(bookingToEdit?.endDate || '');
     const [amountBook, setAmountBook] = useState(bookingToEdit?.amountBook || 1);
+    const { loading, error } = useSelector((state) => state.booking);
+    const roomCategories = useSelector((state) => state.room.roomCategories);
 
     const handleRoomChange = (e) => {
         const value = e.target.value;
@@ -26,6 +29,7 @@ const EditBooking = () => {
     };
 
     useEffect(() => {
+        dispatch(ViewRoomCategory());
         if (!bookingToEdit) {
             dispatch(fetchCurrentBookings);
         }
@@ -82,77 +86,90 @@ const EditBooking = () => {
                         View Your Booking
                     </Nav.Link>
                 </Nav.Item>
-
             </Nav>
-            <h2 className="text-center">Edit Booking</h2>
-            <Form onSubmit={handleSubmit}>
+
+            <h2 className="mb-1 text-center">Booking Room</h2>
+
+            {/* Form */}
+            <Form className="p-4 shadow-sm bg-light rounded" onSubmit={handleSubmit}>
                 <Form.Group controlId="formRoomType" className="mb-4">
                     <Form.Label className="fw-bold">Room Categories</Form.Label>
                     <Row>
-                        <Col md={4}>
-                            <Form.Check
-                                type="checkbox"
-                                label="Basic Room"
-                                value="670108b4cd419eb477134f34"
-                                onChange={handleRoomChange}
-                                className="my-2"
-                            />
-                            <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                        </Col>
-                        <Col md={4}>
-                            <Form.Check
-                                type="checkbox"
-                                label="Modern Room"
-                                value="670108b4cd419eb477134f35"
-                                onChange={handleRoomChange}
-                                className="my-2"
-                            />
-                            <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                        </Col>
-                        <Col md={4}>
-                            <Form.Check
-                                type="checkbox"
-                                label="Luxury Room"
-                                value="670108b4cd419eb477134f36"
-                                onChange={handleRoomChange}
-                                className="my-2"
-                            />
-                            <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                        </Col>
+                        {loading ? (
+                            <p>Loading room categories...</p>
+                        ) : error ? (
+                            <p>Error: {error}</p>
+                        ) : (
+                            roomCategories.map((room) => (
+                                <Col md={4} key={room._id}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label={room.roomCategoryName}
+                                        value={room._id}
+                                        onChange={handleRoomChange}
+                                        className="my-2"
+                                    />
+                                    <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
+                                    <p style={{ fontWeight: 'bold', fontSize: '18px', color: '#2E86C1', margin: '10px 0' }}>
+                                        Price: <span style={{ color: '#27AE60' }}>${room.price.toLocaleString()}</span>
+                                    </p>
+                                </Col>
+                            ))
+                        )}
                     </Row>
                 </Form.Group>
-                <Form.Group controlId="formStartDate">
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control
-                        type="datetime-local"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        required
-                    />
+
+                <Row className="mb-4">
+                    <Form.Group as={Col} controlId="formStartDate" md={6}>
+                        <Form.Label className="fw-bold">Start Date</Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            style={{ maxWidth: '250px' }}
+                        />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formEndDate" md={6}>
+                        <Form.Label className="fw-bold">End Date</Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            style={{ maxWidth: '250px' }}
+                        />
+                    </Form.Group>
+                </Row>
+
+                <Form.Group as={Row} controlId="formRoomCount" className="mb-4">
+                    <Form.Label column sm={2} className="fw-bold">
+                        Amount of Room
+                    </Form.Label>
+                    <Col sm={4}>
+                        <Form.Control
+                            type="number"
+                            value={amountBook}
+                            onChange={(e) => setAmountBook(e.target.value)}
+                            min="1"
+                            style={{ maxWidth: '150px' }}
+                        />
+                    </Col>
                 </Form.Group>
-                <Form.Group controlId="formEndDate">
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control
-                        type="datetime-local"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group controlId="formAmountBook">
-                    <Form.Label>Amount of Rooms</Form.Label>
-                    <Form.Control
-                        type="number"
-                        value={amountBook}
-                        onChange={(e) => setAmountBook(e.target.value)}
-                        min="1"
-                        required
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit" className="mt-3">
-                    Save Changes
-                </Button>
+
+                <Row className="mt-4">
+                    <Col className="text-center">
+                        <Button variant="primary" type="submit" className="me-2">
+                            OK
+                        </Button>
+                        <Button variant="secondary">
+                            Cancel
+                        </Button>
+                    </Col>
+                </Row>
             </Form>
+            {/* Loading and Error Handling */}
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>}
         </Container>
     );
 };
