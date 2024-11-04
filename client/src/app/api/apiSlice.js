@@ -46,7 +46,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReauth,
-    tagTypes: ['User', 'Service', 'ServiceItem'],
+    tagTypes: ['User', 'Service', 'ServiceItem', 'Bill'],
     endpoints: builder => ({
         fetchServices: builder.query({
             query: () => '/services',
@@ -67,8 +67,16 @@ export const apiSlice = createApi({
                 body: newServiceItem,
             }),
             invalidatesTags: ['ServiceItem']
+        }),
+        fetchBills: builder.query({
+            query: () => '/bill',
+            providesTags: ['Bill'],
+        }),
+        fetchBillDetail: builder.query({
+            query: (billId) => `/bill/${billId}`,
+            providesTags: (result, error, billId) => [{ type: 'Bill', id: billId }],
         })
     })
 })
 
-export const { useFetchServicesQuery, useAddServiceMutation, useAddServiceItemMutation } = apiSlice;
+export const { useFetchServicesQuery, useAddServiceMutation, useAddServiceItemMutation, useFetchBillsQuery, useFetchBillDetailQuery } = apiSlice;

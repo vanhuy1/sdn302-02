@@ -7,6 +7,7 @@ import roomReducer from '../features/room/RoomSlice.js'
 import staffReducer from '../store/staffSlice.js'
 import departmentReducer from "../store/departmentSlice.js"
 import profileReducer from "../store/profileSlice.js"
+import billSlice from "../store/billSlice.js"
 
 export const store = configureStore({
     reducer: {
@@ -16,7 +17,8 @@ export const store = configureStore({
         booking: bookingReducer,
         room: roomReducer,
         staff: staffReducer,
-        department: departmentReducer
+        department: departmentReducer,
+        bill: billSlice
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(apiSlice.middleware),

@@ -1,168 +1,124 @@
-import React, { useEffect, useState } from "react";
-import { Button, Row, Col, Container } from "react-bootstrap";
-import axios from "axios";
-import Header from "../../components/landing-page/header";
-import Footer from "../../components/landing-page/footer";
-import Sidebar from "../../components/Sidebar";
+import React, { useEffect } from "react";
+import { Button, Container, Spinner, Alert } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import { useFetchBillDetailQuery } from "../../app/api/apiSlice";
 
 const BillDetail = () => {
-    const [customerName, setCustomerName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [roomDetails, setRoomDetails] = useState([]);
-    const [services, setServices] = useState([]);
-    const [totalCost, setTotalCost] = useState(0);
-    const [arriveDate, setArriveDate] = useState(null);
-    const [leaveDate, setLeaveDate] = useState(null);
-    const [isPaid, setIsPaid] = useState(true);
+  const { billId } = useParams();
+  const navigate = useNavigate();
 
-    const apiUrl = process.env.API_URL;
+  useEffect(() => {
+    if (!billId) {
+      navigate("dash/bill");
+    }
+  }, [billId, navigate]);
 
-    // useEffect(async () => {
-    //     const {data} = await axios.get(`${apiUrl}/bill`);
+  const {
+    data: billDetail,
+    error,
+    isLoading,
+    refetch,
+  } = useFetchBillDetailQuery(billId);
 
-    //     setCustomerName(data.customerName);
-    //     setPhone(data.phoneNumber);
-    //     setRoomDetails(data.roomDetails);
-    //     setServices(data.services);
-    //     setTotalCost(data.totalCost);
-    //     setArriveDate(data.arriveDate);
-    //     setLeaveDate(data.leaveDate);
-    //     setIsPaid(data.isPaid);
-    // }, []);
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
+  if (isLoading) {
     return (
-        <>
-        <Header/>
-            <Container fluid>
-                <Row>
-                    <Col md={2} className="bg-light shadow-sm">
-                        <Sidebar />
-                    </Col>
-
-                    <Col md={10} className="my-5">
-                        <div
-                            className="border rounded my-4"
-                            style={{ margin: "0 10rem" }}
-                        >
-                            <h1 className="py-4 text-center">Bill</h1>
-                            <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
-                                <p>Customer Name</p>
-                                <p>{customerName}</p>
-                            </div>
-                            <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
-                                <p>Phone</p>
-                                <p>{phone}</p>
-                            </div>
-                            <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
-                                <p>Arrive Date</p>
-                                <p>{arriveDate}</p>
-                            </div>
-                            <div className="d-flex justify-content-between mx-5 border-bottom">
-                                <p>Leave Date</p>
-                                <p>{leaveDate}</p>
-                            </div>
-
-                            <div className="mx-5 mt-5">
-                                <h5 className="fw-bolder">Room:</h5>
-                                <div className="mt-3 row mb-2">
-                                    <p className="col-md-4 text-start fw-semibold m-0 mb-1">
-                                        NAME
-                                    </p>
-                                    <p className="col-md-3 text-center fw-semibold m-0 mb-1">
-                                        TYPE
-                                    </p>
-                                    <p className="col-md-3 text-center fw-semibold m-0 mb-1">
-                                        AMOUNT
-                                    </p>
-                                    <p className="col-md-2 text-end fw-semibold m-0 mb-1">
-                                        PRICE
-                                    </p>
-                                </div>
-                                
-                                {roomDetails.forEach((roomDetail, index) => (
-                                    <div key={index} className="d-flex">
-                                    {/* <p className="col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
-                                        <ul>
-                                            <li>Room 102</li>
-                                        </ul>
-                                    </p> */}
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        {roomDetail.roomCategory}
-                                    </p>
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        {roomDetail.roomNumber}
-                                    </p>
-                                    <p className="col-md-2 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
-                                        {roomDetail.price}
-                                    </p>
-                                </div>
-                                ))}
-                                
-                                <div className="d-flex">
-                                    {/* <p className="align-items-center col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
-                                        <ul>
-                                            <li>Room 102</li>
-                                        </ul>
-                                    </p> */}
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        Classic
-                                    </p>
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        1
-                                    </p>
-                                    <p className="col-md-2 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
-                                        1
-                                    </p>
-                                </div>
-                                <div className="d-flex">
-                                    {/* <p className="align-items-center col-md-4 pt-3 pb-2 ps-3 m-0 mb-1 me-1 bg-light text-start rounded-start">
-                                        <ul>
-                                            <li>Room 102</li>
-                                        </ul>
-                                    </p> */}
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        Classic
-                                    </p>
-                                    <p className="col-md-3 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
-                                        1
-                                    </p>
-                                    <p className="col-md-2 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
-                                        1
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mx-5 mt-5">
-                                <h5 className="fw-bolder">Service:</h5>
-                                <ul>
-                                    {services.forEach((service, index) => (
-                                        <li key={index}>{service.serviceName}: {service.servicePrice}VND</li>
-                                    ))}
-                                    <li>Service 1: 200000 VND</li>
-                                    <li>Service 2: 200000 VND</li>
-                                    <li>Service 3: 200000 VND</li>
-                                </ul>
-                            </div>
-
-                            <div className="d-flex justify-content-between mx-5 pt-5 pb-3 fw-bold">
-                                <p>Total Cost:</p>
-                                <p>{totalCost}</p>
-                            </div>
-                            <div className="d-flex justify-content-center my-3">
-                                {isPaid ? (
-                                    <h5 className="fw-bolder text-center bg-success text-white rounded py-1" style={{width: "5rem"}}>PAID</h5>
-                                ) : (
-                                    
-                                    <Button variant="primary">Pay</Button>
-                                )}
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-            <Footer/>
-        </>
+      <Container className="text-center my-4">
+        <Spinner animation="border" />
+        <p>Loading bills...</p>
+      </Container>
     );
+  }
+
+  // Error handling
+  if (error) {
+    return (
+      <Container className="my-4">
+        <Alert variant="danger">Error: {error.message}</Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <>
+      <div className="border rounded my-4" style={{ margin: "0 10rem" }}>
+        <h1 className="py-4 text-center">Bill</h1>
+        <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
+          <p>Customer Name</p>
+          <p>{billDetail?.customerName}</p>
+        </div>
+        <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
+          <p>Phone</p>
+          <p>{billDetail?.phoneNumber}</p>
+        </div>
+        <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
+          <p>Arrive Date</p>
+          <p>{new Date(billDetail?.arriveDate).toLocaleDateString()}</p>
+        </div>
+        <div className="d-flex justify-content-between mx-5 border-bottom">
+          <p>Leave Date</p>
+          <p>{new Date(billDetail?.leaveDate).toLocaleDateString()}</p>
+        </div>
+        {/* Room and Service Details */}
+        <div className="mx-5 mt-5">
+          <h5 className="fw-bolder">Room:</h5>
+          <div className="d-flex">
+            <p className="col-md-4 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center fw-bold">
+              Category
+            </p>
+            <p className="col-md-4 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center fw-bold">
+              Number
+            </p>
+            <p className="col-md-4 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end fw-bold">
+              Price
+            </p>
+          </div>
+          {billDetail?.roomDetails?.map((roomDetail, index) => (
+            <div key={index} className="d-flex">
+              <p className="col-md-4 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
+                {roomDetail.roomCategory}
+              </p>
+              <p className="col-md-4 pt-3 pb-2 m-0 mb-1 me-1 bg-light text-center">
+                {roomDetail.roomNumber}
+              </p>
+              <p className="col-md-4 pt-3 pb-2 m-0 mb-1 me-1 pe-4 bg-light text-end rounded-end">
+                {roomDetail.price}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mx-5 mt-5">
+          <h5 className="fw-bolder">Service:</h5>
+          <ul>
+            {billDetail?.services?.map((service, index) => (
+              <li key={index}>
+                {service.serviceName}: {service.servicePrice} VND
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="d-flex justify-content-between mx-5 pt-5 pb-3 fw-bold">
+          <p>Total Cost:</p>
+          <p>{billDetail?.totalCost}</p>
+        </div>
+        <div className="d-flex justify-content-center my-3">
+          {billDetail?.isPaid ? (
+            <h5
+              className="fw-bolder text-center bg-success text-white rounded py-1"
+              style={{ width: "5rem" }}
+            >
+              PAID
+            </h5>
+          ) : (
+            <Button variant="primary">Pay Now</Button>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default BillDetail;

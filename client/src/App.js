@@ -20,7 +20,8 @@ import ViewAllRoomBook from "./features/booking/ViewAllRoomBook";
 import EditBooking from "./features/booking/EditBooking";
 import UserList from "./features/users/UserList";
 import UpdateUser from "./features/users/UpdateUser";
-import Bill from "./features/bill/Bill";
+import BillList from "./features/bill/BillList";
+import BillDetail from "./features/bill/BillDetail";
 import Staffs from "./features/staff/Staffs";
 import StaffDetail from "./features/staff/StaffDetail";
 import AddStaff from "./features/staff/AddStaff";
@@ -57,7 +58,8 @@ function App() {
                 <Route path="booking" element={<Booking />} />
                 <Route path="viewroom" element={<ViewAllRoomBook />} />
                 <Route path="edit-booking/:id" element={<EditBooking />} />
-                <Route path="bill" element={<Bill />} />
+                <Route path="bill" element={<BillList />} />
+                <Route path="bill/:billId" element={<BillDetail />} />
 
                 <Route path="profile/detail" element={<Profile />} />
                 <Route path="profile/update" element={<UpdateProfile />} />

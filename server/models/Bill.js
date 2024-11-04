@@ -61,6 +61,10 @@ const billSchema = new mongoose.Schema({
     isPaid: {
         type: Boolean,
         required: true
+    },
+    username: {
+        type: String,
+        required: true
     }
 }, { timestamps: true });
 
