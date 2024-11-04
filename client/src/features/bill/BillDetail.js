@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
-import { Button, Container, Spinner, Alert } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Container, Spinner, Alert, Modal } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
-import { useFetchBillDetailQuery } from "../../app/api/apiSlice";
+import { useFetchBillDetailQuery, useUpdateBillMutation } from "../../app/api/apiSlice";
 
 const BillDetail = () => {
   const { billId } = useParams();
   const navigate = useNavigate();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [updateBill] = useUpdateBillMutation();
 
   useEffect(() => {
     if (!billId) {
@@ -24,6 +26,16 @@ const BillDetail = () => {
     refetch();
   }, [refetch]);
 
+  const handlePayment = async () => {
+    try {
+      await updateBill({ id: billId, changes: { isPaid: true } });
+      setShowSuccessModal(true);
+      refetch(); // Refetch bill details to get updated data
+    } catch (err) {
+      console.error("Payment update failed:", err);
+    }
+  };
+
   if (isLoading) {
     return (
       <Container className="text-center my-4">
@@ -33,7 +45,6 @@ const BillDetail = () => {
     );
   }
 
-  // Error handling
   if (error) {
     return (
       <Container className="my-4">
@@ -113,10 +124,24 @@ const BillDetail = () => {
               PAID
             </h5>
           ) : (
-            <Button variant="primary">Pay Now</Button>
+            <Button variant="primary" onClick={handlePayment}>Pay Now</Button>
           )}
         </div>
       </div>
+
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Payment Successful</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Your payment has been processed successfully.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

@@ -5,6 +5,7 @@ const verifyJWT = require('../middleware/verifyJWT')
 
 router.get('/:billId', verifyJWT, billController.getBillById)
 router.put('/:billId', verifyJWT, billController.updateBill)
+router.patch('/:billId/status', verifyJWT, billController.updateBillStatus);
 router.delete('/:billId', verifyJWT, billController.deleteBill)
 router.get('/', verifyJWT, billController.getBillsByUser)
 router.post('/', verifyJWT, billController.createBill)

@@ -75,8 +75,16 @@ export const apiSlice = createApi({
         fetchBillDetail: builder.query({
             query: (billId) => `/bill/${billId}`,
             providesTags: (result, error, billId) => [{ type: 'Bill', id: billId }],
-        })
+        }),
+        updateBill: builder.mutation({
+            query: ({ id, changes }) => ({
+                url: `/bill/${id}/status`,
+                method: 'PATCH', // Use PATCH for partial updates
+                body: changes,
+            }),
+            invalidatesTags: (result, error, { id }) => [{ type: 'Bill', id }],
+        }),
     })
 })
 
-export const { useFetchServicesQuery, useAddServiceMutation, useAddServiceItemMutation, useFetchBillsQuery, useFetchBillDetailQuery } = apiSlice;
+export const { useFetchServicesQuery, useAddServiceMutation, useAddServiceItemMutation, useFetchBillsQuery, useFetchBillDetailQuery, useUpdateBillMutation } = apiSlice;
