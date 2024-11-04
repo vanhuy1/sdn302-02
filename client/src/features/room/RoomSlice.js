@@ -175,6 +175,30 @@ export const DeleteRoom = createAsyncThunk(
     }
 );
 
+//Update room status
+export const ChangeRoomStatus = createAsyncThunk(
+    'room/changeRoomStatus',
+    async ({ roomId, status }, thunkAPI) => {
+        try {
+            console.log(roomId);
+            console.log(status)
+            const response = await fetch(`http://localhost:3500/room/${roomId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to change status!');
+            }
+            return roomId; // Return the ID of the deleted room
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    }
+);
+
 const initialState = {
     roomCategories: [],
     roomCategory: [],

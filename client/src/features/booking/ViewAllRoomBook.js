@@ -22,11 +22,20 @@ const ViewAllRoomBook = () => {
 
     const handleDelete = (bookingId) => {
         if (window.confirm('Are you sure you want to cancel this booking?')) {
-            dispatch(deleteBooking(bookingId)).then(() => {
-                window.location.reload();
+            dispatch(deleteBooking(bookingId)).then((action) => {
+                // Check if the action is fulfilled
+                if (deleteBooking.fulfilled.match(action)) {
+                    alert('Booking cancel successfully.');
+                    window.location.reload();
+                } else {
+                    alert('Can not cancel booking because of in date, we sorry about that!');
+                    window.location.reload();
+                }
             });
         }
     };
+
+
 
     const handleChange = (bookingId) => {
         dispatch(fetchCurrentBookings(bookingId)).then((action) => {
