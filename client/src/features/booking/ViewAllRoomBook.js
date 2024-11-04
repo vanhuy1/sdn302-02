@@ -105,6 +105,7 @@ const ViewAllRoomBook = () => {
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Amount</th>
+                                    <th>Services</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -117,6 +118,11 @@ const ViewAllRoomBook = () => {
                                             <td>{new Date(booking.startDate).toLocaleString()}</td>
                                             <td>{new Date(booking.endDate).toLocaleString()}</td>
                                             <td>{booking.amountBook}</td>
+                                            <td>
+                                                {booking.services && booking.services.length > 0
+                                                    ? booking.services.map(service => service.itemName).join(', ')
+                                                    : 'No services'}
+                                            </td>
                                             <td>
                                                 <Button
                                                     onClick={() => handleChange(booking._id)}

@@ -119,14 +119,14 @@ export const deleteService = createAsyncThunk(
 // ADD Service Items to User
 export const addServiceItemsToUser = createAsyncThunk(
     "services/request",
-    async ({ userId, serviceItemIds }, thunkAPI) => {
+    async ({ bookingId, serviceItemIds }, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/service/serviceItems/request`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ userId, serviceItemIds }),
+                body: JSON.stringify({ bookingId, serviceItemIds }),
             });
             if (!response.ok) {
                 throw new Error("Failed to add service items to user");

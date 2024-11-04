@@ -31,16 +31,15 @@ const Content = () => {
         }
     };
 
-    const handleRequestService = (e) => {
-        e.preventDefault();
+    const handleRequestService = (booking) => {
         const userRole = roles;
         if (userRole[0] === "Customer" && chosenServices.length !== 0) {
             if (window.confirm('Are you sure you want to send this request?')) {
-                const userId = id;
+                const bookingId = booking._id;
                 const serviceItemIds = chosenServices.map(item => item._id);
 
                 const data = {
-                    userId,
+                    bookingId,
                     serviceItemIds
                 };
 

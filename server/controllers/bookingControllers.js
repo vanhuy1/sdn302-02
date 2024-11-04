@@ -118,7 +118,7 @@ const viewBookingRoom = async (req, res) => {
         const customerID = user.id;
 
         // Find all bookings for the customer
-        const bookings = await Booking.find({ userID: customerID });
+        const bookings = await Booking.find({ userID: customerID }).populate('services');
 
         if (bookings.length === 0) {
             return res.status(402).json({ message: 'No bookings found for this user' });

@@ -26,7 +26,11 @@ const bookingSchema = new mongoose.Schema({
     amountBook: {
         type: Number,
         required: true
-    }
+    },
+    services: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ServiceItem'
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Booking', bookingSchema);
