@@ -250,7 +250,7 @@ const editBookingRoom = async (req, res) => {
 };
 
 
-//Delete a booking
+// Delete a booking
 const deleteBooking = async (req, res) => {
     try {
         // Find the booking to delete
@@ -258,6 +258,16 @@ const deleteBooking = async (req, res) => {
 
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        // Check if the booking start date is today
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+        const bookingStartDate = new Date(booking.startDate);
+        bookingStartDate.setHours(0, 0, 0, 0); 
+
+        if (bookingStartDate.getTime() === today.getTime()) {
+            return res.status(400).json({ message: 'Cannot cancel a booking that starts today' });
         }
 
         // Update the room status to 'E' (Empty) if the room exists
@@ -282,6 +292,7 @@ const deleteBooking = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 module.exports = { bookingRoom, viewBookingRoom, editBookingRoom, viewBookingById, deleteBooking };

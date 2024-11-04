@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Table, Button, Badge, Pagination, Modal, ListGroup } from "react-bootstrap";
+import { Row, Col, Table, Button, Badge, Pagination, Modal, ListGroup, ButtonGroup } from "react-bootstrap";
+import { Trash, ArrowRepeat } from 'react-bootstrap-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { ViewAllRoom, clearError, ViewRoomCategory, CreateRoom, DeleteRoom } from '../../features/room/RoomSlice'; // Adjust the import path based on your project structure
+import { ViewAllRoom, clearError, ViewRoomCategory, CreateRoom, DeleteRoom, ChangeRoomStatus } from '../../features/room/RoomSlice'; // Adjust the import path based on your project structure
 
 const ViewAllRooms = () => {
     const dispatch = useDispatch();
@@ -10,7 +11,11 @@ const ViewAllRooms = () => {
     const { rooms, loading, error, roomCategories } = useSelector((state) => state.room);
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
+    const [showModal1, setShowModal1] = useState(false);
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [currentRoomID, setCurrentRoomID] = useState(null);
+
 
     // Pagination handling
     const itemsPerPage = 10;
@@ -37,16 +42,29 @@ const ViewAllRooms = () => {
     }, [dispatch]);
 
     const handleAddRoom = () => {
-        dispatch(ViewRoomCategory()); // Fetch categories
-        setShowModal(true); // Show modal
+        dispatch(ViewRoomCategory());
+        setShowModal(true);
     };
 
     const handleCloseModal = () => {
         setShowModal(false); // Close modal
     };
 
+    const handleChangeRoomStatus = (roomID) => {
+        setCurrentRoomID(roomID);
+        setShowModal1(true);
+    };
+
+    const handleCloseModal1 = () => {
+        setShowModal1(false); // Close modal
+    };
+
     const handleCategorySelect = (category) => {
         setSelectedCategoryId(category);
+    };
+
+    const handleStatusRoom = (status) => {
+        setStatus(status);
     };
 
     const handleConfirm = () => {
@@ -75,6 +93,24 @@ const ViewAllRooms = () => {
             .then((result) => {
                 if (DeleteRoom.fulfilled.match(result)) {
                     alert("Delete done");
+                    window.location.reload();
+                } else if (DeleteRoom.rejected.match(result)) {
+                    alert("Failed to delete room: " + result.error.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Delete error:", error);
+                alert("Something went wrong: " + error.message);
+            });
+    };
+
+    const handleRoomStatus = (roomID) => {
+        console.log("Change room status with ID:", roomID);
+        console.log("Change room status with ID:", status);
+        dispatch(ChangeRoomStatus({ roomId: roomID, status }))
+            .then((result) => {
+                if (ChangeRoomStatus.fulfilled.match(result)) {
+                    alert("Change successful");
                     window.location.reload();
                 } else if (DeleteRoom.rejected.match(result)) {
                     alert("Failed to delete room: " + result.error.message);
@@ -141,8 +177,26 @@ const ViewAllRooms = () => {
                                             {room.status}
                                         </Badge>
                                     </td>
-                                    <td>
-                                        <Button onClick={() => handleDelete(room.roomID)} variant="outline-danger" className="me-2">Delete</Button>
+                                    <td style={{ display: 'flex' }}>
+                                        <ButtonGroup className="mb-2">
+                                            <Button
+                                                onClick={() => handleDelete(room.roomID)}
+                                                variant="outline-danger"
+                                                className="d-flex align-items-center"
+                                                size="sm"
+                                            >
+                                                <Trash className="me-1" /> Delete
+                                            </Button>
+                                            <Button
+                                                onClick={() => handleChangeRoomStatus(room.roomID)}
+                                                variant="outline-primary"
+                                                className="d-flex align-items-center"
+                                                size="sm"
+                                            >
+                                                <ArrowRepeat className="me-1" /> Change Status
+                                            </Button>
+                                        </ButtonGroup>
+
                                     </td>
                                 </tr>
                             ))}
@@ -207,6 +261,50 @@ const ViewAllRooms = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showModal1} onHide={handleCloseModal1} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title className="text-primary">Edit Room Status</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ListGroup>
+                        <ListGroup.Item
+                            onClick={() => handleStatusRoom('E')}
+                            style={{
+                                cursor: 'pointer',
+                                backgroundColor: '#f8f9fa',
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e2e6ea'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+                        >
+                            Empty
+                        </ListGroup.Item>
+                        <ListGroup.Item
+                            onClick={() => handleStatusRoom('B')}
+                            style={{
+                                cursor: 'pointer',
+                                backgroundColor: '#f8f9fa',
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e2e6ea'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+                        >
+                            Busy
+                        </ListGroup.Item>
+                    </ListGroup>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-secondary" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={() => handleRoomStatus(currentRoomID)}
+                    >
+                        Confirm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
 
 
         </>

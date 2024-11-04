@@ -92,7 +92,7 @@ const deleteRoomCategory = async (req, res) => {
             status: { $in: ['R', 'B'] }
         });
 
-        console.log("Found rooms: ", room); 
+        console.log("Found rooms: ", room);
 
         // Check if any rooms are found
         if (room.length > 0) {
@@ -113,7 +113,7 @@ const deleteRoomCategory = async (req, res) => {
 
         res.status(200).json({ message: 'Room category deleted successfully' });
     } catch (error) {
-        console.error("Error deleting room category:", error); 
+        console.error("Error deleting room category:", error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -213,6 +213,39 @@ const getRoomById = async (req, res) => {
     }
 };
 
+const updateRoomStatus = async (req, res) => {
+    try {
+        const status = req.body.status;
+        const room = await Room.findOne({ _id: req.params.roomId });
+
+        if (!room) {
+            return res.status(404).json({ message: "Room not found" });
+        }
+
+        switch (status) {
+            case 'E':
+                const findBooking = await Booking.findOne({ roomID: req.params.roomId });
+                if (findBooking) {
+                    await Booking.findOneAndDelete({ _id: findBooking._id });
+                }
+                await Room.findByIdAndUpdate(req.params.roomId, { status: 'E' }, { new: true });
+                res.status(200).json({ message: 'Room status updated to E' });
+                break;
+
+            case 'B':
+                await Room.findByIdAndUpdate(req.params.roomId, { status: 'B' }, { new: true });
+                break;
+
+            default:
+                res.status(400).json({ message: 'Invalid status' });
+                break;
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 // Delete a room
 const deleteRoom = async (req, res) => {
     try {
@@ -239,5 +272,6 @@ module.exports = {
     createRoom,
     getAllRooms,
     getRoomById,
-    deleteRoom
+    deleteRoom,
+    updateRoomStatus
 };

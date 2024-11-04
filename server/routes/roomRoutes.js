@@ -6,5 +6,6 @@ router.route('/').get(roomManagement.getAllRooms)
 router.route('/:roomId')
     .get(roomManagement.getRoomById)
     .delete(roomManagement.deleteRoom)
+    .put(roomManagement.updateRoomStatus)
 
 module.exports = router;

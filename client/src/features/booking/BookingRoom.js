@@ -15,12 +15,12 @@ const Booking = () => {
     const dispatch = useDispatch();
 
     const { loading, error } = useSelector((state) => state.booking);
-    const roomCategories = useSelector((state) => state.room.roomCategories); 
+    const roomCategories = useSelector((state) => state.room.roomCategories);
     console.log('Redux State:', useSelector((state) => state));
 
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
-    const [modalVariant, setModalVariant] = useState('success'); 
+    const [modalVariant, setModalVariant] = useState('success');
 
     useEffect(() => {
         dispatch(ViewRoomCategory());
@@ -122,7 +122,9 @@ const Booking = () => {
                                                     className="my-2"
                                                 />
                                                 <Image src="https://th.bing.com/th/id/OIP.AZ1nXW2LL-KdxgqX62gqUQHaE8?rs=1&pid=ImgDetMain" rounded className="mt-2" style={{ width: '200px', height: '200px' }} />
-                                                <p> Price: {room.price}</p>
+                                                <p style={{ fontWeight: 'bold', fontSize: '18px', color: '#2E86C1', margin: '10px 0' }}>
+                                                    Price: <span style={{ color: '#27AE60' }}>${room.price.toLocaleString()}</span>
+                                                </p>
                                             </Col>
                                         ))
                                     )}
