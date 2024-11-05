@@ -163,9 +163,39 @@ const ServiceList = () => {
         }
     };
 
-    const handleDeleteItem = (index) => {
-        const newItems = formData.serviceItems.filter((_, i) => i !== index);
-        setFormData({ ...formData, serviceItems: newItems });
+    const handleDeleteItem = async (index) => {
+        if (!editingService) {
+            alert("Please select a service to edit before deleting items.");
+            return;
+        }
+    
+        try {
+            // Remove the item at the specified index from the serviceItems array
+            const newItems = formData.serviceItems.filter((_, i) => i !== index);
+    
+            // Update formData with the new list of service items
+            setFormData({ ...formData, serviceItems: newItems });
+    
+            // Send PATCH request to update the service with the new list of service items
+            const response = await fetch(`${API_URL}/services/${editingService._id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...formData, serviceItems: newItems }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to update service after deleting item');
+            }
+    
+            const updatedService = await response.json();
+            setServices(services.map(service => (service._id === updatedService._id ? updatedService : service)));
+        } catch (err) {
+            setError(err.message);
+        }
+
+        window.location.reload();
     };
 
     if (loading) return <p>Loading services...</p>;
@@ -262,7 +292,7 @@ const ServiceList = () => {
                                 {service.serviceItems.map((item, index) => (
                                     <tr key={item._id}>
                                         <td style={cellStyle}>{item.itemName}</td>
-                                        <td style={cellStyle}>${item.cost}</td>
+                                        <td style={cellStyle}>VND {item.cost}</td>
                                         <td style={cellStyle}>{item.description}</td>
                                         <td style={cellStyle}>
                                             <button onClick={() => handleDeleteItem(index)} className="btn btn-danger">Delete</button>
