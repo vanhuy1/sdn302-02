@@ -4,56 +4,112 @@ const ServiceItem = require("../models/ServiceItem");
 const User = require("../models/User");
 
 const getBillsByUser = async (req, res) => {
-    try {
-        const username = req.user;
-        const user = await User.findOne({ username });
+  try {
+      const username = req.user;
+      const user = await User.findOne({ username });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
 
-        const bills = await Bill.find({ username });
+      const userID = user._id;
 
-        // If no bills found
-        if (!bills.length) {
-            return res.status(200).json([]);
-        }
+      // Fetch all bookings
+      const allBookings = await Booking.find({})
+          .populate({
+              path: 'roomID',
+              populate: { path: 'categoryRoomID', select: 'roomCategoryName price' }
+          })
+          .populate('services');
 
-        const populatedBills = await Promise.all(bills.map(async (bill) => {
-            const booking = await Booking.findById(bill.bookingID)
-                .populate({
-                    path: 'roomID',
-                    populate: { path: 'categoryRoomID', select: 'roomCategoryName price' }
-                })
-                .populate('services');
+      // Filter bookings to only include those for the current user
+      const userBookings = allBookings.filter(
+          (booking) => booking.userID.toString() === userID.toString()
+      );
 
-            return {
-                ...bill._doc,
-                bookingDetails: {
-                    arriveDate: booking.startDate,
-                    leaveDate: booking.endDate,
-                    roomDetails: booking.roomID.map(room => ({
-                        roomCategory: room.categoryRoomID.roomCategoryName,
-                        roomNumber: room.roomNumber,
-                        price: room.categoryRoomID.price,
-                    })),
-                    services: await Promise.all(
-                        booking.services.map(async (serviceID) => {
-                            const service = await ServiceItem.findById(serviceID).select("itemName cost");
-                            return {
-                                serviceName: service.itemName,
-                                servicePrice: service.cost,
-                            };
-                        })
-                    ),
-                },
-            };
-        }));
+      // Fetch all bills associated with the user, regardless of payment status
+      const allBills = await Bill.find({ username });
 
-        res.status(200).json(populatedBills);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+      // Create new bills for any user bookings that don't have a corresponding bill
+      const billedBookingIDs = new Set(allBills.map(bill => bill.bookingID.toString()));
+
+      const newBills = await Promise.all(
+          userBookings.map(async (booking) => {
+              // Skip if this booking has already been billed
+              if (billedBookingIDs.has(booking._id.toString())) {
+                  return null;
+              }
+
+              // Find related room details
+              const roomDetails = booking.roomID.map(room => ({
+                  roomCategory: room.categoryRoomID.roomCategoryName,
+                  roomNumber: room.roomNumber,
+                  price: room.categoryRoomID.price,
+              }));
+
+              // Check if roomDetails is valid
+              if (roomDetails.some(room => !room.roomCategory || !room.price)) {
+                  console.error("Invalid room details", roomDetails);
+                  return null; // Skip this booking due to invalid room details
+              }
+
+              // Extract service details
+              const services = await Promise.all(
+                  booking.services.map(async (serviceID) => {
+                      const service = await ServiceItem.findById(serviceID).select("itemName cost");
+                      return {
+                          serviceName: service.itemName,
+                          servicePrice: service.cost
+                      };
+                  })
+              );
+
+              // Check if services are valid
+              if (services.some(service => !service.servicePrice)) {
+                  console.error("Invalid service details", services);
+                  return null; // Skip this booking due to invalid service details
+              }
+
+              // Calculate total cost (rooms + services)
+              const totalCost =
+                  roomDetails.reduce((acc, room) => acc + room.price, 0) +
+                  services.reduce((acc, service) => acc + service.servicePrice, 0);
+
+              // Check for NaN totalCost
+              if (isNaN(totalCost)) {
+                  console.error("Total cost calculation resulted in NaN", { roomDetails, services });
+                  return null; // Skip this booking due to invalid total cost
+              }
+
+              // Create a new bill with the calculated information
+              const newBill = new Bill({
+                  bookingID: booking._id,
+                  customerName: user.name,
+                  phoneNumber: user.phoneNumber,
+                  roomDetails,
+                  services,
+                  paymentMethod: "Credit Card",
+                  totalCost,
+                  arriveDate: booking.startDate,
+                  leaveDate: booking.endDate,
+                  isPaid: false,
+                  username,
+              });
+
+              return await newBill.save(); // Save the newly created bill
+          })
+      );
+
+      // Filter out any null values from the new bills array
+      const filteredNewBills = newBills.filter(bill => bill !== null);
+
+      // Combine all existing bills with newly created bills
+      const allUserBills = [...allBills, ...filteredNewBills];
+
+      res.status(200).json(allUserBills);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
 };
 
 const getBillById = async (req, res) => {
