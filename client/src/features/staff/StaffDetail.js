@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Row, Col, Button } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import {
   getStaffById,
   selectStaffDetail,
   selectLoading,
   deleteStaff,
 } from "../../store/staffSlice";
-import Swal from "sweetalert2"; // Import SweetAlert2 for deletion confirmation
+import Swal from "sweetalert2";
 
 const StaffDetail = () => {
   const { id } = useParams();
@@ -64,7 +64,7 @@ const StaffDetail = () => {
   return (
     <>
       <div className="mt-5 mx-2 py-4 border rounded">
-        <h3 className="ms-4">Staff Details</h3>
+        <h3 className="ms-4">Staff Detail</h3>
         {isLoading && <p className="ms-4">Loading staff details...</p>}
         {staffDetail && (
           <div className="ms-4 mt-3">

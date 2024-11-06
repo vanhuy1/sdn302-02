@@ -79,7 +79,7 @@ export const apiSlice = createApi({
         updateBill: builder.mutation({
             query: ({ id, changes }) => ({
                 url: `/bill/${id}/status`,
-                method: 'PATCH', // Use PATCH for partial updates
+                method: 'PATCH',
                 body: changes,
             }),
             invalidatesTags: (result, error, { id }) => [{ type: 'Bill', id }],

@@ -33,6 +33,9 @@ import UpdateProfile from "./features/profile/UpdateProfile";
 import ServiceList from "./features/services/manage/serviceList";
 import ChangePassword from "./features/profile/ChangePassword";
 import PublicLayout from "./components/public/PublicLayout";
+import Departments from "./features/department/Departments";
+import DepartmentDetail from "./features/department/DepartmentDetail";
+import AddDepartment from "./features/department/AddDepartment";
 
 function App() {
   return (
@@ -55,6 +58,9 @@ function App() {
               <Route path="dash" element={<DashLayout />}>
 
                 <Route index element={<HomePage />} />
+                <Route path="about" element={<About />} />
+                <Route path="contact" element={<Contact />} />
+                
                 <Route path="booking" element={<Booking />} />
                 <Route path="viewroom" element={<ViewAllRoomBook />} />
                 <Route path="edit-booking/:id" element={<EditBooking />} />
@@ -79,6 +85,12 @@ function App() {
                       <Route index element={<Staffs />} />
                       <Route path=":id" element={<StaffDetail />} />
                       <Route path="update/:id" element={<AddStaff />} />
+                    </Route>
+
+                    <Route path='departments'>
+                      <Route index element={<Departments />} />
+                      <Route path=":id" element={<DepartmentDetail />} />
+                      <Route path="update/:id" element={<AddDepartment />} />
                     </Route>
 
                     <Route path="room" element={<ViewAllRoom />} />

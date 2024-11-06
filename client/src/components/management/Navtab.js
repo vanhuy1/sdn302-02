@@ -44,6 +44,16 @@ const Navtab = () => {
           Customer
         </NavLink>
       </Nav.Item>
+      <Nav.Item>
+        <NavLink
+          to="/dash/manage/departments"
+          className={({ isActive }) =>
+            isActive ? "active nav-link" : "nav-link"
+          }
+        >
+          Department
+        </NavLink>
+      </Nav.Item>
     </Nav>
   );
 };

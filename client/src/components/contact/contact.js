@@ -1,7 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+
 const Contact = () => {
+    const { username } = useAuth();
+
     return (
         <>
             <section className="bg-light py-3 py-md-5">
@@ -28,15 +32,27 @@ const Contact = () => {
                                             We offer luxurious accommodations with excellent service to ensure you have a memorable experience. Book your room today!
                                         </p>
                                         <div style={{ display: "flex", justifyContent: "center" }}>
-                                            <Link to="/dash/booking">
-                                                <Button
-                                                    className="book_btn"
-                                                    type="button"
-                                                    style={{ marginTop: "20px" }}
-                                                >
-                                                    Book Now
-                                                </Button>
-                                            </Link>
+                                            {username ? (
+                                                <Link to="/dash/booking">
+                                                    <Button
+                                                        className="btn btn-primary book_btn"
+                                                        type="button"
+                                                        style={{ marginTop: "20px" }}
+                                                    >
+                                                        Book Now
+                                                    </Button>
+                                                </Link>
+                                            ) : (
+                                                <Link to="/login">
+                                                    <Button
+                                                        className="btn btn-primary book_btn"
+                                                        type="button"
+                                                        style={{ marginTop: "20px" }}
+                                                    >
+                                                        Book Now
+                                                    </Button>
+                                                </Link>
+                                            )}
                                         </div>
                                     </div>
 

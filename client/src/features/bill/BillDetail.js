@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Spinner, Alert, Modal } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
-import { useFetchBillDetailQuery, useUpdateBillMutation } from "../../app/api/apiSlice";
+import { FaAngleLeft } from "react-icons/fa6";
+import {
+  useFetchBillDetailQuery,
+  useUpdateBillMutation,
+} from "../../app/api/apiSlice";
 
 const BillDetail = () => {
   const { billId } = useParams();
@@ -30,10 +34,14 @@ const BillDetail = () => {
     try {
       await updateBill({ id: billId, changes: { isPaid: true } });
       setShowSuccessModal(true);
-      refetch(); // Refetch bill details to get updated data
+      refetch();
     } catch (err) {
       console.error("Payment update failed:", err);
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   if (isLoading) {
@@ -55,6 +63,12 @@ const BillDetail = () => {
 
   return (
     <>
+      <div className="d-flex align-items-center">
+        <Button className="btn btn-light me-1" onClick={handleBack}>
+          <FaAngleLeft className="m-0 fs-4" />
+        </Button>
+        <h5 className="m-0">Bill List</h5>
+      </div>
       <div className="border rounded my-4" style={{ margin: "0 10rem" }}>
         <h1 className="py-4 text-center">Bill</h1>
         <div className="d-flex justify-content-between mx-5 border-bottom mb-3">
@@ -124,7 +138,9 @@ const BillDetail = () => {
               PAID
             </h5>
           ) : (
-            <Button variant="primary" onClick={handlePayment}>Pay Now</Button>
+            <Button variant="primary" onClick={handlePayment}>
+              Pay Now
+            </Button>
           )}
         </div>
       </div>
@@ -133,11 +149,12 @@ const BillDetail = () => {
         <Modal.Header closeButton>
           <Modal.Title>Payment Successful</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          Your payment has been processed successfully.
-        </Modal.Body>
+        <Modal.Body>Your payment has been processed successfully.</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowSuccessModal(false)}
+          >
             Close
           </Button>
         </Modal.Footer>

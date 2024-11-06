@@ -12,7 +12,7 @@ const initialState = {
 // POST CREATE department
 export const addDepartment = createAsyncThunk(
     "department/add",
-    async (departmentData, thunkAPI) => {
+    async ({ departmentData }, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/departments`, {
                 method: "POST",
@@ -37,7 +37,7 @@ export const addDepartment = createAsyncThunk(
 // GET all departments
 export const getAllDepartments = createAsyncThunk(
     "department/getAllDepartments",
-    async (thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/departments`);
 
@@ -56,7 +56,7 @@ export const getAllDepartments = createAsyncThunk(
 // GET department by departmentId
 export const getDepartmentById = createAsyncThunk(
     "department/getDepartmentById",
-    async (_id, thunkAPI) => {
+    async ({ _id }, thunkAPI) => {
         try {
             const response = await fetch(`${API_URL}/departments/${_id}`);
 

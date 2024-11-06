@@ -231,7 +231,11 @@ const Staffs = () => {
               currentStaffs.map((staff, index) => (
                 <tr key={staff._id}>
                   <td>{index + 1 + (currentPage - 1) * 5}</td>
-                  <td>{staff.staffName}</td>
+                  <td>
+                    <Link to={`${staff._id}`} className="text-decoration-none">
+                      {staff.staffName}
+                    </Link>
+                  </td>
                   <td>{staff.gender}</td>
                   <td>{staff.identityNumber}</td>
                   <td>{staff.position}</td>
@@ -244,20 +248,22 @@ const Staffs = () => {
                     )}
                   </td>
                   <td>
-                    <Link className="btn btn-info me-1" to={`${staff._id}`}>
-                      <FaInfoCircle className="m-0 fs-5" />
+                    <Link className="btn btn-outline-success me-1" type="button" to={`${staff._id}`} style={{padding: '2px 5px'}}>
+                      <FaInfoCircle className="m-0" style={{width: '20px'}} />
                     </Link>
                     <Link
                       className="btn btn-warning me-1"
                       to={`update/${staff._id}`}
+                      style={{padding: '2px 5px'}}
                     >
-                      <FaEdit className="m-0 fs-5" />
+                      <FaEdit className="m-0" style={{width: '20px'}} />
                     </Link>
                     <Button
                       variant="danger"
                       onClick={(e) => handleDelete(e, staff._id)}
+                      style={{padding: '2px 5px'}}
                     >
-                      <FaTrash className="m-0 fs-5" />
+                      <FaTrash className="m-0" style={{width: '20px'}} />
                     </Button>
                   </td>
                 </tr>

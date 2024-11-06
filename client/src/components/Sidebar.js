@@ -24,6 +24,7 @@ const Sidebar = () => {
     "/dash/manage/room",
     "/dash/manage/service",
     "/dash/manage/users",
+    "/dash/manage/departments",
   ];
 
   const sidebarUserPaths = [
